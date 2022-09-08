@@ -1,0 +1,59 @@
+import 'package:alephium_wallet/storage/models/wallet_store.dart';
+import 'package:alephium_wallet/utils/theme.dart';
+import 'package:flutter/material.dart';
+
+class BalanceTile extends StatelessWidget {
+  final WalletStore wallet;
+  const BalanceTile({Key? key, required this.wallet}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PhysicalModel(
+      borderRadius: BorderRadius.circular(16.0),
+      color: Colors.white,
+      elevation: 0,
+      child: Container(
+        decoration: BoxDecoration(
+          color: WalletTheme.lightPrimaryColor,
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Balance :',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            Divider(
+              color: Colors.white,
+              thickness: 1,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: RichText(
+                  text: TextSpan(children: [
+                TextSpan(
+                  text: "${wallet.balance}",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                if (wallet.balanceConverted != null &&
+                    wallet.balanceConverted != "0.000") ...[
+                  TextSpan(
+                    text: " = ",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  TextSpan(
+                    text: "${wallet.balanceConverted}",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ]
+              ])),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
