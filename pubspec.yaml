@@ -53,11 +53,7 @@ dependencies:
   flutter_svg: ^1.1.4
   dio: 4.0.4
   flutter_sticky_header: ^0.6.4
-  textfield_tags: ^2.0.1
   flutter_speed_dial: ^6.0.0
-  flutter_launcher_icons: ^0.10.0
-  objectbox: ^1.6.2
-  objectbox_flutter_libs: ^1.6.2
   url_launcher: ^6.1.5
 
 dev_dependencies:

@@ -4,7 +4,6 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   local_auth_windows
-  objectbox_flutter_libs
   url_launcher_windows
 )
 
