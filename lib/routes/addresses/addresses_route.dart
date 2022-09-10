@@ -44,12 +44,7 @@ class _AddressesPageState extends State<AddressesPage> {
             WalletAppBar(
               label: Text(
                 'Wallet Addresses',
-                style: GoogleFonts.abel(
-                    textStyle: TextStyle(
-                  fontSize: 24,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                )),
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
             Expanded(

@@ -100,14 +100,30 @@ class AdvancedOptionsDialog extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                       onTap: () {
                         Navigator.pop(context);
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return GenerateWalletDialog(
-                                type: GenerationType.group,
-                                bloc: bloc,
-                              );
-                            });
+                        showGeneralDialog(
+                          barrierDismissible: true,
+                          barrierLabel: "receive",
+                          context: context,
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  GenerateWalletDialog(
+                            type: GenerationType.group,
+                            bloc: bloc,
+                          ),
+                          transitionDuration: const Duration(milliseconds: 300),
+                          transitionBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            return SlideTransition(
+                              position: animation.drive(
+                                Tween<Offset>(
+                                  begin: Offset(0, 1),
+                                  end: Offset.zero,
+                                ),
+                              ),
+                              child: child,
+                            );
+                          },
+                        );
                       },
                       child: Container(
                         decoration: BoxDecoration(

@@ -1,12 +1,7 @@
-import 'package:alephium_dart/alephium_dart.dart';
-import 'package:alephium_wallet/utils/helpers.dart';
-import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
-import 'package:alephium_wallet/storage/app_storage.dart';
+import 'package:alephium_wallet/routes/receive/receive_route.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
-import 'package:alephium_wallet/utils/theme.dart';
+import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../constants.dart';
 
@@ -19,20 +14,14 @@ class WalletTile extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Material(
-        color: WalletTheme.lightPrimaryColor,
+        color: Theme.of(context).primaryColor,
         elevation: 0,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
         child: InkWell(
           customBorder:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              Routes.wallet,
-              arguments: {"wallet": wallet},
-            );
-          },
+          onTap: () {},
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -78,33 +67,80 @@ class WalletTile extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                Text(
-                  "Main address : ",
-                  style: Theme.of(context).textTheme.bodyMedium,
+                OutlinedButton(
+                  child: Text("Details"),
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      Routes.wallet,
+                      arguments: {"wallet": wallet},
+                    );
+                  },
+                ),
+                const SizedBox(
+                  height: 4,
                 ),
                 Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        wallet.addresses.first.address,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                        child: OutlinedButton(
+                      child: Text("Send"),
+                      onPressed: () {
+                        Navigator.pushNamed(context, Routes.send, arguments: {
+                          "wallet": wallet,
+                        });
+                      },
+                    )),
+                    SizedBox(
+                      width: 16,
                     ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    IconButton(
-                        onPressed: () async {
-                          var data = ClipboardData(
-                              text: wallet.addresses.first.address);
-                          await Clipboard.setData(data);
-                          context.showSnackBar(
-                            "address copied to clipboard!",
-                          );
-                        },
-                        icon: Icon(Icons.copy))
+                    Expanded(
+                        child: OutlinedButton(
+                      child: Text("Receive"),
+                      onPressed: () {
+                        showGeneralDialog(
+                          barrierDismissible: true,
+                          barrierLabel: "receive",
+                          context: context,
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  Padding(
+                            padding: EdgeInsets.only(
+                                top: 16,
+                                bottom: 16 + context.viewInsetsBottom,
+                                left: 16,
+                                right: 16),
+                            child: Center(
+                              child: Material(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.circular(
+                                    16,
+                                  ),
+                                  elevation: 6,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: ReceivePage(
+                                      wallet: wallet,
+                                    ),
+                                  )),
+                            ),
+                          ),
+                          transitionDuration: const Duration(milliseconds: 300),
+                          transitionBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            return SlideTransition(
+                              position: animation.drive(
+                                Tween<Offset>(
+                                  begin: Offset(0, 1),
+                                  end: Offset.zero,
+                                ),
+                              ),
+                              child: child,
+                            );
+                          },
+                        );
+                      },
+                    ))
                   ],
                 )
               ],

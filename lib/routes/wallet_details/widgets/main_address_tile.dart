@@ -22,7 +22,7 @@ class MainAddressTile extends StatelessWidget {
       elevation: 0,
       child: Container(
         decoration: BoxDecoration(
-          color: WalletTheme.lightPrimaryColor,
+          color: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.circular(16.0),
         ),
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),

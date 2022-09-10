@@ -27,7 +27,7 @@ class NewWalletCheckbox extends StatelessWidget {
           elevation: 0,
           color: value == selected
               ? Colors.greenAccent
-              : WalletTheme.lightPrimaryColor,
+              : Theme.of(context).primaryColor,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           child: InkWell(

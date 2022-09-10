@@ -23,9 +23,10 @@ class DraggableItem extends StatelessWidget {
       feedback: SizedBox(
         width: (context.width - 32 - 16 - 12) / 3,
         child: Material(
+          color: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0,
           shape: RoundedRectangleBorder(
-              side: BorderSide(color: Color(0xff797979), width: 2),
+              side: BorderSide(color: Theme.of(context).primaryColor, width: 2),
               borderRadius: BorderRadius.circular(8.0)),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -41,9 +42,10 @@ class DraggableItem extends StatelessWidget {
       ),
       childWhenDragging: const SizedBox(),
       child: Material(
+        color: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         shape: RoundedRectangleBorder(
-            side: BorderSide(color: Color(0xff797979), width: 2),
+            side: BorderSide(color: Theme.of(context).primaryColor, width: 2),
             borderRadius: BorderRadius.circular(8.0)),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),

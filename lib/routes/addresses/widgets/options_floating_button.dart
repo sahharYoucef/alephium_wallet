@@ -18,6 +18,7 @@ class FloatingOptionsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SpeedDial(
+        heroTag: "button",
         icon: Icons.add,
         activeIcon: Icons.close,
         spacing: 3,
@@ -38,6 +39,7 @@ class FloatingOptionsButton extends StatelessWidget {
         animationDuration: const Duration(milliseconds: 100),
         children: [
           SpeedDialChild(
+            labelBackgroundColor: Theme.of(context).primaryColor,
             child: const Icon(Icons.generating_tokens),
             backgroundColor: Color(0xff797979),
             foregroundColor: Colors.white,
@@ -46,18 +48,34 @@ class FloatingOptionsButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8.0)),
             label: 'Generate address',
             onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return GenerateWalletDialog(
-                      type: GenerationType.single,
-                      bloc: bloc,
-                    );
-                  });
+              showGeneralDialog(
+                barrierDismissible: true,
+                barrierLabel: "receive",
+                context: context,
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    GenerateWalletDialog(
+                  type: GenerationType.single,
+                  bloc: bloc,
+                ),
+                transitionDuration: const Duration(milliseconds: 300),
+                transitionBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return SlideTransition(
+                    position: animation.drive(
+                      Tween<Offset>(
+                        begin: Offset(0, 1),
+                        end: Offset.zero,
+                      ),
+                    ),
+                    child: child,
+                  );
+                },
+              );
             },
             onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
           ),
           SpeedDialChild(
+            labelBackgroundColor: Theme.of(context).primaryColor,
             child: const Icon(Icons.keyboard_option_key),
             backgroundColor: Color(0xff797979),
             foregroundColor: Colors.white,

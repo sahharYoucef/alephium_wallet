@@ -70,7 +70,7 @@ class _CircleNavigationBarState extends State<CircleNavigationBar> {
                         );
                       } else {
                         return Material(
-                          color: WalletTheme.lightPrimaryColor,
+                          color: Theme.of(context).primaryColor,
                           borderRadius: BorderRadius.circular(50),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(50),
@@ -122,6 +122,7 @@ class AddButton extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      heroTag: "button",
       onPressed: onTap,
       elevation: 2,
       backgroundColor: color,

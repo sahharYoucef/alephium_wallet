@@ -21,12 +21,14 @@ import '../../bloc/transaction/transaction_bloc.dart';
 class SendTransactionPage extends StatefulWidget {
   final AddressStore? addressStore;
   final WalletStore wallet;
-  final WalletDetailsBloc detailsBloc;
+  final WalletDetailsBloc? detailsBloc;
+  final Map<String, dynamic>? initialData;
   SendTransactionPage({
     Key? key,
     this.addressStore,
+    this.initialData,
     required this.wallet,
-    required this.detailsBloc,
+    this.detailsBloc,
   }) : super(key: key);
 
   @override
@@ -49,6 +51,11 @@ class _SendTransactionPageState extends State<SendTransactionPage>
       getIt.get<BaseWalletService>(),
       widget.wallet,
     );
+    if (widget.initialData != null) {
+      _bloc.amount = widget.initialData?["amount"].toString();
+      _bloc.toAddress = widget.initialData?["address"];
+      _bloc.fromAddress = widget.addressStore;
+    }
     super.initState();
   }
 
@@ -92,7 +99,8 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                 context.showSnackBar(state.message, level: Level.error);
               }
               if (state is TransactionSendingCompleted) {
-                widget.detailsBloc.add(AddPendingTxs(state.transactions));
+                if (widget.detailsBloc != null)
+                  widget.detailsBloc?.add(AddPendingTxs(state.transactions));
                 Navigator.pop(context);
               }
             },
@@ -122,6 +130,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                     color: Colors.black,
                                   ),
                                   AddressFromDropDownMenu(
+                                    initialAddress: widget.addressStore,
                                     label: "from Address",
                                     addresses: widget.wallet.addresses
                                         .where(
@@ -139,6 +148,8 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                   TextFormField(
                                       key: _toAddressKey,
                                       textInputAction: TextInputAction.next,
+                                      initialValue:
+                                          widget.initialData?["address"],
                                       autocorrect: false,
                                       validator: addressToValidator,
                                       onChanged: ((value) {
@@ -150,7 +161,11 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                   const SizedBox(height: 8),
                                   TextFormField(
                                       key: _amountKey,
+                                      inputFormatters: [AmountFormatter()],
                                       validator: amountValidator,
+                                      initialValue: widget
+                                          .initialData?["amount"]
+                                          .toString(),
                                       onChanged: (value) {
                                         _bloc.add(TransactionValuesChangedEvent(
                                             amount: value));
@@ -240,6 +255,9 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                               else ...[
                                                 TextFormField(
                                                   key: _gasAmountKey,
+                                                  inputFormatters: [
+                                                    AmountFormatter()
+                                                  ],
                                                   validator: gasAmountValidator,
                                                   onChanged: (value) {
                                                     _bloc.add(
@@ -259,6 +277,9 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                                 SizedBox(height: 8),
                                                 TextFormField(
                                                     key: _gasPriceKey,
+                                                    inputFormatters: [
+                                                      AmountFormatter()
+                                                    ],
                                                     validator:
                                                         gasPriceValidator,
                                                     onChanged: (value) {
@@ -280,41 +301,47 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                               const SizedBox(
                                                 height: 10,
                                               ),
-                                              OutlinedButton(
-                                                child: Text(
-                                                    state.transaction != null
-                                                        ? 'SEND'
-                                                        : 'CHECK'),
-                                                onPressed: _bloc.activateButton
-                                                    ? () {
-                                                        var isValid = _formKey
-                                                                .currentState
-                                                                ?.validate() ??
-                                                            false;
-                                                        if (!isValid) return;
-                                                        if (state.transaction ==
-                                                            null) {
-                                                          _bloc.add(
-                                                            CheckTransactionEvent(
-                                                              _bloc.fromAddress,
-                                                            ),
-                                                          );
-                                                        } else {
-                                                          _bloc.add(
-                                                              SignAndSendTransaction(
-                                                            privateKey: _bloc
-                                                                .fromAddress!
-                                                                .privateKey,
-                                                            transactionID: _bloc
-                                                                .transaction!
-                                                                .txId!,
-                                                            unsignedTx: _bloc
-                                                                .transaction!
-                                                                .unsignedTx!,
-                                                          ));
+                                              Hero(
+                                                tag: "button",
+                                                child: OutlinedButton(
+                                                  child: Text(
+                                                      state.transaction != null
+                                                          ? 'SEND'
+                                                          : 'CHECK'),
+                                                  onPressed: _bloc
+                                                          .activateButton
+                                                      ? () {
+                                                          var isValid = _formKey
+                                                                  .currentState
+                                                                  ?.validate() ??
+                                                              false;
+                                                          if (!isValid) return;
+                                                          if (state
+                                                                  .transaction ==
+                                                              null) {
+                                                            _bloc.add(
+                                                              CheckTransactionEvent(
+                                                                _bloc
+                                                                    .fromAddress,
+                                                              ),
+                                                            );
+                                                          } else {
+                                                            _bloc.add(
+                                                                SignAndSendTransaction(
+                                                              privateKey: _bloc
+                                                                  .fromAddress!
+                                                                  .privateKey,
+                                                              transactionID: _bloc
+                                                                  .transaction!
+                                                                  .txId!,
+                                                              unsignedTx: _bloc
+                                                                  .transaction!
+                                                                  .unsignedTx!,
+                                                            ));
+                                                          }
                                                         }
-                                                      }
-                                                    : null,
+                                                      : null,
+                                                ),
                                               ),
                                               const SizedBox(
                                                 height: 16,

@@ -21,10 +21,12 @@ import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:alephium_wallet/storage/sqflite_database/sqflite_database.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
+import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -62,9 +64,9 @@ class AppBlocObserver extends BlocObserver {
 }
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent));
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   getIt.registerLazySingleton<BaseWalletService>(() => AlephiumWalletService());
   getIt.registerLazySingleton<BaseApiRepository>(
       () => AlephiumApiRepository(Network.testnet));
@@ -104,12 +106,16 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         scaffoldMessengerKey: scaffoldMessengerKey,
         theme: ThemeData(
-          fontFamily: GoogleFonts.cairo().fontFamily,
+          primaryColor: Color(0xffEDEDED),
+          fontFamily: GoogleFonts.playfairDisplay().fontFamily,
           backgroundColor: Colors.white,
           outlinedButtonTheme: OutlinedButtonThemeData(
             style: OutlinedButton.styleFrom(
               shape: StadiumBorder(),
-              side: BorderSide(width: 2, color: WalletTheme.lightPrimaryColor),
+              side: BorderSide(
+                width: 2,
+                color: Theme.of(context).primaryColor,
+              ),
               primary: Colors.white,
               shadowColor: Colors.black26,
               elevation: 5,
@@ -159,22 +165,26 @@ class MyApp extends StatelessWidget {
           ),
         ),
         darkTheme: ThemeData(
-          cardColor: Colors.black54,
-          scaffoldBackgroundColor: Colors.black54,
+          primaryColor: Color(0xff242424),
+          cardColor: Color(0xff121211),
+          scaffoldBackgroundColor: Color(0xff121211),
           fontFamily: GoogleFonts.roboto().fontFamily,
           outlinedButtonTheme: OutlinedButtonThemeData(
             style: OutlinedButton.styleFrom(
+              shape: StadiumBorder(),
+              side: BorderSide(
+                width: 2,
+                color: Color(0xffEDEDED),
+              ),
               primary: Colors.white,
               shadowColor: Colors.black26,
-              elevation: 2,
-              backgroundColor: Colors.blue,
+              elevation: 5,
+              backgroundColor: Color(0xff242424),
               minimumSize: Size.fromHeight(50),
-              side: BorderSide(color: Colors.transparent),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16)),
-              textStyle: GoogleFonts.abel(
+              textStyle: GoogleFonts.cairo(
                 textStyle: TextStyle(
-                  fontSize: 24,
+                  color: Colors.white,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -182,41 +192,48 @@ class MyApp extends StatelessWidget {
           ),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             elevation: 2,
-            backgroundColor: Colors.blue,
+            backgroundColor: Color(0xff242424),
           ),
           textTheme: TextTheme(
             headlineMedium: TextStyle(
               fontWeight: FontWeight.w700,
-              fontSize: 22,
-              height: 1.2,
-              letterSpacing: 1.1,
+              fontSize: 20,
+              letterSpacing: 1.2,
+              height: 1.3,
+              textBaseline: TextBaseline.alphabetic,
               color: Colors.white,
             ),
             headlineSmall: TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 20,
-              height: 1.2,
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
               letterSpacing: 1.1,
               color: Colors.white,
             ),
             bodySmall: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 14,
-              height: 1.0,
               color: Colors.white,
             ),
             bodyMedium: TextStyle(
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w400,
               fontSize: 16,
-              height: 1.0,
+              height: 1.3,
+              color: Colors.white,
+            ),
+            bodyLarge: TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 18,
+              height: 1.3,
               color: Colors.white,
             ),
           ),
         ),
-        themeMode: ThemeMode.light,
+        themeMode: themeMode,
         debugShowCheckedModeBanner: false,
         initialRoute: firstRun ? Routes.createWallet : Routes.home,
         onGenerateRoute: (settings) {
+          SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark
+              .copyWith(statusBarColor: Colors.transparent));
           if (settings.name == Routes.walletMnemonic) {
             Map<String, dynamic> arguments =
                 settings.arguments as Map<String, dynamic>;
@@ -270,13 +287,16 @@ class MyApp extends StatelessWidget {
                 settings.arguments as Map<String, dynamic>;
             final wallet = arguments["wallet"] as WalletStore;
             final detailsBloc =
-                arguments["wallet-details"] as WalletDetailsBloc;
+                arguments["wallet-details"] as WalletDetailsBloc?;
             final address = arguments["address"] as AddressStore?;
+            final initialData =
+                arguments["initial-data"] as Map<String, dynamic>?;
             return MaterialPageRoute(
               builder: (context) => SendTransactionPage(
                 wallet: wallet,
                 detailsBloc: detailsBloc,
                 addressStore: address,
+                initialData: initialData,
               ),
             );
           } else if (settings.name == Routes.addresses) {

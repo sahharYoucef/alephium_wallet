@@ -51,7 +51,7 @@ class _WalletMnemonicPageState extends State<WalletMnemonicPage> {
                                   index,
                                   Material(
                                       elevation: 0,
-                                      color: WalletTheme.lightPrimaryColor,
+                                      color: Theme.of(context).primaryColor,
                                       shape: RoundedRectangleBorder(
                                           side: BorderSide(
                                               color: Color(0xff797979),

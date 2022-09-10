@@ -22,7 +22,7 @@ class WalletAppBar extends StatelessWidget {
       alignment: Alignment.topCenter,
       child: PhysicalModel(
         elevation: 0,
-        color: WalletTheme.lightPrimaryColor,
+        color: Theme.of(context).primaryColor,
         shadowColor: Colors.black,
         child: SafeArea(
           bottom: false,

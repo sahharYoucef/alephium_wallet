@@ -1,8 +1,24 @@
 import 'package:alephium_wallet/log/logger_service.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 export 'package:alephium_wallet/log/logger_service.dart';
+
+const ThemeMode themeMode = ThemeMode.light;
+
+class AmountFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    var isValid =
+        double.tryParse(newValue.text) != null || newValue.text.isEmpty;
+    if (isValid) {
+      return newValue;
+    }
+    return oldValue;
+  }
+}
 
 extension Helper on BuildContext {
   double get width {
@@ -11,6 +27,10 @@ extension Helper on BuildContext {
 
   double get height {
     return MediaQuery.of(this).size.height;
+  }
+
+  double get viewInsetsBottom {
+    return MediaQuery.of(this).viewInsets.bottom;
   }
 
   showSnackBar(String content, {Level level = Level.info}) {

@@ -145,13 +145,6 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
         }
       } else if (event is AddPendingTxs) {
         try {
-          getIt
-              .get<BaseDBHelper>()
-              .transactions[wallet.id]
-              ?.addAll(event.transactions);
-          getIt
-              .get<BaseDBHelper>()
-              .insertTransactions(wallet.id, event.transactions);
           _transactions = getIt.get<BaseDBHelper>().transactions[wallet.id] ??
               await getIt.get<BaseDBHelper>().getTransactions(wallet.id);
           _transactions.sort(((a, b) => a.timeStamp.compareTo(b.timeStamp)));

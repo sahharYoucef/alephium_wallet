@@ -1,3 +1,5 @@
+import 'package:alephium_wallet/main.dart';
+import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:bloc/bloc.dart';
 import 'package:alephium_wallet/api/dto_models/transaction_build_dto.dart';
 import 'package:alephium_wallet/api/dto_models/transaction_result_dto.dart';
@@ -186,7 +188,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         try {
           emit(TransactionLoading());
           var signature = walletService.signTransaction(
-              transaction!.txId!, fromAddress!.privateKey);
+            transaction!.txId!,
+            fromAddress!.privateKey,
+          );
           var sending = await apiRepository.sendTransaction(
             signature: signature,
             unsignedTx: transaction!.unsignedTx!,
@@ -199,6 +203,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           }
           var data =
               _createTransaction(sending.getData!, fromAddress!, toAddress!);
+          if (getIt.get<BaseDBHelper>().transactions[wallet.id] == null) {
+            getIt.get<BaseDBHelper>().transactions[wallet.id] = [data];
+          } else
+            getIt.get<BaseDBHelper>().transactions[wallet.id]?.addAll([data]);
+          getIt.get<BaseDBHelper>().insertTransactions(wallet.id, [data]);
           emit(
             TransactionSendingCompleted(
               transactions: [data],

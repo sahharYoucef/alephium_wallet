@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:alephium_wallet/utils/format.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
@@ -109,5 +111,14 @@ class AddressStore extends Equatable {
   @override
   String toString() {
     return this.toDb().toString();
+  }
+
+  String receiveAmount(double? value) {
+    final Map<String, dynamic> data = {
+      "Type": "ALEPHIUM",
+      "address": this.address,
+    };
+    if (value != null) data["amount"] = value;
+    return json.encode(data);
   }
 }

@@ -95,10 +95,10 @@ class _WalletDetailsState extends State<WalletDetails> {
                       elevation: 0,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: WalletTheme.lightPrimaryColor,
+                          color: Theme.of(context).primaryColor,
                           // border: Border.symmetric(
                           //     horizontal: BorderSide(
-                          //   color: WalletTheme.lightPrimaryColor,
+                          //   color: Theme.of(context).primaryColor,
                           //   width: 3,
                           // )),
                         ),
@@ -112,9 +112,8 @@ class _WalletDetailsState extends State<WalletDetails> {
                               style: Theme.of(context).textTheme.headlineMedium,
                             ),
                             Spacer(),
-                            SvgPicture.asset(
-                              WalletIcons.darkAlephiumIcon,
-                              height: 40,
+                            AlephiumIcon(
+                              spinning: false,
                             ),
                           ],
                         ),
@@ -185,10 +184,10 @@ class _WalletDetailsState extends State<WalletDetails> {
                                 decoration: BoxDecoration(
                                   // border: Border.symmetric(
                                   //     horizontal: BorderSide(
-                                  //   color: WalletTheme.lightPrimaryColor,
+                                  //   color: Theme.of(context).primaryColor,
                                   //   width: 3,
                                   // )),
-                                  color: WalletTheme.lightPrimaryColor,
+                                  color: Theme.of(context).primaryColor,
                                 ),
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16, vertical: 8),
@@ -244,7 +243,11 @@ class _WalletDetailsState extends State<WalletDetails> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        label: Text('Send'),
+        heroTag: "button",
+        label: Text(
+          'Send',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         icon: Icon(Icons.send_outlined),
         onPressed: () {

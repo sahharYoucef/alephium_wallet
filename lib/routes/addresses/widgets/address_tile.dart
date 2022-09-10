@@ -22,7 +22,7 @@ class AddressTile extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Material(
         elevation: 0,
-        color: WalletTheme.lightPrimaryColor,
+        color: Theme.of(context).primaryColor,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
             side: isMain

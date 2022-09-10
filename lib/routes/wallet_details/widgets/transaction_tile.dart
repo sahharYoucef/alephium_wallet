@@ -33,7 +33,7 @@ class TransactionTile extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Material(
-        color: WalletTheme.lightPrimaryColor,
+        color: Theme.of(context).primaryColor,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),

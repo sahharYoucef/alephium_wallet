@@ -6,7 +6,7 @@ import 'package:alephium_wallet/routes/new_wallet/widgets/new_wallet_checkbox.da
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 class NewWalletPage extends StatefulWidget {
   const NewWalletPage({Key? key}) : super(key: key);
@@ -21,6 +21,7 @@ class _NewWalletPageState extends State<NewWalletPage> {
 
   @override
   void initState() {
+    FlutterNativeSplash.remove();
     _createWalletBloc = CreateWalletBloc(Blockchain.Alephium);
     super.initState();
   }

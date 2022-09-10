@@ -74,49 +74,59 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              SizedBox(
-                height: MediaQuery.of(context).padding.top + 70,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).padding.top + 70,
+                      ),
+                      SvgPicture.asset(
+                        WalletIcons.sendIcon,
+                        color: Colors.black,
+                      ),
+                      AddressFromDropDownMenu(
+                        label: "from Address",
+                        addresses: fromAddresses,
+                        onChanged: (value) {
+                          setState(() {
+                            _fromAddressStore = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      AddressFromDropDownMenu(
+                        label: "to Address",
+                        addresses: widget.wallet.addresses.toList(),
+                        onChanged: (value) {
+                          _toAddressStore = value;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Available Balance: ${_fromAddressStore.formattedBalance}",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      Spacer(),
+                      Hero(
+                        tag: "button",
+                        child: OutlinedButton(
+                          child: Text('SWEEP'),
+                          onPressed: () {
+                            _bloc.add(SweepTransaction(
+                                _fromAddressStore, _toAddressStore));
+                          },
+                        ),
+                      ),
+                    ]),
               ),
-              SvgPicture.asset(
-                WalletIcons.sendIcon,
-                color: Colors.black,
-              ),
-              AddressFromDropDownMenu(
-                label: "from Address",
-                addresses: fromAddresses,
-                onChanged: (value) {
-                  setState(() {
-                    _fromAddressStore = value;
-                  });
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              AddressFromDropDownMenu(
-                label: "to Address",
-                addresses: widget.wallet.addresses.toList(),
-                onChanged: (value) {
-                  _toAddressStore = value;
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                "Available Balance: ${_fromAddressStore.formattedBalance}",
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              Spacer(),
-              OutlinedButton(
-                child: Text('SWEEP'),
-                onPressed: () {
-                  _bloc.add(
-                      SweepTransaction(_fromAddressStore, _toAddressStore));
-                },
-              ),
-            ]),
+            ),
           ],
         ),
       ),

@@ -42,7 +42,6 @@ class WalletStore extends Equatable {
   factory WalletStore.fromDb(
     Map<String, dynamic> data,
   ) {
-    LoggerService.instance.log(data);
     final _id = data["id"] as String;
     final _title = (data["title"] as String?) ?? "Alephium";
     final _passphrase = data["passphrase"] as String;

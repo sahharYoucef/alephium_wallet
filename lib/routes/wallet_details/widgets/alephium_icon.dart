@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../utils/constants.dart';
@@ -49,10 +51,13 @@ class _AlephiumIconState extends State<AlephiumIcon>
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = themeMode == ThemeMode.dark;
     return RotationTransition(
       turns: _animation,
       child: SvgPicture.asset(
-        WalletIcons.darkAlephiumIcon,
+        isDarkMode
+            ? WalletIcons.lightAlephiumIcon
+            : WalletIcons.darkAlephiumIcon,
         height: 40,
         width: 40,
       ),

@@ -145,26 +145,29 @@ class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
                       height: 20,
                     ),
                   ],
-                  OutlinedButton(
-                    onPressed: () {
-                      if (widget.type == GenerationType.single)
-                        widget.bloc.add(GenerateNewAddress(
-                          isMain: _switch,
-                          title: _controller.text,
-                          color: "",
-                          group: _group,
-                        ));
-                      else
-                        widget.bloc.add(GenerateOneAddressPerGroup(
-                          title: _controller.text,
-                          color: "",
-                        ));
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      widget.type == GenerationType.single
-                          ? "Generate Address"
-                          : "Generate",
+                  Hero(
+                    tag: "button",
+                    child: OutlinedButton(
+                      onPressed: () {
+                        if (widget.type == GenerationType.single)
+                          widget.bloc.add(GenerateNewAddress(
+                            isMain: _switch,
+                            title: _controller.text,
+                            color: "",
+                            group: _group,
+                          ));
+                        else
+                          widget.bloc.add(GenerateOneAddressPerGroup(
+                            title: _controller.text,
+                            color: "",
+                          ));
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        widget.type == GenerationType.single
+                            ? "Generate Address"
+                            : "Generate",
+                      ),
                     ),
                   ),
                 ],

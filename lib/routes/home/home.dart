@@ -1,22 +1,17 @@
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
-import 'package:alephium_wallet/log/logger_service.dart';
-import 'package:alephium_wallet/main.dart';
+import 'package:alephium_wallet/routes/home/widgets/qr_view.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/home/widgets/circle_navigation_bar.dart';
 import 'package:alephium_wallet/routes/home/widgets/wallet_tile.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
-import 'package:alephium_wallet/utils/constants.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import '../constants.dart';
-import '../new_wallet/new_wallet_route.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -31,6 +26,7 @@ class _HomePageState extends State<HomePage>
   late final TabController _tabController;
   @override
   void initState() {
+    FlutterNativeSplash.remove();
     _tabController = TabController(length: 2, vsync: this);
     _walletHomeBloc = BlocProvider.of<WalletHomeBloc>(context)
       ..add(WalletHomeLoadData());
@@ -40,6 +36,7 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Stack(
         children: [
@@ -49,6 +46,75 @@ class _HomePageState extends State<HomePage>
               BlocBuilder<WalletHomeBloc, WalletHomeState>(
                 builder: (context, state) {
                   return WalletAppBar(
+                    action: _walletHomeBloc.wallets.isNotEmpty
+                        ? IconButton(
+                            icon: Icon(
+                              Icons.qr_code_scanner,
+                              color: Colors.white,
+                            ),
+                            onPressed: () async {
+                              var data = await showGeneralDialog<
+                                  Map<String, dynamic>?>(
+                                barrierDismissible: true,
+                                barrierLabel: "receive",
+                                context: context,
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 16,
+                                      bottom: 16 + context.viewInsetsBottom,
+                                      left: 16,
+                                      right: 16),
+                                  child: Center(
+                                    child: Material(
+                                      color: Theme.of(context).primaryColor,
+                                      borderRadius: BorderRadius.circular(
+                                        16,
+                                      ),
+                                      elevation: 6,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                          16,
+                                        ),
+                                        child: SizedBox(
+                                          width: context.width * .7,
+                                          height: context.height * .6,
+                                          child: const QRViewExample(),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                transitionDuration:
+                                    const Duration(milliseconds: 300),
+                                transitionBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  return SlideTransition(
+                                    position: animation.drive(
+                                      Tween<Offset>(
+                                        begin: Offset(0, 1),
+                                        end: Offset.zero,
+                                      ),
+                                    ),
+                                    child: child,
+                                  );
+                                },
+                              );
+
+                              if (data != null) {
+                                print(data);
+                                Navigator.pushNamed(context, Routes.send,
+                                    arguments: {
+                                      "wallet": _walletHomeBloc.wallets.first,
+                                      "address": _walletHomeBloc
+                                          .wallets.first.addresses.first,
+                                      "initial-data": data,
+                                    });
+                              }
+                            },
+                          )
+                        : null,
                     leading: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Row(
@@ -147,7 +213,7 @@ class _HomePageState extends State<HomePage>
           Align(
             alignment: Alignment.bottomCenter,
             child: CircleNavigationBar(
-              navBarColor: WalletTheme.lightPrimaryColor,
+              navBarColor: Theme.of(context).primaryColor,
               onTap: () {
                 Navigator.pushNamed(context, Routes.createWallet);
               },

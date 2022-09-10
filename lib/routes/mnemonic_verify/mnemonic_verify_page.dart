@@ -28,7 +28,7 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
   String message = '';
   late List<int> indexes;
   List _data = <Map<String, dynamic>?>[null, null];
-  Color? color = WalletTheme.lightPrimaryColor;
+  Color? color;
 
   @override
   void initState() {
@@ -37,6 +37,12 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
     values = List.from(mnemonic);
     values.shuffle();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    color = Theme.of(context).primaryColor;
+    super.didChangeDependencies();
   }
 
   _fillIndexes() {
@@ -176,7 +182,7 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16)),
                         elevation: 0,
-                        color: WalletTheme.lightPrimaryColor,
+                        color: Theme.of(context).primaryColor,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
