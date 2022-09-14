@@ -21,7 +21,9 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
       if (event is WalletHomeLoadData) {
         emit(WalletHomeLoading());
         var currency = AppStorage.instance.currency;
-        wallets = await getIt.get<BaseDBHelper>().getWallets();
+        wallets = await getIt.get<BaseDBHelper>().getWallets(
+              network: apiRepository.network,
+            );
         emit(WalletHomeCompleted(
           wallets: List<WalletStore>.from(wallets),
           withLoadingIndicator: true,
@@ -49,7 +51,9 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
           await getIt
               .get<BaseDBHelper>()
               .updateAddressBalance(updatedAddresses);
-          wallets = await getIt.get<BaseDBHelper>().getWallets();
+          wallets = await getIt.get<BaseDBHelper>().getWallets(
+                network: apiRepository.network,
+              );
           emit(WalletHomeCompleted(
             wallets: List<WalletStore>.from(wallets),
             withLoadingIndicator: false,
@@ -83,7 +87,9 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
             await getIt
                 .get<BaseDBHelper>()
                 .updateAddressBalance(updatedAddresses);
-            wallets = await getIt.get<BaseDBHelper>().getWallets();
+            wallets = await getIt.get<BaseDBHelper>().getWallets(
+                  network: apiRepository.network,
+                );
             emit(WalletHomeCompleted(
               wallets: List<WalletStore>.from(wallets),
               withLoadingIndicator: false,

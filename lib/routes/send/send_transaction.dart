@@ -134,9 +134,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                     label: "from Address",
                                     addresses: widget.wallet.addresses
                                         .where(
-                                          (element) =>
-                                              element.addressBalance != 0 &&
-                                              element.addressBalance != null,
+                                          (element) => element.balance != 0,
                                         )
                                         .toList(),
                                     onChanged: (address) {

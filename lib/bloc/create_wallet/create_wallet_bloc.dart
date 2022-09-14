@@ -52,7 +52,8 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
             ),
           );
         } catch (e) {
-          CreateWalletFailure(error: e.toString());
+          print(e);
+          emit(CreateWalletFailure(error: e.toString()));
         }
       } else if (event is CreateWalletRestore) {
         try {

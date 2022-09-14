@@ -54,7 +54,7 @@ dependencies:
   dio: 4.0.4
   flutter_sticky_header: ^0.6.4
   flutter_speed_dial: ^6.0.0
-  url_launcher: ^6.1.5
+  flutter_custom_tabs: ^1.0.4
   flutter_native_splash: ^2.2.9
   qr_flutter: ^4.0.0
   qr_code_scanner: ^1.0.1

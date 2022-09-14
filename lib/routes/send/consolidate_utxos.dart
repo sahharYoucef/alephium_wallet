@@ -37,8 +37,7 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
   void initState() {
     fromAddresses = widget.wallet.addresses
         .where(
-          (element) =>
-              element.addressBalance != 0 && element.addressBalance != null,
+          (element) => element.balance != 0,
         )
         .toList();
     _fromAddressStore = fromAddresses.first;

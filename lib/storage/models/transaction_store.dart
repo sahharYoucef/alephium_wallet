@@ -1,4 +1,5 @@
 import 'package:alephium_dart/alephium_dart.dart';
+import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/storage/models/transaction_ref_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:equatable/equatable.dart';
@@ -23,6 +24,7 @@ class TransactionStore extends Equatable {
   final String walletId;
   final List<TransactionRefStore> refsIn;
   final List<TransactionRefStore> refsOut;
+  final Network network;
 
   TransactionStore({
     required this.txHash,
@@ -35,11 +37,12 @@ class TransactionStore extends Equatable {
     required this.walletId,
     this.refsIn = const [],
     this.refsOut = const [],
+    required this.network,
   });
 
   factory TransactionStore.fromDb(Map<String, dynamic> data) {
     final _txHash = data["txHash"] as String;
-    final _address = data["address"] as String;
+    final _address = data["tx_address"] as String;
     final _blockHash = data["blockHash"];
     final _gas = data["transactionGas"];
     final _walletId = data["wallet_id"];
@@ -51,6 +54,7 @@ class TransactionStore extends Equatable {
         .toList();
     final _refsIn = refs?.where((element) => element.type == "in").toList();
     final _refsOut = refs?.where((element) => element.type == "out").toList();
+    final _network = Network.network(data["network"]);
     return TransactionStore(
       address: _address,
       txHash: _txHash,
@@ -62,6 +66,7 @@ class TransactionStore extends Equatable {
       refsIn: _refsIn ?? [],
       refsOut: _refsOut ?? [],
       timeStamp: _timeStamp,
+      network: _network,
     );
   }
 
@@ -76,6 +81,7 @@ class TransactionStore extends Equatable {
     String? walletId,
     List<TransactionRefStore>? refsIn,
     List<TransactionRefStore>? refsOut,
+    Network? network,
   }) {
     return TransactionStore(
       txHash: txHash ?? this.txHash,
@@ -88,6 +94,7 @@ class TransactionStore extends Equatable {
       blockHash: blockHash ?? this.blockHash,
       refsIn: refsIn ?? this.refsIn,
       refsOut: refsOut ?? this.refsOut,
+      network: network ?? this.network,
     );
   }
 
@@ -97,11 +104,12 @@ class TransactionStore extends Equatable {
       "blockHash": this.blockHash,
       "transactionGas": this.transactionGas,
       "wallet_id": this.walletId,
-      "address": this.address,
+      "tx_address": this.address,
       "status": this.txStatus.title,
       "transactionAmount": this.transactionAmount,
       "id": id,
       "timeStamp": this.timeStamp,
+      "network": this.network.name,
     };
   }
 

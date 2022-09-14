@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
@@ -26,7 +27,7 @@ class TransactionRefStore {
   });
 
   factory TransactionRefStore.fromDb(Map<String, dynamic> data) {
-    final _address = data["address"] as String;
+    final _address = data["ref_address"] as String;
     final _unlockScript = data["unlockScript"];
     final _amount = data["amount"] as int;
     final _txHashRef = data["txHashRef"];
@@ -44,7 +45,7 @@ class TransactionRefStore {
 
   Map<String, dynamic> toDb() {
     return {
-      "address": this.address,
+      "ref_address": this.address,
       "unlockScript": this.unlockScript,
       "amount": this.amount,
       "txHashRef": this.txHashRef,

@@ -1,3 +1,6 @@
+import 'package:alephium_wallet/api/utils/network.dart';
+import 'package:alephium_wallet/main.dart';
+import 'package:alephium_wallet/utils/format.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -29,17 +32,17 @@ class AppStorage {
   double? get price {
     var settings = Hive.box("settings");
     var _price = settings.get("price");
-    return _price as double?;
+    return _price[currency] as double?;
   }
 
   String? get formattedPrice {
-    if (price != null) return NumberFormat.currency(symbol: "\$").format(price);
+    if (price != null) return Format.formatCurrency(price!);
     return null;
   }
 
   set price(double? value) {
     var settings = Hive.box("settings");
-    settings.put("price", value);
+    settings.put("price", {currency: value});
   }
 
   bool get firstRun {
@@ -54,5 +57,20 @@ class AppStorage {
   set firstRun(bool? value) {
     var settings = Hive.box("settings");
     settings.put("firstRun", value);
+  }
+
+  Network get network {
+    var settings = Hive.box("settings");
+    var _network = settings.get("network") as String?;
+    if (_network == null) {
+      network = Network.testnet;
+      _network = network.name;
+    }
+    return Network.network(_network);
+  }
+
+  set network(Network value) {
+    var settings = Hive.box("settings");
+    settings.put("network", value.name);
   }
 }

@@ -1,5 +1,8 @@
 import 'package:alephium_wallet/api/dto_models/balance_dto.dart';
+import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
+import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/log/logger_service.dart';
+import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/utils/format.dart';
 import 'package:equatable/equatable.dart';
@@ -74,6 +77,7 @@ class WalletStore extends Equatable {
     String? seed,
     String? mainAddress,
     List<AddressStore>? addresses,
+    Network? network,
   }) {
     return WalletStore(
       id: id ?? this.id,
@@ -115,7 +119,9 @@ class WalletStore extends Equatable {
   String get balance {
     var value = 0.0;
     for (var address in _addresses) {
-      value += address.addressBalance ?? 0;
+      double? addressBalance;
+      addressBalance = address.balance?.balance;
+      value += addressBalance ?? 0;
     }
     return Format.formatNumber(value / 10e17);
   }

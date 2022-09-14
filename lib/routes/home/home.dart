@@ -1,12 +1,12 @@
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/routes/home/widgets/qr_view.dart';
+import 'package:alephium_wallet/routes/settings/settings_page.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/home/widgets/circle_navigation_bar.dart';
 import 'package:alephium_wallet/routes/home/widgets/wallet_tile.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
-import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -164,6 +164,8 @@ class _HomePageState extends State<HomePage>
                                   level: Level.error);
                           }
                         },
+                        buildWhen: (previous, current) =>
+                            current is! WalletHomeError,
                         builder: (context, state) {
                           if (state is WalletHomeLoading) {
                             return Center(
@@ -199,12 +201,8 @@ class _HomePageState extends State<HomePage>
                           }
                         },
                       ),
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: MediaQuery.of(context).padding.top + 70,
-                          )
-                        ],
+                      SettingsPage(
+                        bloc: _walletHomeBloc,
                       )
                     ]),
               ),

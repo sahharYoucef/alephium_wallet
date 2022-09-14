@@ -7,7 +7,6 @@ abstract class Format {
     "##0.0000",
     "en_US",
   );
-  static var _currencyFormat = NumberFormat.currency(symbol: "\$");
 
   static String formatNumber(dynamic value) {
     if (value is String) {
@@ -16,8 +15,22 @@ abstract class Format {
     return _format.format(value);
   }
 
+  static String formatCurrency(double value) {
+    final symbol =
+        getCurrencySymbol(AppStorage.instance.currency.toUpperCase());
+    var _currencyFormat = NumberFormat.currency(symbol: "$symbol ");
+    return _currencyFormat.format(value);
+  }
+
   static String? convertToCurrency(double value) {
     if (AppStorage.instance.price == null) return null;
+    final symbol =
+        getCurrencySymbol(AppStorage.instance.currency.toUpperCase());
+    var _currencyFormat = NumberFormat.currency(symbol: symbol);
     return _currencyFormat.format(value * AppStorage.instance.price!);
+  }
+
+  static String getCurrencySymbol(String value) {
+    return NumberFormat.simpleCurrency(name: value).currencySymbol;
   }
 }

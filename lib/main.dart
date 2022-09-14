@@ -1,4 +1,3 @@
-import 'package:alephium_dart/alephium_dart.dart';
 import 'package:alephium_wallet/api/repositories/alephium/alephium_api_repository.dart';
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/api/utils/network.dart';
@@ -21,8 +20,8 @@ import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:alephium_wallet/storage/sqflite_database/sqflite_database.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
+import 'package:alephium_wallet/utils/gradient_stadium_border.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
-import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,19 +65,16 @@ class AppBlocObserver extends BlocObserver {
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
   getIt.registerLazySingleton<BaseWalletService>(() => AlephiumWalletService());
-  getIt.registerLazySingleton<BaseApiRepository>(
-      () => AlephiumApiRepository(Network.testnet));
   getIt.registerSingleton<BaseDBHelper>(SQLiteDBHelper());
   await AppStorage.instance.initHive();
   Bloc.observer = AppBlocObserver();
-  final box = await Hive.openBox("settings");
-  var firstRun = box.get("firstRun");
-  if (firstRun == null) {
-    box.put("firstRun", true);
-    firstRun = true;
-  }
+  await Hive.openBox("settings");
+  print(AppStorage.instance.network);
+  var firstRun = AppStorage.instance.firstRun;
+  var network = AppStorage.instance.network;
+  getIt.registerLazySingleton<BaseApiRepository>(
+      () => AlephiumApiRepository(network));
   runApp(MyApp(
     firstRun: firstRun,
   ));
@@ -111,7 +107,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.white,
           outlinedButtonTheme: OutlinedButtonThemeData(
             style: OutlinedButton.styleFrom(
-              shape: StadiumBorder(),
+              shape: GradientStadiumBorder(),
               side: BorderSide(
                 width: 2,
                 color: Theme.of(context).primaryColor,
@@ -121,11 +117,11 @@ class MyApp extends StatelessWidget {
               elevation: 5,
               backgroundColor: Color(0xff797979),
               minimumSize: Size.fromHeight(50),
-              textStyle: GoogleFonts.cairo(
+              textStyle: GoogleFonts.playfairDisplay(
                 textStyle: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w100,
                 ),
               ),
             ),
@@ -133,6 +129,13 @@ class MyApp extends StatelessWidget {
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             elevation: 0,
             backgroundColor: Color(0xff797979),
+            extendedTextStyle: TextStyle(
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+              fontFamily: GoogleFonts.playfairDisplay().fontFamily,
+              fontSize: 16,
+              height: 1.3,
+            ),
           ),
           textTheme: TextTheme(
             headlineMedium: TextStyle(

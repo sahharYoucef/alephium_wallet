@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
+import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/log/logger_service.dart';
 import 'package:alephium_wallet/storage/base_db_helper.dart';
-import 'package:alephium_wallet/storage/models/transaction_ref_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -14,26 +13,35 @@ final String _walletTable = "wallets";
 final String _transactionTable = "transactions";
 final String _transactionRefsTable = "transaction_refs";
 final String _addressesTable = "addresses";
+final String _balancesTable = "balances";
 
 class SQLiteDBHelper extends BaseDBHelper {
   @override
-  Map<String, List<TransactionStore>> transactions = {};
+  Map<String, Map<String, List<TransactionStore>>> transactions = {
+    "mainnet": {},
+    "testnet": {},
+    "custom": {},
+  };
 
   SQLiteDBHelper() : super();
 
   late Completer<Database> db;
 
   dropTables(Database _db) async {
-    // await _db.execute('DROP TABLE IF EXISTS $_addressesTable');
-    // await _db.execute('DROP TABLE IF EXISTS $_transactionRefsTable');
-    // await _db.execute('DROP TABLE IF EXISTS $_transactionTable');
-    // await _db.execute('DROP TABLE IF EXISTS $_walletTable');
+    final batch = _db.batch();
+    // batch.execute('DROP TABLE IF EXISTS $_addressesTable');
+    // batch.execute('DROP TABLE IF EXISTS $_transactionRefsTable');
+    // batch.execute('DROP TABLE IF EXISTS $_transactionTable');
+    // batch.execute('DROP TABLE IF EXISTS $_walletTable');
+    // batch.execute('DROP TABLE IF EXISTS $_balancesTable');
+    await batch.commit();
   }
 
   _onConfigure(Database _db) async {
-    await dropTables(_db);
-    await _db.execute('PRAGMA foreign_keys = ON');
-    await _db.execute("""
+    // await dropTables(_db);
+    final batch = _db.batch();
+    batch.execute('PRAGMA foreign_keys = ON');
+    batch.execute("""
       CREATE TABLE IF NOT EXISTS $_walletTable (
           id TEXT PRIMARY KEY NOT NULL,
           title TEXT,
@@ -43,47 +51,56 @@ class SQLiteDBHelper extends BaseDBHelper {
           seed TEXT NOT NULL,
           mainAddress TEXT NOT NULL
       )""");
-    await _db.execute("""
+    batch.execute("""
       CREATE TABLE IF NOT EXISTS $_transactionTable (
           id TEXT PRIMARY KEY NOT NULL,
           txHash TEXT NOT NULL,
-          address TEXT NOT NULL,
+          tx_address TEXT NOT NULL,
           wallet_id TEXT NOT NULL,
           blockHash TEXT,
-          timeStamp INTEGER,
-          transactionAmount INTEGER,
+          timeStamp INTEGER NOT NULL,
+          transactionAmount INTEGER NOT NULL,
           transactionGas TEXT,
-          status TEXT,
+          status TEXT NOT NULL,
+          network TEXT NOT NULL,
           FOREIGN KEY(wallet_id) REFERENCES $_walletTable(id) ON DELETE CASCADE
       )""");
-    await _db.execute("""
+    batch.execute("""
       CREATE TABLE IF NOT EXISTS $_transactionRefsTable (
-          address TEXT NOT NULL,
+          ref_address TEXT NOT NULL,
           unlockScript TEXT,
           amount INTEGER,
           txHashRef TEXT,
-          status TEXT,
           type TEXT,
           transaction_id TEXT NOT NULL,
           FOREIGN KEY(transaction_id) REFERENCES $_transactionTable(id) ON DELETE CASCADE
       )""");
-    await _db.execute("""
+    batch.execute("""
       CREATE TABLE IF NOT EXISTS $_addressesTable (
           address TEXT PRIMARY KEY NOT NULL,
           address_title TEXT,
           address_color TEXT,
           publicKey TEXT NOT NULL,
           privateKey TEXT NOT NULL,
-          address_balance REAL,
           address_index INTEGER,
           group_index INTEGER,
-          balance_hint REAL,
-          balance_locked REAL,
           warning TEXT,
           wallet_id TEXT NOT NULL,
           FOREIGN KEY(wallet_id) REFERENCES $_walletTable(id)  ON DELETE CASCADE
       )
       """);
+    batch.execute("""
+      CREATE TABLE IF NOT EXISTS $_balancesTable (
+          balance_id TEXT PRIMARY KEY NOT NULL,
+          address_balance REAL,
+          balance_hint REAL,
+          balance_locked REAL,
+          network TEXT NOT NULL,
+          address_id TEXT NOT NULL,
+          FOREIGN KEY(address_id) REFERENCES $_walletTable(address)  ON DELETE CASCADE
+      )
+      """);
+    await batch.commit();
   }
 
   @override
@@ -107,13 +124,18 @@ class SQLiteDBHelper extends BaseDBHelper {
   }
 
   @override
-  Future<List<WalletStore>> getWallets() async {
+  Future<List<WalletStore>> getWallets({required Network network}) async {
     var _db = await db.future;
     var data = await _db.rawQuery("""
         SELECT * FROM ${_walletTable} wallets
         LEFT JOIN ${_addressesTable} addresses
-        ON wallets.id = addresses.wallet_id;
+        ON wallets.id = addresses.wallet_id 
+        LEFT JOIN ${_balancesTable} balances
+        ON balances.address_id = addresses.address
+        AND balances.network = '${network.name}';
       """);
+    LoggerService.instance.log(data);
+
     return List<Map<String, dynamic>>.from(data)
         .combine()
         .map((e) => WalletStore.fromDb(e))
@@ -121,25 +143,35 @@ class SQLiteDBHelper extends BaseDBHelper {
   }
 
   @override
-  updateWalletName(String id, String title) async {
+  updateWalletName(
+    String id,
+    String title,
+  ) async {
     var _db = await db.future;
     await _db.update(
       _walletTable,
       {"title": title},
       where: "id = ?",
-      whereArgs: [id],
+      whereArgs: [
+        id,
+      ],
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
   }
 
   @override
-  updateWalletMainAddress(String id, String mainAddress) async {
+  updateWalletMainAddress(
+    String id,
+    String mainAddress,
+  ) async {
     var _db = await db.future;
     await _db.update(
       _walletTable,
       {"mainAddress": mainAddress},
       where: "id = ?",
-      whereArgs: [id],
+      whereArgs: [
+        id,
+      ],
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
   }
@@ -170,15 +202,12 @@ class SQLiteDBHelper extends BaseDBHelper {
     var _db = await db.future;
     var batch = await _db.batch();
     for (var address in addresses)
-      batch.update(
-          _addressesTable,
-          {
-            "address_balance": address.addressBalance,
-            "balance_locked": address.balanceLocked,
-            "balance_hint": address.balanceHint,
-          },
-          where: "address = ?",
-          whereArgs: [address.address]);
+      if (address.balance != null)
+        batch.insert(
+          _balancesTable,
+          address.balance!.toDb(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
     batch.commit();
   }
 
@@ -191,8 +220,11 @@ class SQLiteDBHelper extends BaseDBHelper {
     var _db = await db.future;
     var batch = _db.batch();
     transactionStores.forEach((element) {
-      batch.insert(_transactionTable, element.toDb(),
-          conflictAlgorithm: ConflictAlgorithm.replace);
+      batch.insert(
+        _transactionTable,
+        element.toDb(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
       for (var ref in element.refsIn) {
         batch.insert(
           _transactionRefsTable,
@@ -208,17 +240,19 @@ class SQLiteDBHelper extends BaseDBHelper {
         );
       }
     });
-    await batch.commit();
+    var data = await batch.commit();
+    LoggerService.instance.log(data);
   }
 
   @override
-  Future<List<TransactionStore>> getTransactions(String walletID) async {
+  Future<List<TransactionStore>> getTransactions(
+      String walletID, Network network) async {
     var _db = await db.future;
     var data = await _db.rawQuery(
       '''SELECT * FROM $_transactionTable t 
            LEFT JOIN $_transactionRefsTable r 
-           ON t.id = r.transaction_id WHERE t.wallet_id = "${walletID}"
-           ORDER BY timeStamp ASC
+           ON t.id = r.transaction_id WHERE t.wallet_id = "${walletID}" AND t.network = "${network.name}"
+           ORDER BY timeStamp DESC
         ''',
     );
     var transactions = data

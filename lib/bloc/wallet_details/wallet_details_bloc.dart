@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:bloc/bloc.dart';
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/api/utils/error_handler.dart';
@@ -36,10 +37,15 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
     on<WalletDetailsEvent>((event, emit) async {
       if (event is WalletDetailsLoadData) {
         emit(WalletDetailsLoading());
-        _transactions = getIt.get<BaseDBHelper>().transactions[wallet.id] ??
-            await getIt.get<BaseDBHelper>().getTransactions(wallet.id);
+        _transactions = getIt
+                .get<BaseDBHelper>()
+                .transactions[apiRepository.network.name]?[wallet.id] ??
+            await getIt
+                .get<BaseDBHelper>()
+                .getTransactions(wallet.id, apiRepository.network);
+        LoggerService.instance.log(getIt.get<BaseDBHelper>().transactions);
         emit(WalletDetailsCompleted(
-          transactions: List.from(_transactions.reversed),
+          transactions: List.from(_transactions),
           withLoadingIndicator: true,
           wallet: wallet,
         ));
@@ -67,7 +73,8 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
               .removeWhere((element) => updateTransactions.contains(element));
           _transactions.addAll(updateTransactions);
           _transactions.sort(((a, b) => a.timeStamp.compareTo(b.timeStamp)));
-          getIt.get<BaseDBHelper>().transactions[wallet.id] = _transactions;
+          getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
+              ?[wallet.id] = _transactions;
           emit(WalletDetailsCompleted(
             transactions: List.from(_transactions.reversed),
             wallet: wallet,
@@ -121,7 +128,9 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
               updatedAddresses.add(address.getData!);
             }
           }
-          getIt.get<BaseDBHelper>().updateAddressBalance(updatedAddresses);
+          getIt.get<BaseDBHelper>().updateAddressBalance(
+                updatedAddresses,
+              );
           wallet = wallet.copyWith(addresses: updatedAddresses);
           walletHomeBloc.add(HomeUpdateWalletDetails(wallet));
 
@@ -129,7 +138,8 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
               .removeWhere((element) => updateTransactions.contains(element));
           _transactions.addAll(updateTransactions);
           _transactions.sort(((a, b) => a.timeStamp.compareTo(b.timeStamp)));
-          getIt.get<BaseDBHelper>().transactions[wallet.id] = _transactions;
+          getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
+              ?[wallet.id] = _transactions;
           emit(WalletDetailsCompleted(
             transactions: List.from(_transactions.reversed),
             wallet: wallet,
@@ -145,10 +155,15 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
         }
       } else if (event is AddPendingTxs) {
         try {
-          _transactions = getIt.get<BaseDBHelper>().transactions[wallet.id] ??
-              await getIt.get<BaseDBHelper>().getTransactions(wallet.id);
+          _transactions = getIt
+                  .get<BaseDBHelper>()
+                  .transactions[apiRepository.network.name]?[wallet.id] ??
+              await getIt
+                  .get<BaseDBHelper>()
+                  .getTransactions(wallet.id, apiRepository.network);
           _transactions.sort(((a, b) => a.timeStamp.compareTo(b.timeStamp)));
-          getIt.get<BaseDBHelper>().transactions[wallet.id] = _transactions;
+          getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
+              ?[wallet.id] = _transactions;
 
           periodic = Timer.periodic(Duration(seconds: 10), (value) {
             var tx = _transactions.firstWhereOrNull(

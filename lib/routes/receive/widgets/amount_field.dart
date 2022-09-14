@@ -25,14 +25,18 @@ class _ReceiveAmountFieldState extends State<ReceiveAmountField> {
         setState(() {
           amount = double.tryParse(controller.text);
         });
-        if (widget.onChanged != null && amount != null)
-          widget.onChanged!(amountType
-              ? amount
-              : AppStorage.instance.price != null
-                  ? amount! / AppStorage.instance.price!
-                  : null);
+        _onChanged();
       });
     super.initState();
+  }
+
+  _onChanged() {
+    if (widget.onChanged != null && amount != null)
+      widget.onChanged!(amountType
+          ? amount
+          : AppStorage.instance.price != null
+              ? amount! / AppStorage.instance.price!
+              : null);
   }
 
   @override
@@ -55,7 +59,8 @@ class _ReceiveAmountFieldState extends State<ReceiveAmountField> {
       suffixIcon: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(amountType ? "USD" : "ALPH"),
+          Text(
+              amountType ? AppStorage.instance.currency.toUpperCase() : "ALPH"),
           SizedBox(
             width: 4,
           ),
@@ -63,6 +68,7 @@ class _ReceiveAmountFieldState extends State<ReceiveAmountField> {
             icon: Icon(Icons.switch_left),
             onPressed: () {
               amountType = !amountType;
+              _onChanged();
               setState(() {});
             },
           ),

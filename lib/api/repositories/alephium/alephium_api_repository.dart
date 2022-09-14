@@ -1,6 +1,7 @@
 import 'package:alephium_wallet/api/coingecko_api/coingecko_repository.dart';
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
+import 'package:alephium_wallet/storage/models/balance_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_ref_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'dart:async';
@@ -28,7 +29,7 @@ class AlephiumApiRepository extends BaseApiRepository {
   late Dio _dio;
   Network network;
 
-  AlephiumApiRepository(this.network) {
+  AlephiumApiRepository(this.network) : super(network) {
     _dio = Dio(
       BaseOptions(
         connectTimeout: 10 * 1000,
@@ -69,19 +70,23 @@ class AlephiumApiRepository extends BaseApiRepository {
       {required AddressStore address}) async {
     try {
       var data = await _addressClient.getAddressBalance(address.address);
-      return Either<AddressStore>(
-          data: AddressStore(
+      final addressData = AddressStore(
         group: address.group,
         privateKey: address.privateKey,
         publicKey: address.publicKey,
         address: address.address,
-        addressBalance: double.tryParse("${data.balance}"),
-        balanceHint: double.tryParse("${data.balanceHint}"),
         walletId: address.walletId,
         index: address.index,
         warning: data.warning,
-        balanceLocked: double.tryParse("${data.lockedBalance}"),
-      ));
+        balance: BalanceStore(
+          balance: double.tryParse("${data.balance}") ?? 0,
+          balanceHint: double.tryParse("${data.balanceHint}") ?? 0,
+          lockedBalance: double.tryParse("${data.lockedBalance}") ?? 0,
+          address: address.address,
+          network: network,
+        ),
+      );
+      return Either<AddressStore>(data: addressData);
     } on Exception catch (e, trace) {
       return Either<AddressStore>()
         ..setException(ApiError(exception: e, trace: trace));
@@ -98,6 +103,7 @@ class AlephiumApiRepository extends BaseApiRepository {
                 address: address,
                 walletId: walletId,
                 txStatus: TXStatus.completed,
+                network: network,
                 refsIn: transaction.inputs
                         ?.map((e) => TransactionRefStore(
                               transactionId: '$address${transaction.hash}',

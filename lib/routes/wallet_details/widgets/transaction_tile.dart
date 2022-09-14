@@ -3,9 +3,8 @@ import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
-import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class TransactionTile extends StatelessWidget {
@@ -19,10 +18,9 @@ class TransactionTile extends StatelessWidget {
 
   Future<void> _launchUrl() async {
     final repo = getIt.get<BaseApiRepository>() as AlephiumApiRepository;
-    final url = Uri.parse(
-        "${repo.network.explorerUrl}/transactions/${transaction.txHash}");
-    final isValid = await canLaunchUrl(url);
-    if (isValid) await launchUrl(url);
+    final url =
+        "${repo.network.explorerUrl}/transactions/${transaction.txHash}";
+    await launch(url);
   }
 
   @override

@@ -1,3 +1,5 @@
+import 'package:alephium_wallet/api/repositories/alephium/alephium_api_repository.dart';
+import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:bloc/bloc.dart';
@@ -203,10 +205,16 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           }
           var data =
               _createTransaction(sending.getData!, fromAddress!, toAddress!);
-          if (getIt.get<BaseDBHelper>().transactions[wallet.id] == null) {
-            getIt.get<BaseDBHelper>().transactions[wallet.id] = [data];
+          if (getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
+                  ?[wallet.id] ==
+              null) {
+            getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
+                ?[wallet.id] = [data];
           } else
-            getIt.get<BaseDBHelper>().transactions[wallet.id]?.addAll([data]);
+            getIt
+                .get<BaseDBHelper>()
+                .transactions[apiRepository.network.name]?[wallet.id]
+                ?.addAll([data]);
           getIt.get<BaseDBHelper>().insertTransactions(wallet.id, [data]);
           emit(
             TransactionSendingCompleted(
@@ -232,6 +240,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       txHash: value.txId!,
       transactionAmount: int.tryParse("${transaction?.gasPrice}"),
       transactionGas: transaction?.gasAmount,
+      network: apiRepository.network,
     );
     var amountValue = (double.tryParse('${amount}') ?? 0.0) * 10e17;
     var fee = ((double.tryParse("${data.fee}") ?? 0) * 10e17).toInt();

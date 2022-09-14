@@ -1,10 +1,11 @@
+import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:flutter/material.dart';
 
 abstract class BaseDBHelper {
-  Map<String, List<TransactionStore>> get transactions;
+  Map<String, Map<String, List<TransactionStore>>> get transactions;
 
   @mustCallSuper
   BaseDBHelper() {
@@ -15,7 +16,7 @@ abstract class BaseDBHelper {
 
   Future<void> insertWallet(WalletStore wallet, AddressStore addressStore);
 
-  Future<List<WalletStore>> getWallets();
+  Future<List<WalletStore>> getWallets({required Network network});
 
   Future<void> updateWalletName(String id, String title);
 
@@ -32,5 +33,6 @@ abstract class BaseDBHelper {
     List<TransactionStore> transactionStores,
   );
 
-  Future<List<TransactionStore>> getTransactions(String walletID);
+  Future<List<TransactionStore>> getTransactions(
+      String walletID, Network network);
 }

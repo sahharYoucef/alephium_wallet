@@ -1,4 +1,5 @@
 import 'package:alephium_dart/alephium_dart.dart' as alephium;
+import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/bloc/transaction/transaction_bloc.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:collection/collection.dart';
@@ -18,7 +19,8 @@ mixin InputValidators {
     var amountNumber = double.tryParse(value!);
     var balance = wallet.addresses
             .firstWhereOrNull((element) => element == bloc.fromAddress)
-            ?.addressBalance ??
+            ?.balance
+            ?.balance ??
         0;
     if (amountNumber == null) {
       return null;
@@ -26,8 +28,8 @@ mixin InputValidators {
     if (amountNumber == 0) {
       return "Amount must be greater than 0";
     }
-    if (amountNumber > (balance / 10e17)) {
-      return 'Amount must be less than ${(balance / 10e17)}';
+    if (amountNumber > balance) {
+      return 'Amount must be less than ${balance}';
     }
     return null;
   }

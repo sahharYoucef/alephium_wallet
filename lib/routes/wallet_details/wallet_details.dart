@@ -246,7 +246,6 @@ class _WalletDetailsState extends State<WalletDetails> {
         heroTag: "button",
         label: Text(
           'Send',
-          style: Theme.of(context).textTheme.bodyMedium,
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         icon: Icon(Icons.send_outlined),

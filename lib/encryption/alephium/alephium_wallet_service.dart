@@ -84,17 +84,15 @@ class AlephiumWalletService extends BaseWalletService {
     var address = walletService.deriveNewAddressData(seed, forGroup,
         index: index, skipAddressIndexes: skipAddressIndexes);
     return AddressStore(
-        title: title,
-        color: color,
-        group: address.group,
-        privateKey: address.privateKey,
-        publicKey: address.publicKey,
-        address: address.address,
-        index: address.index,
-        walletId: walletId,
-        addressBalance: 0,
-        balanceHint: 0,
-        balanceLocked: 0);
+      title: title,
+      color: color,
+      group: address.group,
+      privateKey: address.privateKey,
+      publicKey: address.publicKey,
+      address: address.address,
+      index: address.index,
+      walletId: walletId,
+    );
   }
 
   List<AddressStore> generateOneAddressPerGroup({
@@ -109,17 +107,15 @@ class AlephiumWalletService extends BaseWalletService {
         .map((group) => walletService.deriveNewAddressData(wallet.seed, group,
             skipAddressIndexes: skipAddressIndexes))
         .map((address) => AddressStore(
-            title: title,
-            color: color,
-            group: address.group,
-            privateKey: address.privateKey,
-            publicKey: address.publicKey,
-            address: address.address,
-            index: address.index,
-            walletId: wallet.id,
-            addressBalance: 0,
-            balanceHint: 0,
-            balanceLocked: 0))
+              title: title,
+              color: color,
+              group: address.group,
+              privateKey: address.privateKey,
+              publicKey: address.publicKey,
+              address: address.address,
+              index: address.index,
+              walletId: wallet.id,
+            ))
         .toList();
   }
 }

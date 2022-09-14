@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 
 import '../../storage/models/transaction_store.dart';
@@ -9,6 +10,10 @@ import '../dto_models/transaction_result_dto.dart';
 import '../utils/either.dart';
 
 abstract class BaseApiRepository {
+  Network network;
+
+  BaseApiRepository(this.network);
+
   Future<Either<double>> getPrice({String coin, String currency = "usd"});
   Future<Either<AddressStore>> getAddressBalance({
     required AddressStore address,

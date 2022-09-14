@@ -72,18 +72,15 @@ class AddressTile extends StatelessWidget {
                       text: "Balance : ",
                       style: Theme.of(context).textTheme.headlineSmall),
                   TextSpan(
-                      text: "${address.balance}",
+                      text: "${address.formattedBalance}",
                       style: Theme.of(context).textTheme.headlineSmall),
                   if (address.balanceConverted != null &&
-                      address.balance != "0.0000") ...[
+                      address.balance?.balance != "0.0000") ...[
                     TextSpan(
                         text: " = ",
                         style: Theme.of(context).textTheme.bodyMedium),
                     TextSpan(
                         text: "${address.balanceConverted}  ",
-                        style: Theme.of(context).textTheme.bodyMedium),
-                    TextSpan(
-                        text: "${AppStorage.instance.currency.toUpperCase()}",
                         style: Theme.of(context).textTheme.bodyMedium),
                   ]
                 ])),

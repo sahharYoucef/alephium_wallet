@@ -9,7 +9,7 @@ enum Network {
     'https://testnet-backend.alephium.org',
     'https://testnet.alephium.org',
   ),
-  localhost(
+  custom(
     'http://localhost:12973',
     'http://localhost:9090',
     'http://localhost:3000',
@@ -19,4 +19,13 @@ enum Network {
   final String explorerApiHost;
   final String explorerUrl;
   const Network(this.nodeHost, this.explorerApiHost, this.explorerUrl);
+
+  static Network network(String value) {
+    return Network.values.firstWhere((element) => element.name == value);
+  }
+
+  @override
+  String toString() {
+    return name.toUpperCase();
+  }
 }
