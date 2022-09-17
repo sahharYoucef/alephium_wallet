@@ -6,6 +6,7 @@ import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/wallet_settings/widgets/wallet_data_dialog.dart';
 import 'package:alephium_wallet/routes/widgets/confirmation_dialog.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,12 +25,14 @@ class _WalletSettingState extends State<WalletSetting> {
   late FocusNode _focusNode;
   late final WalletSettingBloc _settingBloc;
   late final GlobalKey<FormFieldState> _nameKey;
+  late final ScrollController controller;
 
   @override
   void initState() {
     _nameKey = GlobalKey<FormFieldState>();
     _settingBloc = WalletSettingBloc(widget.detailsBloc.wallet);
     _focusNode = FocusNode();
+    controller = ScrollController();
     super.initState();
   }
 
@@ -37,6 +40,7 @@ class _WalletSettingState extends State<WalletSetting> {
   void dispose() {
     _focusNode.dispose();
     _settingBloc.close();
+    controller.dispose();
     super.dispose();
   }
 
@@ -67,6 +71,7 @@ class _WalletSettingState extends State<WalletSetting> {
           body: Column(
             children: [
               WalletAppBar(
+                controller: controller,
                 label: Text(
                   'Wallet setting',
                   style: Theme.of(context).textTheme.headlineMedium,
@@ -90,13 +95,16 @@ class _WalletSettingState extends State<WalletSetting> {
                     },
                     icon: Icon(
                       Icons.delete,
-                      color: Colors.white,
                     )),
               ),
               Expanded(
                 child: ListView(
+                  controller: controller,
                   padding: const EdgeInsets.all(16.0),
                   children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
                     TextFormField(
                       focusNode: _focusNode,
                       key: _nameKey,
@@ -111,32 +119,30 @@ class _WalletSettingState extends State<WalletSetting> {
                         return null;
                       }),
                       onChanged: (value) {},
+                      style: Theme.of(context).textTheme.headlineMedium,
                       decoration: InputDecoration(
                         labelText: 'Wallet name',
-                        labelStyle: Theme.of(context).textTheme.headlineMedium,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
                       ),
                     ),
                     const SizedBox(
                       height: 10,
                     ),
-                    OutlinedButton(
-                        onPressed: () {
-                          _focusNode.unfocus();
-                          if (_nameKey.currentState?.value != null &&
-                              _nameKey.currentState!.value.trim().isNotEmpty)
-                            widget.detailsBloc.add(
-                                UpdateWalletName(_nameKey.currentState?.value));
-                        },
-                        child: Text("Apply")),
+                    Hero(
+                      tag: "button",
+                      child: OutlinedButton(
+                          onPressed: () {
+                            _focusNode.unfocus();
+                            if (_nameKey.currentState?.value != null &&
+                                _nameKey.currentState!.value.trim().isNotEmpty)
+                              widget.detailsBloc.add(UpdateWalletName(
+                                  _nameKey.currentState?.value));
+                          },
+                          child: Text("Apply")),
+                    ),
                     const SizedBox(
                       height: 10,
                     ),
-                    Divider(
-                      color: Colors.blue,
-                    ),
+                    const Divider(),
                     const SizedBox(
                       height: 10,
                     ),
@@ -159,9 +165,7 @@ class _WalletSettingState extends State<WalletSetting> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Divider(
-                      color: Colors.blue,
-                    ),
+                    const Divider(),
                     const SizedBox(
                       height: 10,
                     ),
@@ -181,9 +185,7 @@ class _WalletSettingState extends State<WalletSetting> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Divider(
-                      color: Colors.blue,
-                    ),
+                    const Divider(),
                     const SizedBox(
                       height: 10,
                     ),

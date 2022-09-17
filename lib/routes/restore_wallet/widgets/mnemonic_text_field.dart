@@ -13,6 +13,7 @@ class MnemonicTextField extends StatefulWidget {
 class MnemonicTextFieldState extends State<MnemonicTextField> {
   late final TextEditingController _controller;
   bool isActive = true;
+  int? editIndex;
 
   List<String> words = <String>[];
 
@@ -32,7 +33,10 @@ class MnemonicTextFieldState extends State<MnemonicTextField> {
   }
 
   _addNewWord() {
-    words.add(_controller.value.text.trim());
+    if (editIndex != null)
+      words.insert(editIndex!, _controller.value.text.trim());
+    else
+      words.add(_controller.value.text.trim());
     _controller.clear();
     isActive = words.length < 24;
     setState(() {});
@@ -54,7 +58,7 @@ class MnemonicTextFieldState extends State<MnemonicTextField> {
           children: [
             ...words.mapIndexed((index, value) {
               return Chip(
-                padding: EdgeInsets.all(4),
+                padding: EdgeInsets.symmetric(horizontal: 4),
                 onDeleted: () {
                   words.removeAt(index);
                   isActive = words.length < 24;

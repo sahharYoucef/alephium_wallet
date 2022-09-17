@@ -21,28 +21,20 @@ class FloatingOptionsButton extends StatelessWidget {
         heroTag: "button",
         icon: Icons.add,
         activeIcon: Icons.close,
+        overlayColor: WalletTheme.instance.background,
         spacing: 3,
         openCloseDial: isDialOpen,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         animatedIcon: AnimatedIcons.menu_close,
-        // dialRoot: (ctx, open, toggleChildren) {
-        //   return FloatingActionButton(
-        //     child: AnimatedIcon(icon: AnimatedIcons.close_menu,),
-        //     onPressed: toggleChildren,
-        //     shape: RoundedRectangleBorder(
-        //         borderRadius: BorderRadius.circular(8.0)),
-        //   );
-        // },
-        elevation: 0,
         animationCurve: Curves.ease,
         isOpenOnStart: false,
         animationDuration: const Duration(milliseconds: 100),
         children: [
           SpeedDialChild(
-            labelBackgroundColor: Theme.of(context).primaryColor,
+            labelBackgroundColor: WalletTheme.instance.primary,
             child: const Icon(Icons.generating_tokens),
-            backgroundColor: Color(0xff797979),
-            foregroundColor: Colors.white,
+            backgroundColor: WalletTheme.instance.secondary,
+            foregroundColor: WalletTheme.instance.textColor,
             elevation: 0,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0)),
@@ -72,13 +64,12 @@ class FloatingOptionsButton extends StatelessWidget {
                 },
               );
             },
-            onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
           ),
           SpeedDialChild(
-            labelBackgroundColor: Theme.of(context).primaryColor,
-            child: const Icon(Icons.keyboard_option_key),
-            backgroundColor: Color(0xff797979),
-            foregroundColor: Colors.white,
+            labelBackgroundColor: WalletTheme.instance.primary,
+            child: const Icon(Icons.engineering_outlined),
+            backgroundColor: WalletTheme.instance.secondary,
+            foregroundColor: WalletTheme.instance.textColor,
             elevation: 0,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0)),
@@ -91,7 +82,6 @@ class FloatingOptionsButton extends StatelessWidget {
                         bloc: bloc,
                       ));
             },
-            onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
           ),
         ]);
   }

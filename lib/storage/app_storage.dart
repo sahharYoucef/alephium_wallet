@@ -32,7 +32,7 @@ class AppStorage {
   double? get price {
     var settings = Hive.box("settings");
     var _price = settings.get("price");
-    return _price[currency] as double?;
+    return _price?[currency] as double?;
   }
 
   String? get formattedPrice {

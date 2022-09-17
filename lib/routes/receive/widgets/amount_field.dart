@@ -1,6 +1,7 @@
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/utils/format.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -49,13 +50,6 @@ class _ReceiveAmountFieldState extends State<ReceiveAmountField> {
     return InputDecoration(
       contentPadding: EdgeInsets.all(8),
       labelText: label,
-      hintStyle: Theme.of(context)
-          .textTheme
-          .bodyMedium!
-          .copyWith(color: Colors.black.withOpacity(.5)),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(3),
-      ),
       suffixIcon: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -65,7 +59,10 @@ class _ReceiveAmountFieldState extends State<ReceiveAmountField> {
             width: 4,
           ),
           IconButton(
-            icon: Icon(Icons.switch_left),
+            icon: Icon(
+              Icons.switch_left,
+              color: WalletTheme.instance.textColor,
+            ),
             onPressed: () {
               amountType = !amountType;
               _onChanged();

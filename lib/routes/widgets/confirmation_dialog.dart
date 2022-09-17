@@ -36,9 +36,7 @@ class WalletConfirmationDialog extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  Divider(
-                    color: Colors.grey,
-                  ),
+                  const Divider(),
                   const SizedBox(
                     height: 10,
                   ),

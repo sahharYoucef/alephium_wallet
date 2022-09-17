@@ -31,7 +31,7 @@ class TransactionDetails extends StatelessWidget {
                 "${transaction.blockHash}",
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              Divider(),
+              const Divider(),
             ])));
   }
 }

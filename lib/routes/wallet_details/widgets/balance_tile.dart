@@ -11,7 +11,7 @@ class BalanceTile extends StatelessWidget {
     return PhysicalModel(
       borderRadius: BorderRadius.circular(16.0),
       color: Colors.white,
-      elevation: 0,
+      elevation: 1,
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
@@ -26,10 +26,7 @@ class BalanceTile extends StatelessWidget {
               'Balance :',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
-            Divider(
-              color: Colors.white,
-              thickness: 1,
-            ),
+            const Divider(),
             Align(
               alignment: Alignment.center,
               child: RichText(

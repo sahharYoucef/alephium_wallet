@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,10 +25,9 @@ class NewWalletCheckbox extends StatelessWidget {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Material(
-          elevation: 0,
-          color: value == selected
-              ? Colors.greenAccent
-              : Theme.of(context).primaryColor,
+          elevation: value == selected ? 5 : 0,
+          color: Theme.of(context).primaryColor,
+          shadowColor: Color(0xff1902d5),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           child: InkWell(
@@ -43,10 +43,23 @@ class NewWalletCheckbox extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    icon,
-                    size: 50,
-                  ),
+                  if (value == selected)
+                    GradientIcon(
+                        icon: icon,
+                        size: 50,
+                        gradient: LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          colors: [
+                            Color(0xff1902d5),
+                            Color(0xfffe594e),
+                          ],
+                        ))
+                  else
+                    Icon(
+                      icon,
+                      size: 50,
+                    ),
                   const SizedBox(
                     width: 20,
                   ),

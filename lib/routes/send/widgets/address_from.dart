@@ -1,6 +1,7 @@
 import 'package:alephium_wallet/bloc/transaction/transaction_bloc.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
+import 'package:alephium_wallet/utils/theme.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -39,13 +40,9 @@ class _AddressFromDropDownMenuState extends State<AddressFromDropDownMenu> {
         child: DropdownButtonFormField<AddressStore>(
           alignment: AlignmentDirectional.bottomStart,
           elevation: 0,
-          dropdownColor: Color.fromARGB(255, 251, 241, 241),
+          dropdownColor: WalletTheme.instance.primary,
           borderRadius: BorderRadius.circular(16),
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.all(8),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4),
-            ),
             label: Text(widget.label),
           ),
           value: _value,

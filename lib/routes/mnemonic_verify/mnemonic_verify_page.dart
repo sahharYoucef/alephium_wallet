@@ -78,7 +78,7 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
                   [
                     Padding(
                       padding: const EdgeInsets.only(
-                          top: 16, left: 16, right: 16, bottom: 16),
+                          top: 16, left: 16, right: 16, bottom: 4),
                       child: Text(
                         "Please put the correspondent word to the index.",
                         style: Theme.of(context).textTheme.bodyLarge,
@@ -118,7 +118,7 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
                                               }
                                               if (message.isNotEmpty) {
                                                 color = WalletTheme
-                                                    .lightPrimaryColor;
+                                                    .instance.primary;
                                                 message = "";
                                               }
                                               setState(() {});
@@ -173,7 +173,7 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
                               ),
                             ))),
                     const SizedBox(
-                      height: 20,
+                      height: 4,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -206,8 +206,10 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
                                                           if (message
                                                               .isNotEmpty) {
                                                             setState(() {
-                                                              color = WalletTheme
-                                                                  .lightPrimaryColor;
+                                                              color =
+                                                                  WalletTheme
+                                                                      .instance
+                                                                      .primary;
                                                               message = "";
                                                             });
                                                           }
@@ -244,15 +246,17 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
                   child: Column(
                     children: [
                       const Spacer(),
-                      Container(
-                        alignment: Alignment.center,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
                           "Reorder the words to verify the mnemonic",
                           style: Theme.of(context).textTheme.bodyLarge,
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 16),
                         child: Hero(
                           tag: "Button",
                           child: OutlinedButton(

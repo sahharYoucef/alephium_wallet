@@ -3,6 +3,7 @@ import 'package:alephium_wallet/routes/send/widgets/address_from.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -66,12 +67,16 @@ class _ReceivePageState extends State<ReceivePage> {
               builder: (context) {
                 return QrImage(
                   data: _addressStore.receiveAmount(amount),
-                  backgroundColor: Colors.white,
+                  backgroundColor: WalletTheme.instance.primary,
                   version: QrVersions.auto,
                   embeddedImage:
                       AssetImage("assets/icons/alephium_logo_light.png"),
                   embeddedImageStyle: QrEmbeddedImageStyle(
-                      color: Colors.white, size: Size(50, 50)),
+                    size: Size(
+                      50,
+                      50,
+                    ),
+                  ),
                   size: 200.0,
                 );
               }),
@@ -101,7 +106,9 @@ class _ReceivePageState extends State<ReceivePage> {
                     "address copied to clipboard!",
                   );
                 },
-                icon: Icon(Icons.copy)),
+                icon: Icon(
+                  Icons.copy,
+                )),
           ],
         ),
         ReceiveAmountField(

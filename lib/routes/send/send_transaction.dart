@@ -8,6 +8,7 @@ import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/constants.dart';
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:alephium_wallet/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:alephium_dart/alephium_dart.dart' as alephium;
@@ -73,15 +74,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
 
   InputDecoration textFieldDecoration(String label) {
     return InputDecoration(
-      contentPadding: EdgeInsets.all(8),
       labelText: label,
-      hintStyle: Theme.of(context)
-          .textTheme
-          .bodyMedium!
-          .copyWith(color: Colors.black.withOpacity(.5)),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(3),
-      ),
     );
   }
 
@@ -125,9 +118,21 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                     horizontal: 16, vertical: 16),
                                 sliver: SliverList(
                                     delegate: SliverChildListDelegate([
-                                  SvgPicture.asset(
-                                    WalletIcons.sendIcon,
-                                    color: Colors.black,
+                                  ShaderMask(
+                                    shaderCallback: (bounds) {
+                                      return LinearGradient(
+                                        begin: Alignment.topRight,
+                                        end: Alignment.bottomLeft,
+                                        colors: [
+                                          Color(0xff1902d5),
+                                          Color(0xfffe594e),
+                                        ],
+                                      ).createShader(bounds);
+                                    },
+                                    child: SvgPicture.asset(
+                                      WalletIcons.sendIcon,
+                                      color: WalletTheme.instance.primary,
+                                    ),
                                   ),
                                   AddressFromDropDownMenu(
                                     initialAddress: widget.addressStore,
@@ -174,14 +179,14 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                       autocorrect: false,
                                       decoration:
                                           textFieldDecoration("Amount")),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: 16),
                                   BlocBuilder<TransactionBloc,
                                       TransactionState>(
                                     bloc: _bloc,
                                     builder: (context, state) {
                                       return Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 12.0),
+                                            horizontal: 4),
                                         child: Text(
                                           "Available Balance: ${_bloc.balance}",
                                           style: Theme.of(context)
@@ -191,7 +196,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                       );
                                     },
                                   ),
-                                  const SizedBox(height: 8),
+                                  // const SizedBox(height: 8),
                                 ])),
                               ),
                               SliverFillRemaining(

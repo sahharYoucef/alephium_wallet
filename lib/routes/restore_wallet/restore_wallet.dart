@@ -1,7 +1,6 @@
 import 'package:alephium_wallet/routes/restore_wallet/widgets/mnemonic_text_field.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../bloc/create_wallet/create_wallet_bloc.dart';
 

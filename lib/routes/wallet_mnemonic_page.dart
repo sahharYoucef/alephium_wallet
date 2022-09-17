@@ -50,11 +50,12 @@ class _WalletMnemonicPageState extends State<WalletMnemonicPage> {
                               return MapEntry(
                                   index,
                                   Material(
-                                      elevation: 0,
+                                      elevation: 1,
                                       color: Theme.of(context).primaryColor,
                                       shape: RoundedRectangleBorder(
                                           side: BorderSide(
-                                              color: Color(0xff797979),
+                                              color: WalletTheme
+                                                  .instance.secondary,
                                               width: 2),
                                           borderRadius:
                                               BorderRadius.circular(8.0)),
@@ -76,15 +77,13 @@ class _WalletMnemonicPageState extends State<WalletMnemonicPage> {
                   ),
                 ),
               ),
-              Container(
-                alignment: Alignment.center,
+              Padding(
+                padding: const EdgeInsets.all(4),
                 child: Text(
                   "Please keep this mnemonic safe and secure.",
                   style: Theme.of(context).textTheme.bodyLarge,
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(
-                height: 8,
               ),
               Padding(
                 padding: const EdgeInsets.all(24.0),

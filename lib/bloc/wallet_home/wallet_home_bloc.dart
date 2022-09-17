@@ -24,6 +24,7 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
         wallets = await getIt.get<BaseDBHelper>().getWallets(
               network: apiRepository.network,
             );
+
         emit(WalletHomeCompleted(
           wallets: List<WalletStore>.from(wallets),
           withLoadingIndicator: true,

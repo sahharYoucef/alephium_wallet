@@ -2,7 +2,6 @@ import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/routes/constants.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/theme.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class MainAddressTile extends StatelessWidget {
@@ -19,7 +18,7 @@ class MainAddressTile extends StatelessWidget {
     return PhysicalModel(
       borderRadius: BorderRadius.circular(16.0),
       color: Colors.white,
-      elevation: 0,
+      elevation: 1,
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
@@ -33,10 +32,7 @@ class MainAddressTile extends StatelessWidget {
               'Main Address :',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
-            Divider(
-              color: Colors.white,
-              thickness: 1,
-            ),
+            Divider(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -53,7 +49,7 @@ class MainAddressTile extends StatelessWidget {
                   height: 4,
                 ),
                 Material(
-                  color: Color(0xff797979),
+                  color: WalletTheme.instance.secondary,
                   borderRadius: BorderRadius.circular(8),
                   child: InkWell(
                     onTap: () {
@@ -66,9 +62,7 @@ class MainAddressTile extends StatelessWidget {
                           vertical: 4, horizontal: 16),
                       child: Text(
                         'show more addresses',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: Colors.white,
-                            ),
+                        style: Theme.of(context).textTheme.bodyMedium!,
                       ),
                     ),
                   ),

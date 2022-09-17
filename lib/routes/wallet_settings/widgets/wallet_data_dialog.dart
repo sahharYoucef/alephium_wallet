@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,7 +20,7 @@ class WalletSettingDataDialog extends StatelessWidget {
         child: Material(
             elevation: 3,
             borderRadius: BorderRadius.circular(16.0),
-            color: Color.fromARGB(255, 240, 240, 240),
+            color: WalletTheme.instance.primary,
             child: Container(
               color: Colors.transparent,
               padding: const EdgeInsets.all(16.0),
@@ -34,9 +35,7 @@ class WalletSettingDataDialog extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  Divider(
-                    color: Colors.grey,
-                  ),
+                  const Divider(),
                   const SizedBox(
                     height: 10,
                   ),

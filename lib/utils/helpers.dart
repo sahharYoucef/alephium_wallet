@@ -5,8 +5,6 @@ import 'package:flutter/services.dart';
 
 export 'package:alephium_wallet/log/logger_service.dart';
 
-const ThemeMode themeMode = ThemeMode.light;
-
 class AmountFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(

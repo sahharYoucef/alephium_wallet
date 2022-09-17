@@ -43,7 +43,6 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
             await getIt
                 .get<BaseDBHelper>()
                 .getTransactions(wallet.id, apiRepository.network);
-        LoggerService.instance.log(getIt.get<BaseDBHelper>().transactions);
         emit(WalletDetailsCompleted(
           transactions: List.from(_transactions),
           withLoadingIndicator: true,
@@ -74,7 +73,7 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
           _transactions.addAll(updateTransactions);
           _transactions.sort(((a, b) => a.timeStamp.compareTo(b.timeStamp)));
           getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
-              ?[wallet.id] = _transactions;
+              ?[wallet.id] = List.from(_transactions.reversed);
           emit(WalletDetailsCompleted(
             transactions: List.from(_transactions.reversed),
             wallet: wallet,

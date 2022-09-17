@@ -1,4 +1,3 @@
-import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 
 class CircleNavigationBar extends StatefulWidget {
@@ -10,11 +9,13 @@ class CircleNavigationBar extends StatefulWidget {
   final Color circleIconsColor;
   final double margin;
   final BorderRadius? borderRadius;
+  final TabController? tabController;
   final void Function() onTap;
 
   const CircleNavigationBar(
       {Key? key,
       this.navbarHeight = 80,
+      this.tabController,
       required this.navBarIcons,
       required this.onTap,
       this.navBarUnselectedIconsColor = const Color(0xff9d9fa1),
@@ -49,51 +50,28 @@ class _CircleNavigationBarState extends State<CircleNavigationBar> {
           children: <Widget>[
             Align(
               alignment: Alignment.bottomCenter,
-              child: Container(
-                height: widget.navbarHeight,
-                margin: EdgeInsets.symmetric(horizontal: widget.margin),
-                width: constraints.maxWidth,
-                decoration: BoxDecoration(
-                  color: widget.navBarColor,
-                  borderRadius: widget.borderRadius,
-                  // boxShadow: [BoxShadow(color: Colors.black38, blurRadius: 10)],
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    ...List.generate(widget.navBarIcons.length, (index) {
-                      if (index ==
-                          (widget.navBarIcons.length - 1).floor() / 2) {
-                        return SizedBox(
-                          width: 30,
-                        );
-                      } else {
-                        return Material(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(50),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Icon(
-                                widget.navBarIcons[index].icon,
-                                color: selected == index
-                                    ? widget.navBarSelectedIconsColor
-                                    : widget.navBarUnselectedIconsColor,
-                              ),
-                            ),
-                            onTap: () {
-                              setState(() {
-                                selected = index;
-                              });
-                              widget.navBarIcons[index].onPressed();
-                            },
-                          ),
-                        );
-                      }
-                    })
-                  ],
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: widget.margin),
+                child: SizedBox(
+                  height: widget.navbarHeight,
+                  width: constraints.maxWidth,
+                  child: Material(
+                      elevation: 2,
+                      color: widget.navBarColor,
+                      borderRadius: widget.borderRadius,
+                      child: TabBar(
+                        controller: widget.tabController,
+                        indicatorColor: Colors.transparent,
+                        unselectedLabelColor: widget.navBarUnselectedIconsColor,
+                        labelColor: widget.navBarSelectedIconsColor,
+                        tabs: <Widget>[
+                          ...List.generate(widget.navBarIcons.length, (index) {
+                            return Icon(
+                              widget.navBarIcons[index].icon,
+                            );
+                          })
+                        ],
+                      )),
                 ),
               ),
             ),
@@ -130,7 +108,6 @@ class AddButton extends StatelessWidget {
       child: Icon(
         Icons.add,
         size: 50,
-        color: Colors.white,
       ),
     );
   }

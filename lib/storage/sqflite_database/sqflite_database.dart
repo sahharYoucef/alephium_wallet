@@ -18,9 +18,8 @@ final String _balancesTable = "balances";
 class SQLiteDBHelper extends BaseDBHelper {
   @override
   Map<String, Map<String, List<TransactionStore>>> transactions = {
-    "mainnet": {},
-    "testnet": {},
-    "custom": {},
+    ...Network.values.asMap().map((key, value) =>
+        MapEntry(value.name, <String, List<TransactionStore>>{}))
   };
 
   SQLiteDBHelper() : super();
@@ -59,7 +58,7 @@ class SQLiteDBHelper extends BaseDBHelper {
           wallet_id TEXT NOT NULL,
           blockHash TEXT,
           timeStamp INTEGER NOT NULL,
-          transactionAmount INTEGER NOT NULL,
+          transactionAmount INTEGER,
           transactionGas TEXT,
           status TEXT NOT NULL,
           network TEXT NOT NULL,

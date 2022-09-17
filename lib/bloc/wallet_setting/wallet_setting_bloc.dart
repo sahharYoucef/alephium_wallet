@@ -18,8 +18,15 @@ class WalletSettingBloc extends Bloc<WalletSettingEvent, WalletSettingState> {
           canAuthenticateWithBiometrics || await auth.isDeviceSupported();
       if (canAuthenticate) {
         try {
-          final bool didAuthenticate = await auth.authenticate(
-              localizedReason: 'Please authenticate to show account balance');
+          final isDeviceSupported = await auth.isDeviceSupported();
+          bool didAuthenticate = true;
+          String message =
+              "Please authenticate to show account ${event is WalletSettingDisplayMnemonic ? 'mnemonic' : 'public key'}";
+          if (isDeviceSupported) {
+            didAuthenticate = await auth.authenticate(
+              localizedReason: message,
+            );
+          }
           if (didAuthenticate) {
             if (event is WalletSettingDisplayMnemonic) {
               emit(WalletSettingDisplayDataState(wallet.mnemonic, "Mnemonic"));

@@ -62,10 +62,7 @@ class AddressTile extends StatelessWidget {
                     ),
                   ],
                 ),
-                Divider(
-                  color: Colors.white,
-                  thickness: 2,
-                ),
+                const Divider(),
                 RichText(
                     text: TextSpan(children: [
                   TextSpan(

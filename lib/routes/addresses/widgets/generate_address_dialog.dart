@@ -1,4 +1,5 @@
 import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -82,9 +83,7 @@ class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Divider(
-                    color: Colors.grey,
-                  ),
+                  const Divider(),
                   const SizedBox(
                     height: 10,
                   ),
@@ -93,10 +92,6 @@ class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
                     autofocus: true,
                     decoration: InputDecoration(
                       label: Text("Title"),
-                      labelStyle: Theme.of(context).textTheme.bodyMedium,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
                     ),
                   ),
                   const SizedBox(
@@ -110,9 +105,7 @@ class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
                         elevation: 3,
                         borderRadius: BorderRadius.circular(16),
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
+                          labelStyle: Theme.of(context).textTheme.bodyMedium!,
                         ),
                         isExpanded: true,
                         onChanged: (value) {

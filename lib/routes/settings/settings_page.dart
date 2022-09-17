@@ -3,10 +3,12 @@ import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/main.dart';
+import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/utils/constants.dart';
 import 'package:alephium_wallet/utils/currencies.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -36,24 +38,18 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = themeMode == ThemeMode.dark;
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         Material(
           elevation: 2,
+          color: WalletTheme.instance.primary,
           borderRadius: BorderRadius.circular(16),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                SvgPicture.asset(
-                  isDarkMode
-                      ? WalletIcons.lightAlephiumIcon
-                      : WalletIcons.darkAlephiumIcon,
-                  height: 40,
-                  width: 40,
-                ),
+                AlephiumIcon(),
                 const SizedBox(
                   height: 10,
                 ),
@@ -109,40 +105,38 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ),
         const SizedBox(
-          height: 10,
+          height: 20,
         ),
         RichText(
+            textAlign: TextAlign.center,
             text: TextSpan(children: [
-          TextSpan(
-            text: "Alephium Price is powered by ",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          TextSpan(
-            text: "CoinGecko",
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.blue, decoration: TextDecoration.underline),
-            recognizer: new TapGestureRecognizer()
-              ..onTap = () {
-                launch('https://www.coingecko.com/');
-              },
-          ),
-        ])),
+              TextSpan(
+                text: "Alephium Price is powered by ",
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              TextSpan(
+                text: "CoinGecko",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.blue, decoration: TextDecoration.underline),
+                recognizer: new TapGestureRecognizer()
+                  ..onTap = () {
+                    launch('https://www.coingecko.com/');
+                  },
+              ),
+            ])),
         const SizedBox(
-          height: 10,
+          height: 20,
         ),
         ButtonTheme(
           alignedDropdown: true,
           child: DropdownButtonFormField<String>(
+            dropdownColor: WalletTheme.instance.primary,
             alignment: AlignmentDirectional.bottomEnd,
             elevation: 3,
             borderRadius: BorderRadius.circular(16),
             decoration: InputDecoration(
               label: Text(
                 "Currency",
-              ),
-              labelStyle: Theme.of(context).textTheme.bodyLarge,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
               ),
             ),
             isExpanded: true,
@@ -189,14 +183,10 @@ class _SettingsPageState extends State<SettingsPage> {
         ButtonTheme(
           alignedDropdown: true,
           child: DropdownButtonFormField<Network>(
+            dropdownColor: WalletTheme.instance.primary,
             alignment: AlignmentDirectional.bottomEnd,
             elevation: 3,
             borderRadius: BorderRadius.circular(16),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
             isExpanded: true,
             onChanged: (value) {
               setState(() {
