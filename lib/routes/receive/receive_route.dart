@@ -68,9 +68,12 @@ class _ReceivePageState extends State<ReceivePage> {
                 return QrImage(
                   data: _addressStore.receiveAmount(amount),
                   backgroundColor: WalletTheme.instance.primary,
+                  foregroundColor: WalletTheme.instance.textColor,
                   version: QrVersions.auto,
-                  embeddedImage:
-                      AssetImage("assets/icons/alephium_logo_light.png"),
+                  embeddedImage: AssetImage(
+                      WalletTheme.themeMode == ThemeMode.light
+                          ? "assets/icons/alephium_logo_light.png"
+                          : "assets/icons/alephium_logo_dark.png"),
                   embeddedImageStyle: QrEmbeddedImageStyle(
                     size: Size(
                       50,

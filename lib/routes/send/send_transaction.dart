@@ -131,7 +131,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                     },
                                     child: SvgPicture.asset(
                                       WalletIcons.sendIcon,
-                                      color: WalletTheme.instance.primary,
+                                      color: Colors.white,
                                     ),
                                   ),
                                   AddressFromDropDownMenu(

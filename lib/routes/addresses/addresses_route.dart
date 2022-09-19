@@ -6,6 +6,7 @@ import 'package:alephium_wallet/routes/addresses/widgets/generate_address_dialog
 import 'package:alephium_wallet/routes/addresses/widgets/options_floating_button.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/utils/constants.dart';
+import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -51,16 +52,9 @@ class _AddressesPageState extends State<AddressesPage> {
           isDialOpen: isDialOpen,
           bloc: widget.bloc,
         ),
-        body: Column(
+        body: Stack(
           children: [
-            WalletAppBar(
-              controller: controller,
-              label: Text(
-                'Wallet Addresses',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-            ),
-            Expanded(
+            Positioned.fill(
               child: BlocBuilder<WalletDetailsBloc, WalletDetailsState>(
                 bloc: widget.bloc,
                 buildWhen: (previous, current) {
@@ -70,8 +64,8 @@ class _AddressesPageState extends State<AddressesPage> {
                   return ListView.builder(
                       controller: controller,
                       padding: EdgeInsets.only(
-                        bottom: 16,
-                        top: 32,
+                        top: 20 + 70 + context.topPadding,
+                        bottom: 32,
                       ),
                       itemCount: widget.bloc.wallet.addresses.length,
                       itemBuilder: (context, index) {
@@ -92,6 +86,13 @@ class _AddressesPageState extends State<AddressesPage> {
                         );
                       });
                 },
+              ),
+            ),
+            WalletAppBar(
+              controller: controller,
+              label: Text(
+                'Wallet Addresses',
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
           ],

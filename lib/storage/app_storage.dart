@@ -1,6 +1,7 @@
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/utils/format.dart';
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -72,5 +73,20 @@ class AppStorage {
   set network(Network value) {
     var settings = Hive.box("settings");
     settings.put("network", value.name);
+  }
+
+  ThemeMode get themeMode {
+    var settings = Hive.box("settings");
+    var _themeMode = settings.get("themeMode") as String?;
+    if (_themeMode == null) {
+      themeMode = ThemeMode.light;
+      _themeMode = themeMode.name;
+    }
+    return ThemeMode.values.firstWhere((element) => element.name == _themeMode);
+  }
+
+  set themeMode(ThemeMode value) {
+    var settings = Hive.box("settings");
+    settings.put("themeMode", value.name);
   }
 }

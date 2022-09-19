@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -21,7 +22,7 @@ class WalletConfirmationDialog extends StatelessWidget {
         child: Material(
             elevation: 3,
             borderRadius: BorderRadius.circular(16.0),
-            color: Color.fromARGB(255, 240, 240, 240),
+            color: WalletTheme.instance.background,
             child: Container(
               color: Colors.transparent,
               padding: const EdgeInsets.all(16.0),
@@ -58,7 +59,8 @@ class WalletConfirmationDialog extends StatelessWidget {
                             Navigator.pop(context);
                           },
                           style: OutlinedButton.styleFrom(
-                              backgroundColor: Colors.grey),
+                              backgroundColor:
+                                  WalletTheme.instance.primary.withOpacity(.5)),
                           child: Text(
                             "Close",
                           ),

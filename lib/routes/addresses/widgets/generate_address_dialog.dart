@@ -46,7 +46,7 @@ class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
         child: Material(
             elevation: 3,
             borderRadius: BorderRadius.circular(16.0),
-            color: Color.fromARGB(255, 240, 240, 240),
+            color: WalletTheme.instance.background,
             child: Container(
               color: Colors.transparent,
               padding: const EdgeInsets.all(16.0),

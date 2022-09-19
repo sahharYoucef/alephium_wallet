@@ -1,6 +1,7 @@
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 
-class CircleNavigationBar extends StatefulWidget {
+class CircleNavigationBar extends StatelessWidget {
   final double navbarHeight;
   final Color navBarColor;
   final List<CustomIcon> navBarIcons;
@@ -25,65 +26,51 @@ class CircleNavigationBar extends StatefulWidget {
       this.borderRadius,
       this.navBarColor = Colors.white})
       : super(key: key);
-  @override
-  _CircleNavigationBarState createState() => _CircleNavigationBarState();
-}
-
-class _CircleNavigationBarState extends State<CircleNavigationBar> {
-  double height = 185;
-  double navBarHeight = 80;
-  int selected = 0;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  final double height = 185;
+  final double navBarHeight = 80;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (context, constraints) => Container(
-        height: height,
-        width: constraints.maxWidth,
-        child: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: widget.margin),
-                child: SizedBox(
-                  height: widget.navbarHeight,
-                  width: constraints.maxWidth,
-                  child: Material(
-                      elevation: 2,
-                      color: widget.navBarColor,
-                      borderRadius: widget.borderRadius,
-                      child: TabBar(
-                        controller: widget.tabController,
-                        indicatorColor: Colors.transparent,
-                        unselectedLabelColor: widget.navBarUnselectedIconsColor,
-                        labelColor: widget.navBarSelectedIconsColor,
-                        tabs: <Widget>[
-                          ...List.generate(widget.navBarIcons.length, (index) {
-                            return Icon(
-                              widget.navBarIcons[index].icon,
-                            );
-                          })
-                        ],
-                      )),
-                ),
+      builder: (context, constraints) => Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: margin),
+              child: SizedBox(
+                height: navbarHeight,
+                width: constraints.maxWidth,
+                child: Material(
+                    elevation: 2,
+                    shadowColor: WalletTheme.instance.gradientOne,
+                    color: navBarColor,
+                    borderRadius: borderRadius,
+                    child: TabBar(
+                      controller: tabController,
+                      indicatorColor: Colors.transparent,
+                      unselectedLabelColor: navBarUnselectedIconsColor,
+                      labelColor: navBarSelectedIconsColor,
+                      tabs: <Widget>[
+                        ...List.generate(navBarIcons.length, (index) {
+                          return Icon(
+                            navBarIcons[index].icon,
+                          );
+                        })
+                      ],
+                    )),
               ),
             ),
-            Positioned(
-              bottom: navBarHeight - 50,
-              child: AddButton(
-                onTap: widget.onTap,
-                color: widget.circleIconsColor,
-              ),
+          ),
+          Positioned(
+            bottom: navBarHeight - 50,
+            child: AddButton(
+              onTap: onTap,
+              color: circleIconsColor,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -152,12 +139,13 @@ class CustomBorder extends ShapeBorder {
       ..strokeWidth = 10
       ..strokeJoin = StrokeJoin.round;
 
-    canvas.drawPath(path, hexagonPaint);
-    canvas.drawPath(
-        path,
-        hexagonPaint
-          ..style = PaintingStyle.fill
-          ..color = Colors.transparent);
+    canvas
+      ..drawPath(path, hexagonPaint)
+      ..drawPath(
+          path,
+          hexagonPaint
+            ..style = PaintingStyle.fill
+            ..color = Colors.transparent);
   }
 
   @override

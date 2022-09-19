@@ -68,39 +68,17 @@ class _WalletSettingState extends State<WalletSetting> {
         },
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          body: Column(
+          body: Stack(
             children: [
-              WalletAppBar(
-                controller: controller,
-                label: Text(
-                  'Wallet setting',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                action: IconButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) => WalletConfirmationDialog(
-                                title: "Delete Wallet",
-                                data:
-                                    "Please make sure you saved your mnemonic before deleting this wallet , are you sure you want to continue?",
-                                onConfirmTap: () {
-                                  BlocProvider.of<WalletHomeBloc>(context).add(
-                                      WalletHomeRemoveWallet(
-                                          widget.detailsBloc.wallet.id));
-                                  Navigator.popUntil(
-                                      context, (route) => route.isFirst);
-                                },
-                              ));
-                    },
-                    icon: Icon(
-                      Icons.delete,
-                    )),
-              ),
-              Expanded(
+              Positioned.fill(
                 child: ListView(
                   controller: controller,
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.only(
+                    top: 70 + context.topPadding,
+                    left: 16,
+                    right: 16,
+                    bottom: 16,
+                  ),
                   children: [
                     const SizedBox(
                       height: 20,
@@ -206,6 +184,33 @@ class _WalletSettingState extends State<WalletSetting> {
                         )),
                   ],
                 ),
+              ),
+              WalletAppBar(
+                controller: controller,
+                label: Text(
+                  'Wallet setting',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                action: IconButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => WalletConfirmationDialog(
+                                title: "Delete Wallet",
+                                data:
+                                    "Please make sure you saved your mnemonic before deleting this wallet , are you sure you want to continue?",
+                                onConfirmTap: () {
+                                  BlocProvider.of<WalletHomeBloc>(context).add(
+                                      WalletHomeRemoveWallet(
+                                          widget.detailsBloc.wallet.id));
+                                  Navigator.popUntil(
+                                      context, (route) => route.isFirst);
+                                },
+                              ));
+                    },
+                    icon: Icon(
+                      Icons.delete,
+                    )),
               ),
             ],
           ),

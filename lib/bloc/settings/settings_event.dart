@@ -6,3 +6,12 @@ abstract class SettingsEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class ChangeAppTheme extends SettingsEvent {
+  final ThemeMode themeMode;
+
+  ChangeAppTheme(this.themeMode);
+
+  @override
+  List<Object> get props => [themeMode];
+}

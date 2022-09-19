@@ -11,7 +11,6 @@ import 'package:alephium_wallet/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../utils/helpers.dart';
 
@@ -79,12 +78,24 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).padding.top + 70,
+                      const SizedBox(
+                        height: 50,
                       ),
-                      SvgPicture.asset(
-                        WalletIcons.sendIcon,
-                        color: Colors.black,
+                      ShaderMask(
+                        shaderCallback: (bounds) {
+                          return LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              Color(0xff1902d5),
+                              Color(0xfffe594e),
+                            ],
+                          ).createShader(bounds);
+                        },
+                        child: SvgPicture.asset(
+                          WalletIcons.sendIcon,
+                          color: Colors.white,
+                        ),
                       ),
                       AddressFromDropDownMenu(
                         label: "from Address",

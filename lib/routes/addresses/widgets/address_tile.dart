@@ -1,5 +1,7 @@
+import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
+import 'package:alephium_wallet/utils/gradient_input_bordder.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
@@ -23,11 +25,17 @@ class AddressTile extends StatelessWidget {
       child: Material(
         elevation: 0,
         color: Theme.of(context).primaryColor,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-            side: isMain
-                ? BorderSide(color: Colors.orange, width: 2)
-                : BorderSide.none),
+        shape: GradientOutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(width: 3),
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Color(0xff1902d5),
+                Color(0xfffe594e),
+              ],
+            )),
         child: InkWell(
           customBorder:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
@@ -39,6 +47,7 @@ class AddressTile extends StatelessWidget {
               children: [
                 Row(
                   children: [
+                    GradientIcon(icon: isMain ? Icons.star : Icons.circle),
                     Expanded(
                       child: Text(
                         address.title ?? "",

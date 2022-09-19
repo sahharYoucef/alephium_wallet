@@ -9,14 +9,20 @@ class WalletAppBar extends StatefulWidget {
   final bool withLoadingIndicator;
   final ScrollController? controller;
   final Widget? leading;
-  const WalletAppBar({
+  late final Color color;
+  final double elevation;
+  WalletAppBar({
     Key? key,
     this.action,
     this.controller,
     this.label,
     this.withLoadingIndicator = false,
     this.leading,
-  }) : super(key: key);
+    this.elevation = 0,
+    Color? color,
+  }) : super(key: key) {
+    this.color = color ?? WalletTheme.instance.background;
+  }
 
   @override
   State<WalletAppBar> createState() => _WalletAppBarState();
@@ -28,20 +34,18 @@ class _WalletAppBarState extends State<WalletAppBar> {
 
   @override
   void initState() {
-    appBarColor = WalletTheme.instance.background;
-    elevation = 0;
+    appBarColor = widget.color;
+    elevation = widget.elevation;
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant WalletAppBar oldWidget) {
     if (widget.controller != null) {
-      appBarColor = Color.lerp(
-          WalletTheme.instance.background,
-          WalletTheme.instance.primary,
+      appBarColor = Color.lerp(widget.color, WalletTheme.instance.primary,
           (widget.controller!.offset / 50).clamp(0, 1))!;
     } else {
-      appBarColor = WalletTheme.instance.background;
+      appBarColor = widget.color;
     }
     setState(() {});
     super.didUpdateWidget(oldWidget);
@@ -55,6 +59,7 @@ class _WalletAppBarState extends State<WalletAppBar> {
         width: double.infinity,
         height: 70,
         alignment: Alignment.center,
+        color: Colors.transparent,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8),
           child: Column(
@@ -106,19 +111,17 @@ class _WalletAppBarState extends State<WalletAppBar> {
         animation: widget.controller!,
         builder: (context, child) {
           try {
-            appBarColor = Color.lerp(
-                WalletTheme.instance.background,
-                WalletTheme.instance.primary,
+            appBarColor = Color.lerp(widget.color, WalletTheme.instance.primary,
                 (widget.controller!.offset / 50).clamp(0, 1))!;
             elevation = (widget.controller!.offset / 50 * 2).clamp(0, 2);
           } catch (_) {
-            appBarColor = WalletTheme.instance.background;
-            elevation = 0;
+            appBarColor = widget.color;
+            elevation = widget.elevation;
           }
           return Material(
             elevation: elevation,
             color: appBarColor,
-            shadowColor: Colors.black,
+            shadowColor: WalletTheme.instance.gradientOne,
             child: child,
           );
         },
@@ -128,7 +131,7 @@ class _WalletAppBarState extends State<WalletAppBar> {
       child = Material(
         elevation: elevation,
         color: appBarColor,
-        shadowColor: Colors.black,
+        shadowColor: WalletTheme.instance.gradientOne,
         child: safeArea,
       );
     }

@@ -69,118 +69,132 @@ class _WalletDetailsState extends State<WalletDetails> {
           await _refresh?.future;
           _refresh = null;
         },
-        child: Column(
+        child: Stack(
           children: [
-            WalletAppBar(
-                controller: scrollController,
-                label: Text(
-                  '${widget.wallet.title} Wallet',
-                  style: Theme.of(context).textTheme.headlineMedium,
+            Column(
+              children: [
+                SizedBox(
+                  height: 70 + context.topPadding,
                 ),
-                action: IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.walletSettings,
-                        arguments: {
-                          "wallet-details": _walletDetailsBloc,
-                        });
-                  },
-                  icon: Icon(
-                    Icons.settings,
+                Expanded(
+                  child: CustomScrollView(
+                    controller: scrollController,
+                    slivers: [
+                      const SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 40,
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child:
+                            BlocConsumer<WalletDetailsBloc, WalletDetailsState>(
+                          bloc: _walletDetailsBloc,
+                          listener: (context, state) {
+                            if (state is WalletDetailsCompleted) {
+                              if (!state.withLoadingIndicator) {
+                                _refresh?.complete();
+                              }
+                            } else if (state is WalletDetailsError) {
+                              if (state is WalletDetailsCompleted) {
+                                _refresh?.complete();
+                                if (state.message != null)
+                                  context.showSnackBar(state.message!,
+                                      level: Level.info);
+                              }
+                            }
+                          },
+                          builder: (context, state) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  BalanceTile(
+                                    wallet: _walletDetailsBloc.wallet,
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  MainAddressTile(
+                                    wallet: _walletDetailsBloc.wallet,
+                                    walletDetailsBloc: _walletDetailsBloc,
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      BlocBuilder<WalletDetailsBloc, WalletDetailsState>(
+                          bloc: _walletDetailsBloc,
+                          buildWhen: (previous, current) {
+                            if (previous is WalletDetailsCompleted &&
+                                current is WalletDetailsCompleted) {
+                              return previous.transactions !=
+                                  current.transactions;
+                            }
+                            return true;
+                          },
+                          // box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+                          builder: (context, state) {
+                            return StickyHeader(state,
+                                sliver: state is WalletDetailsCompleted
+                                    ? SliverPadding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 16),
+                                        sliver: SliverList(
+                                            delegate:
+                                                SliverChildBuilderDelegate(
+                                                    (context, index) {
+                                          final transaction =
+                                              state.transactions?[index];
+                                          if (transaction == null)
+                                            return const SizedBox();
+                                          return TransactionTile(
+                                            _walletDetailsBloc,
+                                            transaction: transaction,
+                                          );
+                                        },
+                                                    childCount: state
+                                                            .transactions
+                                                            ?.length ??
+                                                        0)),
+                                      )
+                                    : SliverFillRemaining(
+                                        hasScrollBody: false,
+                                        child: Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      ));
+                          })
+                    ],
                   ),
-                )),
-            Expanded(
-              child: CustomScrollView(
-                controller: scrollController,
-                slivers: [
-                  const SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: 40,
+                ),
+              ],
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: WalletAppBar(
+                  controller: scrollController,
+                  label: Text(
+                    '${widget.wallet.title} Wallet',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  action: IconButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, Routes.walletSettings,
+                          arguments: {
+                            "wallet-details": _walletDetailsBloc,
+                          });
+                    },
+                    icon: Icon(
+                      Icons.settings,
                     ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: BlocConsumer<WalletDetailsBloc, WalletDetailsState>(
-                      bloc: _walletDetailsBloc,
-                      listener: (context, state) {
-                        if (state is WalletDetailsCompleted) {
-                          if (!state.withLoadingIndicator) {
-                            _refresh?.complete();
-                          }
-                        } else if (state is WalletDetailsError) {
-                          if (state is WalletDetailsCompleted) {
-                            _refresh?.complete();
-                            if (state.message != null)
-                              context.showSnackBar(state.message!,
-                                  level: Level.info);
-                          }
-                        }
-                      },
-                      builder: (context, state) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              BalanceTile(
-                                wallet: _walletDetailsBloc.wallet,
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              MainAddressTile(
-                                wallet: _walletDetailsBloc.wallet,
-                                walletDetailsBloc: _walletDetailsBloc,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  BlocBuilder<WalletDetailsBloc, WalletDetailsState>(
-                      bloc: _walletDetailsBloc,
-                      buildWhen: (previous, current) {
-                        if (previous is WalletDetailsCompleted &&
-                            current is WalletDetailsCompleted) {
-                          return previous.transactions != current.transactions;
-                        }
-                        return true;
-                      },
-                      // box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-                      builder: (context, state) {
-                        return StickyHeader(state,
-                            sliver: state is WalletDetailsCompleted
-                                ? SliverPadding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
-                                    sliver: SliverList(
-                                        delegate: SliverChildBuilderDelegate(
-                                            (context, index) {
-                                      final transaction =
-                                          state.transactions?[index];
-                                      if (transaction == null)
-                                        return const SizedBox();
-                                      return TransactionTile(
-                                        _walletDetailsBloc,
-                                        transaction: transaction,
-                                      );
-                                    },
-                                            childCount:
-                                                state.transactions?.length ??
-                                                    0)),
-                                  )
-                                : SliverFillRemaining(
-                                    hasScrollBody: false,
-                                    child: Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ));
-                      })
-                ],
-              ),
+                  )),
             ),
           ],
         ),

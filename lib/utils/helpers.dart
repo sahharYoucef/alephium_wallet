@@ -31,6 +31,10 @@ extension Helper on BuildContext {
     return MediaQuery.of(this).viewInsets.bottom;
   }
 
+  double get topPadding {
+    return MediaQuery.of(this).padding.top;
+  }
+
   showSnackBar(String content, {Level level = Level.info}) {
     scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
       margin: EdgeInsets.symmetric(vertical: 16, horizontal: 8),

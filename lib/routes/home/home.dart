@@ -34,6 +34,12 @@ class _HomePageState extends State<HomePage>
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   DateTime? currentBackPressTime;
   Future<bool> onWillPop() async {
     if (_tabController.index == 1) {
@@ -61,113 +67,8 @@ class _HomePageState extends State<HomePage>
             Positioned.fill(
                 child: Column(
               children: [
-                BlocBuilder<WalletHomeBloc, WalletHomeState>(
-                  builder: (context, state) {
-                    return WalletAppBar(
-                      action: _walletHomeBloc.wallets.isNotEmpty
-                          ? IconButton(
-                              icon: Icon(
-                                Icons.qr_code_scanner,
-                              ),
-                              onPressed: () async {
-                                var data = await showGeneralDialog<
-                                    Map<String, dynamic>?>(
-                                  barrierDismissible: true,
-                                  barrierLabel: "receive",
-                                  context: context,
-                                  pageBuilder: (context, animation,
-                                          secondaryAnimation) =>
-                                      Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 16,
-                                        bottom: 16 + context.viewInsetsBottom,
-                                        left: 16,
-                                        right: 16),
-                                    child: Center(
-                                      child: Material(
-                                        color: Theme.of(context).primaryColor,
-                                        borderRadius: BorderRadius.circular(
-                                          16,
-                                        ),
-                                        elevation: 6,
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            16,
-                                          ),
-                                          child: SizedBox(
-                                            width: context.width * .7,
-                                            height: context.height * .6,
-                                            child: const QRViewExample(),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  transitionDuration:
-                                      const Duration(milliseconds: 300),
-                                  transitionBuilder: (context, animation,
-                                      secondaryAnimation, child) {
-                                    return SlideTransition(
-                                      position: animation.drive(
-                                        Tween<Offset>(
-                                          begin: Offset(0, 1),
-                                          end: Offset.zero,
-                                        ),
-                                      ),
-                                      child: child,
-                                    );
-                                  },
-                                );
-
-                                if (data != null) {
-                                  print(data);
-                                  Navigator.pushNamed(context, Routes.send,
-                                      arguments: {
-                                        "wallet": _walletHomeBloc.wallets.first,
-                                        "address": _walletHomeBloc
-                                            .wallets.first.addresses.first,
-                                        "initial-data": data,
-                                      });
-                                }
-                              },
-                            )
-                          : null,
-                      leading: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            AlephiumIcon(
-                              spinning: state is WalletHomeCompleted &&
-                                  state.withLoadingIndicator,
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "${AppStorage.instance.formattedPrice ?? ''}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium,
-                                ),
-                                Text(
-                                  'Alephium Wallet',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium,
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      withLoadingIndicator: state is WalletHomeCompleted &&
-                          state.withLoadingIndicator,
-                    );
-                  },
+                SizedBox(
+                  height: 70 + context.topPadding,
                 ),
                 Expanded(
                   child: TabBarView(
@@ -223,13 +124,117 @@ class _HomePageState extends State<HomePage>
                             }
                           },
                         ),
-                        SettingsPage(
-                          bloc: _walletHomeBloc,
-                        )
+                        SettingsPage()
                       ]),
                 ),
               ],
             )),
+            BlocBuilder<WalletHomeBloc, WalletHomeState>(
+              builder: (context, state) {
+                return WalletAppBar(
+                  color: WalletTheme.instance.primary,
+                  elevation: 1,
+                  action: _walletHomeBloc.wallets.isNotEmpty
+                      ? IconButton(
+                          icon: Icon(
+                            Icons.qr_code_scanner,
+                          ),
+                          onPressed: () async {
+                            var data =
+                                await showGeneralDialog<Map<String, dynamic>?>(
+                              barrierDismissible: true,
+                              barrierLabel: "receive",
+                              context: context,
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      Padding(
+                                padding: EdgeInsets.only(
+                                    top: 16,
+                                    bottom: 16 + context.viewInsetsBottom,
+                                    left: 16,
+                                    right: 16),
+                                child: Center(
+                                  child: Material(
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: BorderRadius.circular(
+                                      16,
+                                    ),
+                                    elevation: 6,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(
+                                        16,
+                                      ),
+                                      child: SizedBox(
+                                        width: context.width * .7,
+                                        height: context.height * .6,
+                                        child: const QRViewExample(),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              transitionDuration:
+                                  const Duration(milliseconds: 300),
+                              transitionBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                return SlideTransition(
+                                  position: animation.drive(
+                                    Tween<Offset>(
+                                      begin: Offset(0, 1),
+                                      end: Offset.zero,
+                                    ),
+                                  ),
+                                  child: child,
+                                );
+                              },
+                            );
+
+                            if (data != null) {
+                              print(data);
+                              Navigator.pushNamed(context, Routes.send,
+                                  arguments: {
+                                    "wallet": _walletHomeBloc.wallets.first,
+                                    "address": _walletHomeBloc
+                                        .wallets.first.addresses.first,
+                                    "initial-data": data,
+                                  });
+                            }
+                          },
+                        )
+                      : null,
+                  leading: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        AlephiumIcon(
+                          spinning: state is WalletHomeCompleted &&
+                              state.withLoadingIndicator,
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${AppStorage.instance.formattedPrice ?? ''}",
+                              style: Theme.of(context).textTheme.headlineMedium,
+                            ),
+                            Text(
+                              'Alephium Wallet',
+                              style: Theme.of(context).textTheme.headlineMedium,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  withLoadingIndicator: state is WalletHomeCompleted &&
+                      state.withLoadingIndicator,
+                );
+              },
+            ),
             Align(
               alignment: Alignment.bottomCenter,
               child: CircleNavigationBar(

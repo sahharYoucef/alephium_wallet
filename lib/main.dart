@@ -1,6 +1,7 @@
 import 'package:alephium_wallet/api/repositories/alephium/alephium_api_repository.dart';
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/bloc/create_wallet/create_wallet_bloc.dart';
+import 'package:alephium_wallet/bloc/settings/settings_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/encryption/alephium/alephium_wallet_service.dart';
@@ -18,8 +19,6 @@ import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:alephium_wallet/storage/sqflite_database/sqflite_database.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
-import 'package:alephium_wallet/utils/gradient_input_bordder.dart';
-import 'package:alephium_wallet/utils/gradient_stadium_border.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +26,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'routes/new_wallet/new_wallet_route.dart';
@@ -63,6 +61,13 @@ class AppBlocObserver extends BlocObserver {
 }
 
 void main() async {
+  final _firstRun = await _initApp();
+  runApp(MyApp(
+    firstRun: _firstRun,
+  ));
+}
+
+Future<bool> _initApp() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   getIt.registerLazySingleton<BaseWalletService>(() => AlephiumWalletService());
@@ -75,9 +80,7 @@ void main() async {
   var network = AppStorage.instance.network;
   getIt.registerLazySingleton<BaseApiRepository>(
       () => AlephiumApiRepository(network));
-  runApp(MyApp(
-    firstRun: firstRun,
-  ));
+  return firstRun;
 }
 
 class MyApp extends StatelessWidget {
@@ -86,6 +89,8 @@ class MyApp extends StatelessWidget {
       : super(
           key: key,
         );
+
+  final SettingsBloc settingsBloc = SettingsBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -97,123 +102,132 @@ class MyApp extends StatelessWidget {
           ),
           lazy: true,
         ),
+        BlocProvider<SettingsBloc>.value(value: settingsBloc),
       ],
-      child: Builder(builder: (context) {
-        WalletTheme.themeMode = ThemeMode.light;
-        WalletTheme.instance = WalletTheme();
-        return MaterialApp(
-          scaffoldMessengerKey: scaffoldMessengerKey,
-          theme: WalletTheme.instance.themeData,
-          darkTheme: WalletTheme.instance.themeData,
-          themeMode: WalletTheme.themeMode,
-          debugShowCheckedModeBanner: false,
-          initialRoute: firstRun ? Routes.createWallet : Routes.home,
-          onGenerateRoute: (settings) {
-            SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark
-                .copyWith(statusBarColor: Colors.transparent));
-            if (settings.name == Routes.walletMnemonic) {
-              Map<String, dynamic> arguments =
-                  settings.arguments as Map<String, dynamic>;
-              final wallet = arguments["wallet"] as WalletStore;
-              final bloc = arguments["bloc"] as CreateWalletBloc;
-              return MaterialPageRoute(
-                builder: (context) => WalletMnemonicPage(
-                  wallet: wallet,
-                  bloc: bloc,
-                ),
-              );
-            } else if (settings.name == Routes.walletVerifyMnemonic) {
-              Map<String, dynamic> arguments =
-                  settings.arguments as Map<String, dynamic>;
-              final wallet = arguments["wallet"] as WalletStore;
-              final bloc = arguments["bloc"] as CreateWalletBloc;
-              return MaterialPageRoute(
-                builder: (context) => WalletMnemonicVerifyPage(
-                  wallet: wallet,
-                  bloc: bloc,
-                ),
-              );
-            } else if (settings.name == Routes.createWallet) {
-              return MaterialPageRoute(
-                builder: (context) => NewWalletPage(),
-              );
-            } else if (settings.name == Routes.home) {
-              return MaterialPageRoute(
-                builder: (context) => HomePage(),
-              );
-            } else if (settings.name == Routes.restoreWallet) {
-              Map<String, dynamic> arguments =
-                  settings.arguments as Map<String, dynamic>;
-              final bloc = arguments["bloc"] as CreateWalletBloc;
-              return MaterialPageRoute(
-                builder: (context) => RestoreWallet(
-                  bloc: bloc,
-                ),
-              );
-            } else if (settings.name == Routes.wallet) {
-              Map<String, dynamic> arguments =
-                  settings.arguments as Map<String, dynamic>;
-              final wallet = arguments["wallet"] as WalletStore;
-              return MaterialPageRoute(
-                builder: (context) => WalletDetails(
-                  wallet: wallet,
-                ),
-              );
-            } else if (settings.name == Routes.send) {
-              Map<String, dynamic> arguments =
-                  settings.arguments as Map<String, dynamic>;
-              final wallet = arguments["wallet"] as WalletStore;
-              final detailsBloc =
-                  arguments["wallet-details"] as WalletDetailsBloc?;
-              final address = arguments["address"] as AddressStore?;
-              final initialData =
-                  arguments["initial-data"] as Map<String, dynamic>?;
-              return MaterialPageRoute(
-                builder: (context) => SendTransactionPage(
-                  wallet: wallet,
-                  detailsBloc: detailsBloc,
-                  addressStore: address,
-                  initialData: initialData,
-                ),
-              );
-            } else if (settings.name == Routes.addresses) {
-              Map<String, dynamic> arguments =
-                  settings.arguments as Map<String, dynamic>;
-              final detailsBloc =
-                  arguments["wallet-details"] as WalletDetailsBloc;
-              return MaterialPageRoute(
-                builder: (context) => AddressesPage(
-                  bloc: detailsBloc,
-                ),
-              );
-            } else if (settings.name == Routes.walletSettings) {
-              Map<String, dynamic> arguments =
-                  settings.arguments as Map<String, dynamic>;
-              final detailsBloc =
-                  arguments["wallet-details"] as WalletDetailsBloc;
-              return MaterialPageRoute(
-                builder: (context) => WalletSetting(
-                  detailsBloc: detailsBloc,
-                ),
-              );
-            } else if (settings.name == Routes.walletUtxo) {
-              Map<String, dynamic> arguments =
-                  settings.arguments as Map<String, dynamic>;
-              final wallet = arguments["wallet"] as WalletStore;
-              final detailsBloc =
-                  arguments["wallet-details"] as WalletDetailsBloc;
-              return MaterialPageRoute(
-                builder: (context) => ConsolidateUtxosRoute(
-                  detailsBloc: detailsBloc,
-                  wallet: wallet,
-                ),
-              );
+      child: BlocBuilder<SettingsBloc, SettingsState>(
+          bloc: settingsBloc,
+          buildWhen: (previous, current) => current is AppThemeState,
+          builder: (context, state) {
+            if (state is AppThemeState) {
+              WalletTheme.themeMode = AppStorage.instance.themeMode;
+              WalletTheme.instance = WalletTheme();
+              SystemChrome.setSystemUIOverlayStyle(
+                  AppStorage.instance.themeMode == ThemeMode.dark
+                      ? SystemUiOverlayStyle.light
+                      : SystemUiOverlayStyle.dark
+                          .copyWith(statusBarColor: Colors.transparent));
             }
+            return MaterialApp(
+              scaffoldMessengerKey: scaffoldMessengerKey,
+              theme: WalletTheme.instance.themeData,
+              darkTheme: WalletTheme.instance.themeData,
+              themeMode: WalletTheme.themeMode,
+              debugShowCheckedModeBanner: false,
+              initialRoute: firstRun ? Routes.createWallet : Routes.home,
+              onGenerateRoute: (settings) {
+                if (settings.name == Routes.walletMnemonic) {
+                  Map<String, dynamic> arguments =
+                      settings.arguments as Map<String, dynamic>;
+                  final wallet = arguments["wallet"] as WalletStore;
+                  final bloc = arguments["bloc"] as CreateWalletBloc;
+                  return MaterialPageRoute(
+                    builder: (context) => WalletMnemonicPage(
+                      wallet: wallet,
+                      bloc: bloc,
+                    ),
+                  );
+                } else if (settings.name == Routes.walletVerifyMnemonic) {
+                  Map<String, dynamic> arguments =
+                      settings.arguments as Map<String, dynamic>;
+                  final wallet = arguments["wallet"] as WalletStore;
+                  final bloc = arguments["bloc"] as CreateWalletBloc;
+                  return MaterialPageRoute(
+                    builder: (context) => WalletMnemonicVerifyPage(
+                      wallet: wallet,
+                      bloc: bloc,
+                    ),
+                  );
+                } else if (settings.name == Routes.createWallet) {
+                  return MaterialPageRoute(
+                    builder: (context) => NewWalletPage(),
+                  );
+                } else if (settings.name == Routes.home) {
+                  return MaterialPageRoute(
+                    builder: (context) => HomePage(),
+                  );
+                } else if (settings.name == Routes.restoreWallet) {
+                  Map<String, dynamic> arguments =
+                      settings.arguments as Map<String, dynamic>;
+                  final bloc = arguments["bloc"] as CreateWalletBloc;
+                  return MaterialPageRoute(
+                    builder: (context) => RestoreWallet(
+                      bloc: bloc,
+                    ),
+                  );
+                } else if (settings.name == Routes.wallet) {
+                  Map<String, dynamic> arguments =
+                      settings.arguments as Map<String, dynamic>;
+                  final wallet = arguments["wallet"] as WalletStore;
+                  return MaterialPageRoute(
+                    builder: (context) => WalletDetails(
+                      wallet: wallet,
+                    ),
+                  );
+                } else if (settings.name == Routes.send) {
+                  Map<String, dynamic> arguments =
+                      settings.arguments as Map<String, dynamic>;
+                  final wallet = arguments["wallet"] as WalletStore;
+                  final detailsBloc =
+                      arguments["wallet-details"] as WalletDetailsBloc?;
+                  final address = arguments["address"] as AddressStore?;
+                  final initialData =
+                      arguments["initial-data"] as Map<String, dynamic>?;
+                  return MaterialPageRoute(
+                    builder: (context) => SendTransactionPage(
+                      wallet: wallet,
+                      detailsBloc: detailsBloc,
+                      addressStore: address,
+                      initialData: initialData,
+                    ),
+                  );
+                } else if (settings.name == Routes.addresses) {
+                  Map<String, dynamic> arguments =
+                      settings.arguments as Map<String, dynamic>;
+                  final detailsBloc =
+                      arguments["wallet-details"] as WalletDetailsBloc;
+                  return MaterialPageRoute(
+                    builder: (context) => AddressesPage(
+                      bloc: detailsBloc,
+                    ),
+                  );
+                } else if (settings.name == Routes.walletSettings) {
+                  Map<String, dynamic> arguments =
+                      settings.arguments as Map<String, dynamic>;
+                  final detailsBloc =
+                      arguments["wallet-details"] as WalletDetailsBloc;
+                  return MaterialPageRoute(
+                    builder: (context) => WalletSetting(
+                      detailsBloc: detailsBloc,
+                    ),
+                  );
+                } else if (settings.name == Routes.walletUtxo) {
+                  Map<String, dynamic> arguments =
+                      settings.arguments as Map<String, dynamic>;
+                  final wallet = arguments["wallet"] as WalletStore;
+                  final detailsBloc =
+                      arguments["wallet-details"] as WalletDetailsBloc;
+                  return MaterialPageRoute(
+                    builder: (context) => ConsolidateUtxosRoute(
+                      detailsBloc: detailsBloc,
+                      wallet: wallet,
+                    ),
+                  );
+                }
 
-            return null;
-          },
-        );
-      }),
+                return null;
+              },
+            );
+          }),
     );
   }
 }

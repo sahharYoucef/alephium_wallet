@@ -1,4 +1,5 @@
 import 'package:alephium_wallet/routes/receive/receive_route.dart';
+import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/gradient_stadium_border.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
@@ -35,8 +36,8 @@ class WalletTile extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(
-                      Icons.account_balance_wallet_outlined,
+                    GradientIcon(
+                      icon: Icons.account_balance_wallet_outlined,
                       size: 40,
                     ),
                     const SizedBox(

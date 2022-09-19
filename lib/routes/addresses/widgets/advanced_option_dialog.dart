@@ -2,6 +2,8 @@ import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/routes/addresses/widgets/generate_address_dialog.dart';
 import 'package:alephium_wallet/routes/constants.dart';
 import 'package:alephium_wallet/utils/constants.dart';
+import 'package:alephium_wallet/utils/gradient_input_bordder.dart';
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -21,7 +23,7 @@ class AdvancedOptionsDialog extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-            color: Colors.white,
+            color: WalletTheme.instance.background,
             borderRadius: BorderRadius.circular(
               16,
             )),
@@ -52,6 +54,17 @@ class AdvancedOptionsDialog extends StatelessWidget {
                 children: [
                   Expanded(
                       child: Material(
+                    color: WalletTheme.instance.primary,
+                    shape: GradientOutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        gradient: LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          colors: [
+                            Color(0xff1902d5),
+                            Color(0xfffe594e),
+                          ],
+                        )),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(16),
                       onTap: () {
@@ -62,11 +75,8 @@ class AdvancedOptionsDialog extends StatelessWidget {
                               "wallet-details": bloc,
                             });
                       },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey)),
-                        padding: EdgeInsets.all(8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -96,6 +106,17 @@ class AdvancedOptionsDialog extends StatelessWidget {
                   ),
                   Expanded(
                       child: Material(
+                    color: WalletTheme.instance.primary,
+                    shape: GradientOutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        gradient: LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          colors: [
+                            Color(0xff1902d5),
+                            Color(0xfffe594e),
+                          ],
+                        )),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(16),
                       onTap: () {
@@ -125,11 +146,8 @@ class AdvancedOptionsDialog extends StatelessWidget {
                           },
                         );
                       },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey)),
-                        padding: EdgeInsets.all(8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
