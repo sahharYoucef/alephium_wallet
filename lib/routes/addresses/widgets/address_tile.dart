@@ -32,8 +32,8 @@ class AddressTile extends StatelessWidget {
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
               colors: [
-                Color(0xff1902d5),
-                Color(0xfffe594e),
+                WalletTheme.instance.gradientOne,
+                WalletTheme.instance.gradientTwo,
               ],
             )),
         child: InkWell(

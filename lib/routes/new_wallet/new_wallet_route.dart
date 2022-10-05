@@ -146,6 +146,14 @@ class _NewWalletPageState extends State<NewWalletPage> {
                                 "bloc": _createWalletBloc,
                               },
                             );
+                          else if (selected == "read-only")
+                            Navigator.pushNamed(
+                              context,
+                              Routes.readOnlyWallet,
+                              arguments: {
+                                "bloc": _createWalletBloc,
+                              },
+                            );
                         }
                       : null,
                   child: Text("Next"),

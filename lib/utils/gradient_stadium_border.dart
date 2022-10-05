@@ -4,6 +4,7 @@
 
 import 'dart:ui' as ui show lerpDouble;
 
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -108,8 +109,8 @@ class GradientStadiumBorder extends OutlinedBorder {
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
                 colors: [
-                  Color(0xff1902d5),
-                  Color(0xfffe594e),
+                  WalletTheme.instance.gradientOne,
+                  WalletTheme.instance.gradientTwo,
                 ],
               ).createShader(rect));
     }

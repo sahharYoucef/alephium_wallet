@@ -43,7 +43,7 @@ class _WalletMnemonicPageState extends State<WalletMnemonicPage> {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       alignment: WrapAlignment.spaceAround,
                       children: [
-                        ...widget.wallet.mnemonic
+                        ...widget.wallet.mnemonic!
                             .split(' ')
                             .asMap()
                             .map((index, word) {

@@ -40,3 +40,16 @@ class CreateWalletRestore extends CreateWalletEvent {
         DateTime.now(),
       ];
 }
+
+class AddReadOnlyWallet extends CreateWalletEvent {
+  final String value;
+  AddReadOnlyWallet({
+    required this.value,
+  });
+
+  @override
+  List<Object?> get props => [
+        value,
+        DateTime.now(),
+      ];
+}

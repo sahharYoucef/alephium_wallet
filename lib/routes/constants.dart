@@ -2,6 +2,7 @@ abstract class Routes {
   static const String home = '/home';
   static const String createWallet = '/create-wallet';
   static const String restoreWallet = '/restore-wallet';
+  static const String readOnlyWallet = '/read-only-wallet';
   static const String walletMnemonic = '/mnemonic';
   static const String walletVerifyMnemonic = '/verify-mnemonic';
   static const String importWallet = '/import-wallet';

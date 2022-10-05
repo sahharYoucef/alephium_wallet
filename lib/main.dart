@@ -8,6 +8,7 @@ import 'package:alephium_wallet/encryption/alephium/alephium_wallet_service.dart
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/routes/addresses/addresses_route.dart';
 import 'package:alephium_wallet/routes/constants.dart';
+import 'package:alephium_wallet/routes/read_only_wallet.dart/read_only_wallet_page.dart';
 import 'package:alephium_wallet/routes/restore_wallet/restore_wallet.dart';
 import 'package:alephium_wallet/routes/send/consolidate_utxos.dart';
 import 'package:alephium_wallet/routes/send/send_transaction.dart';
@@ -154,6 +155,15 @@ class MyApp extends StatelessWidget {
                 } else if (settings.name == Routes.home) {
                   return MaterialPageRoute(
                     builder: (context) => HomePage(),
+                  );
+                } else if (settings.name == Routes.readOnlyWallet) {
+                  Map<String, dynamic> arguments =
+                      settings.arguments as Map<String, dynamic>;
+                  final bloc = arguments["bloc"] as CreateWalletBloc;
+                  return MaterialPageRoute(
+                    builder: (context) => ReadOnlyWalletPage(
+                      bloc: bloc,
+                    ),
                   );
                 } else if (settings.name == Routes.restoreWallet) {
                   Map<String, dynamic> arguments =

@@ -8,6 +8,7 @@ import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/constants.dart';
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -87,8 +88,8 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
                             begin: Alignment.topRight,
                             end: Alignment.bottomLeft,
                             colors: [
-                              Color(0xff1902d5),
-                              Color(0xfffe594e),
+                              WalletTheme.instance.gradientOne,
+                              WalletTheme.instance.gradientTwo,
                             ],
                           ).createShader(bounds);
                         },

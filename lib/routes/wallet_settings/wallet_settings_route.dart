@@ -6,7 +6,6 @@ import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/wallet_settings/widgets/wallet_data_dialog.dart';
 import 'package:alephium_wallet/routes/widgets/confirmation_dialog.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
-import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -121,67 +120,69 @@ class _WalletSettingState extends State<WalletSetting> {
                       height: 10,
                     ),
                     const Divider(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "A wallet can have multiple public addresses derived from the main address.",
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    OutlinedButton(
-                        onPressed: () {
-                          _focusNode.unfocus();
-                          Navigator.pushNamed(context, Routes.addresses,
-                              arguments: {
-                                "wallet-details": widget.detailsBloc,
-                              });
-                        },
-                        child: Text("Addresses")),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Divider(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "You can add this wallet as a read only wallet to other wallet applications with your extended public key.No secret will be shared.",
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    OutlinedButton(
-                        onPressed: () {
-                          _focusNode.unfocus();
-                          _settingBloc.add(WalletSettingDisplayPublicKey());
-                        },
-                        child: Text("Display public key")),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Divider(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "You can display your mnemonic (seed phrase , paper key) in can you have lost your backup, or to confirm that your backup is correct.",
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    OutlinedButton(
-                        onPressed: () {
-                          _focusNode.unfocus();
-                          _settingBloc.add(WalletSettingDisplayMnemonic());
-                        },
-                        child: Text(
-                          "Display mnemonic",
-                        )),
+                    if (widget.detailsBloc.wallet.mnemonic != null) ...[
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "A wallet can have multiple public addresses derived from the main address.",
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      OutlinedButton(
+                          onPressed: () {
+                            _focusNode.unfocus();
+                            Navigator.pushNamed(context, Routes.addresses,
+                                arguments: {
+                                  "wallet-details": widget.detailsBloc,
+                                });
+                          },
+                          child: Text("Addresses")),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Divider(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "You can add this wallet as a read only wallet to other wallet applications with your extended public key.No secret will be shared.",
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      OutlinedButton(
+                          onPressed: () {
+                            _focusNode.unfocus();
+                            _settingBloc.add(WalletSettingDisplayPublicKey());
+                          },
+                          child: Text("Display public key")),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Divider(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "You can display your mnemonic (seed phrase , paper key) in can you have lost your backup, or to confirm that your backup is correct.",
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      OutlinedButton(
+                          onPressed: () {
+                            _focusNode.unfocus();
+                            _settingBloc.add(WalletSettingDisplayMnemonic());
+                          },
+                          child: Text(
+                            "Display mnemonic",
+                          )),
+                    ]
                   ],
                 ),
               ),

@@ -126,7 +126,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           }
           var data = await apiRepository.createTransaction(
             amount: amount!,
-            fromPublicKey: fromAddress!.publicKey,
+            fromPublicKey: fromAddress!.publicKey!,
             toAddress: toAddress!,
             gas: gas,
             gasPrice: gasPrice,
@@ -147,7 +147,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       } else if (event is SweepTransaction) {
         emit(TransactionLoading());
         var sending = await apiRepository.sweepTransaction(
-          publicKey: event.fromAddress.publicKey,
+          publicKey: event.fromAddress.publicKey!,
           address: event.fromAddress.address,
           toAddress: event.toAddress.address,
         );
@@ -162,7 +162,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         var transactions = await Future.wait<Either<TransactionResultDTO>>([
           ...sending.getData!.unsignedTxs!.map((value) async {
             var signature = walletService.signTransaction(
-                value.txId!, event.fromAddress.privateKey);
+                value.txId!, event.fromAddress.privateKey!);
             var data = await apiRepository.sendTransaction(
               signature: signature,
               unsignedTx: value.unsignedTx!,
@@ -188,10 +188,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         );
       } else if (event is SignAndSendTransaction) {
         try {
+          if (fromAddress?.privateKey == null) return;
           emit(TransactionLoading());
           var signature = walletService.signTransaction(
             transaction!.txId!,
-            fromAddress!.privateKey,
+            fromAddress!.privateKey!,
           );
           var sending = await apiRepository.sendTransaction(
             signature: signature,

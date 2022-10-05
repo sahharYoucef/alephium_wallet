@@ -11,12 +11,9 @@ import 'package:alephium_wallet/utils/constants.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:alephium_wallet/utils/validators.dart';
 import 'package:flutter/material.dart';
-import 'package:alephium_dart/alephium_dart.dart' as alephium;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import '../../api/repositories/alephium/alephium_api_repository.dart';
 import '../../bloc/transaction/transaction_bloc.dart';
 
 class SendTransactionPage extends StatefulWidget {
@@ -124,8 +121,8 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                         begin: Alignment.topRight,
                                         end: Alignment.bottomLeft,
                                         colors: [
-                                          Color(0xff1902d5),
-                                          Color(0xfffe594e),
+                                          WalletTheme.instance.gradientOne,
+                                          WalletTheme.instance.gradientTwo,
                                         ],
                                       ).createShader(bounds);
                                     },
@@ -333,7 +330,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                                                 SignAndSendTransaction(
                                                               privateKey: _bloc
                                                                   .fromAddress!
-                                                                  .privateKey,
+                                                                  .privateKey!,
                                                               transactionID: _bloc
                                                                   .transaction!
                                                                   .txId!,

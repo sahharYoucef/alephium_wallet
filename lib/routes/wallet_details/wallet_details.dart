@@ -199,20 +199,23 @@ class _WalletDetailsState extends State<WalletDetails> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        heroTag: "button",
-        label: Text(
-          'Send',
-        ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        icon: Icon(Icons.send_outlined),
-        onPressed: () {
-          Navigator.pushNamed(context, Routes.send, arguments: {
-            "wallet": widget.wallet,
-            "wallet-details": _walletDetailsBloc
-          });
-        },
-      ),
+      floatingActionButton: (widget.wallet.mnemonic != null)
+          ? FloatingActionButton.extended(
+              heroTag: "button",
+              label: Text(
+                'Send',
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              icon: Icon(Icons.send_outlined),
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.send, arguments: {
+                  "wallet": widget.wallet,
+                  "wallet-details": _walletDetailsBloc
+                });
+              },
+            )
+          : null,
     );
   }
 }

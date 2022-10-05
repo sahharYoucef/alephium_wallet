@@ -39,8 +39,8 @@ mixin InputValidators {
     if (amountNumber == 0) {
       return null;
     }
-    if ((amountNumber * 10e17) < alephium.MINIMAL_GAS_PRICE) {
-      return 'Gas price must be greater than ${(alephium.MINIMAL_GAS_PRICE / 10e17).toStringAsFixed(7)}';
+    if ((amountNumber * 10e17) < alephium.minimalGasPrice) {
+      return 'Gas price must be greater than ${(alephium.minimalGasPrice / 10e17).toStringAsFixed(7)}';
     }
     return null;
   }
@@ -50,8 +50,8 @@ mixin InputValidators {
     if (amountNumber == 0) {
       return null;
     }
-    if (amountNumber < alephium.MINIMAL_GAS_AMOUNT) {
-      return 'Amount must be greater than ${alephium.MINIMAL_GAS_AMOUNT}';
+    if (amountNumber < alephium.minimalGasAmount) {
+      return 'Amount must be greater than ${alephium.minimalGasAmount}';
     }
     return null;
   }

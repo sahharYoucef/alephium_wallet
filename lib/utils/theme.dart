@@ -33,8 +33,8 @@ class WalletTheme {
         secondary = Color(0xffeeeeee);
         black = Color(0xff040404);
         background = Color(0xffe8dbeb);
-        gradientOne = Color(0xff1902d5);
-        gradientTwo = Color(0xfffe594e);
+        gradientOne = Color(0xfffe594e);
+        gradientTwo = Color(0xff1902d5);
         break;
     }
   }

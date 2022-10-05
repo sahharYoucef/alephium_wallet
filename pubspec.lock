@@ -12,8 +12,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: "8ec48e8ca84479a29c3dfb7900351f3536db488e"
+      ref: "3df6ae2bd4b822c18b76741ced7b20ed2bf1bcf7"
+      resolved-ref: "3df6ae2bd4b822c18b76741ced7b20ed2bf1bcf7"
       url: "https://github.com/sahharYoucef/alephium_dart.git"
     source: git
     version: "1.0.0"

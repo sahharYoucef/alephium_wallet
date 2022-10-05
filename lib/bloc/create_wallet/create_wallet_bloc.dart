@@ -52,13 +52,25 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
             ),
           );
         } catch (e) {
-          print(e);
           emit(CreateWalletFailure(error: e.toString()));
         }
       } else if (event is CreateWalletRestore) {
         try {
           var wallet = walletService.importWallet(event.mnemonic, "");
           add(SaveWalletToDatabase(wallet: wallet));
+        } on Exception catch (e) {
+          emit(CreateWalletFailure(error: e.toString()));
+        }
+      } else if (event is AddReadOnlyWallet) {
+        try {
+          var validator = RegExp(r'^[1-9A-HJ-NP-Za-km-z]+$');
+          late final String address;
+          if (validator.hasMatch(event.value)) {
+            address = event.value;
+          } else {
+            address = walletService.addressFromPublicKey(event.value);
+          }
+          add(SaveWalletToDatabase(wallet: WalletStore.redOnly(address)));
         } on Exception catch (e) {
           emit(CreateWalletFailure(error: e.toString()));
         }

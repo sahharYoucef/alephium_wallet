@@ -28,11 +28,11 @@ class SQLiteDBHelper extends BaseDBHelper {
 
   dropTables(Database _db) async {
     final batch = _db.batch();
-    // batch.execute('DROP TABLE IF EXISTS $_addressesTable');
-    // batch.execute('DROP TABLE IF EXISTS $_transactionRefsTable');
-    // batch.execute('DROP TABLE IF EXISTS $_transactionTable');
-    // batch.execute('DROP TABLE IF EXISTS $_walletTable');
-    // batch.execute('DROP TABLE IF EXISTS $_balancesTable');
+    batch.execute('DROP TABLE IF EXISTS $_addressesTable');
+    batch.execute('DROP TABLE IF EXISTS $_transactionRefsTable');
+    batch.execute('DROP TABLE IF EXISTS $_transactionTable');
+    batch.execute('DROP TABLE IF EXISTS $_walletTable');
+    batch.execute('DROP TABLE IF EXISTS $_balancesTable');
     await batch.commit();
   }
 
@@ -46,8 +46,8 @@ class SQLiteDBHelper extends BaseDBHelper {
           title TEXT,
           passphrase TEXT,
           blockchain TEXT NOT NULL,
-          mnemonic TEXT NOT NULL,
-          seed TEXT NOT NULL,
+          mnemonic TEXT,
+          seed TEXT,
           mainAddress TEXT NOT NULL
       )""");
     batch.execute("""
@@ -79,8 +79,8 @@ class SQLiteDBHelper extends BaseDBHelper {
           address TEXT PRIMARY KEY NOT NULL,
           address_title TEXT,
           address_color TEXT,
-          publicKey TEXT NOT NULL,
-          privateKey TEXT NOT NULL,
+          publicKey TEXT,
+          privateKey TEXT,
           address_index INTEGER,
           group_index INTEGER,
           warning TEXT,
@@ -116,6 +116,11 @@ class SQLiteDBHelper extends BaseDBHelper {
   @override
   insertWallet(WalletStore wallet, AddressStore addressStore) async {
     var _db = await db.future;
+    var value = await _db.query(_addressesTable,
+        where: "address = ?", whereArgs: [addressStore.address]);
+    if (value.isNotEmpty) {
+      throw Exception("address Already Exists");
+    }
     var batch = _db.batch();
     batch.insert(_walletTable, wallet.toDb());
     batch.insert(_addressesTable, addressStore.toDb());

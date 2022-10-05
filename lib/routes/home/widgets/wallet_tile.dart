@@ -117,21 +117,23 @@ class WalletTile extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Expanded(
-                        child: OutlinedButton(
-                      child: Text("Send"),
-                      onPressed: loading
-                          ? null
-                          : () {
-                              Navigator.pushNamed(context, Routes.send,
-                                  arguments: {
-                                    "wallet": wallet,
-                                  });
-                            },
-                    )),
-                    SizedBox(
-                      width: 16,
-                    ),
+                    if (wallet?.mnemonic != null) ...[
+                      Expanded(
+                          child: OutlinedButton(
+                        child: Text("Send"),
+                        onPressed: loading
+                            ? null
+                            : () {
+                                Navigator.pushNamed(context, Routes.send,
+                                    arguments: {
+                                      "wallet": wallet,
+                                    });
+                              },
+                      )),
+                      SizedBox(
+                        width: 16,
+                      ),
+                    ],
                     Expanded(
                         child: OutlinedButton(
                       child: Text("Receive"),

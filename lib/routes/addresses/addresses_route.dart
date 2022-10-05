@@ -48,10 +48,12 @@ class _AddressesPageState extends State<AddressesPage> {
         return true;
       },
       child: Scaffold(
-        floatingActionButton: FloatingOptionsButton(
-          isDialOpen: isDialOpen,
-          bloc: widget.bloc,
-        ),
+        floatingActionButton: widget.bloc.wallet.mnemonic != null
+            ? FloatingOptionsButton(
+                isDialOpen: isDialOpen,
+                bloc: widget.bloc,
+              )
+            : null,
         body: Stack(
           children: [
             Positioned.fill(
@@ -76,6 +78,7 @@ class _AddressesPageState extends State<AddressesPage> {
                           address: address,
                           isMain: isMain,
                           onTap: () {
+                            if (address.privateKey == null) return;
                             Navigator.pushNamed(context, Routes.send,
                                 arguments: {
                                   "wallet": widget.bloc.wallet,

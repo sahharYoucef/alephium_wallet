@@ -29,10 +29,10 @@ class WalletSettingBloc extends Bloc<WalletSettingEvent, WalletSettingState> {
           }
           if (didAuthenticate) {
             if (event is WalletSettingDisplayMnemonic) {
-              emit(WalletSettingDisplayDataState(wallet.mnemonic, "Mnemonic"));
+              emit(WalletSettingDisplayDataState(wallet.mnemonic!, "Mnemonic"));
             } else if (event is WalletSettingDisplayPublicKey) {
               emit(WalletSettingDisplayDataState(
-                  wallet.addresses.first.publicKey, "Public Key"));
+                  wallet.addresses.first.publicKey!, "Public Key"));
             }
             return;
           }

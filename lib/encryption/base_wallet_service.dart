@@ -9,6 +9,7 @@ abstract class BaseWalletService {
   BaseWalletService(this.blockchain);
 
   WalletStore generateWallet(String passphrase);
+  String addressFromPublicKey(String publicKey);
   WalletStore importWallet(String mnemonic, String passphrase);
   AddressStore deriveNewAddress({
     required String walletId,

@@ -1,12 +1,9 @@
-import 'dart:typed_data';
-
 import 'package:alephium_dart/alephium_dart.dart';
 import 'package:alephium_wallet/api/dto_models/balance_dto.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
+import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:uuid/uuid.dart';
-
-import '../../storage/models/wallet_store.dart';
 
 class AlephiumWalletService extends BaseWalletService {
   AlephiumWalletService({Blockchain blockchain = Blockchain.Alephium})
@@ -17,6 +14,11 @@ class AlephiumWalletService extends BaseWalletService {
   @override
   String signTransaction(String txHash, String privetKey) {
     return walletService.signTransaction(txHash, privetKey);
+  }
+
+  @override
+  String addressFromPublicKey(String publicKey) {
+    return walletService.addressFromPublicKey(publicKey);
   }
 
   @override
@@ -104,7 +106,7 @@ class AlephiumWalletService extends BaseWalletService {
     var skipAddressIndexes = wallet.addresses.map((e) => e.index).toList();
     return List.generate(4, (index) => index)
         .where((element) => !skipGroups.contains(element))
-        .map((group) => walletService.deriveNewAddressData(wallet.seed, group,
+        .map((group) => walletService.deriveNewAddressData(wallet.seed!, group,
             skipAddressIndexes: skipAddressIndexes))
         .map((address) => AddressStore(
               title: title,

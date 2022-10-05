@@ -20,8 +20,8 @@ class AddressStore extends Equatable {
   // wallet_id INTEGER,
 
   final String address;
-  final String publicKey;
-  final String privateKey;
+  final String? publicKey;
+  final String? privateKey;
   final int index;
   final int group;
   final String? warning;
@@ -32,8 +32,8 @@ class AddressStore extends Equatable {
 
   AddressStore({
     required this.address,
-    required this.publicKey,
-    required this.privateKey,
+    this.publicKey,
+    this.privateKey,
     required this.index,
     required this.group,
     required this.walletId,
@@ -48,8 +48,8 @@ class AddressStore extends Equatable {
     final _index = data["address_index"] as int;
     final _warning = data["warning"] as String?;
     final _walletId = data["wallet_id"] as String;
-    final _publicKey = data["publicKey"] as String;
-    final _privateKey = data["privateKey"] as String;
+    final _publicKey = data["publicKey"] as String?;
+    final _privateKey = data["privateKey"] as String?;
     final _group = data["group_index"] as int? ?? 0;
     final _title = data["address_title"] as String?;
     final _color = data["address_color"] as String?;

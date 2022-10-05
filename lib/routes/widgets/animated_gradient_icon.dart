@@ -1,20 +1,12 @@
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedGradientProgressIndicator extends StatefulWidget {
   AnimatedGradientProgressIndicator({
     this.size = 24,
-    this.gradient = const LinearGradient(
-      begin: Alignment.topRight,
-      end: Alignment.bottomLeft,
-      colors: [
-        Color(0xff1902d5),
-        Color(0xfffe594e),
-      ],
-    ),
   });
 
   final double? size;
-  final Gradient gradient;
 
   @override
   State<AnimatedGradientProgressIndicator> createState() =>
@@ -32,8 +24,8 @@ class _AnimatedGradientProgressIndicatorState
         AnimationController(vsync: this, duration: Duration(seconds: 1))
           ..repeat();
     _animation = ColorTween(
-      begin: Color(0xff1902d5),
-      end: Color(0xfffe594e),
+      begin: WalletTheme.instance.gradientOne,
+      end: WalletTheme.instance.gradientTwo,
     ).animate(_controller);
     super.initState();
   }

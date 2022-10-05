@@ -4,7 +4,7 @@ abstract class CreateWalletState extends Equatable {
   const CreateWalletState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class CreateWalletInitial extends CreateWalletState {}
@@ -17,7 +17,7 @@ class CreateWalletGenerateMnemonicSuccess extends CreateWalletState {
   });
 
   @override
-  List<Object> get props => [wallet.mnemonic];
+  List<Object?> get props => [wallet.mnemonic];
 }
 
 class CreateWalletFailure extends CreateWalletState {
@@ -35,5 +35,5 @@ class SaveWalletToDatabaseSuccess extends CreateWalletState {
     required this.wallet,
   });
   @override
-  List<Object> get props => [wallet.mnemonic];
+  List<Object?> get props => [wallet.mnemonic];
 }

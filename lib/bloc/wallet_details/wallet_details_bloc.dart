@@ -190,7 +190,7 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
         var indexes = wallet.addresses.map((e) => e.index).toList();
         var newAddress = walletService.deriveNewAddress(
           walletId: wallet.id,
-          seed: wallet.seed,
+          seed: wallet.seed!,
           skipAddressIndexes: indexes,
           forGroup: event.group,
         );

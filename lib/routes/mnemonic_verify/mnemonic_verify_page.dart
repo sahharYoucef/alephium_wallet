@@ -33,7 +33,7 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
   @override
   void initState() {
     _fillIndexes();
-    mnemonic = widget.wallet.mnemonic.split(" ").toList();
+    mnemonic = widget.wallet.mnemonic!.split(" ").toList();
     values = List.from(mnemonic);
     values.shuffle();
     super.initState();

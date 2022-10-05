@@ -190,7 +190,6 @@ class _HomePageState extends State<HomePage>
                             );
 
                             if (data != null) {
-                              print(data);
                               Navigator.pushNamed(context, Routes.send,
                                   arguments: {
                                     "wallet": _walletHomeBloc.wallets.first,
