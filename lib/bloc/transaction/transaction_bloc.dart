@@ -1,5 +1,3 @@
-import 'package:alephium_wallet/api/repositories/alephium/alephium_api_repository.dart';
-import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:bloc/bloc.dart';

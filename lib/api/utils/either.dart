@@ -2,8 +2,8 @@ import 'package:alephium_wallet/api/utils/error_handler.dart';
 import 'package:equatable/equatable.dart';
 
 class Either<T> extends Equatable {
-  ApiError? _error;
-  T? _data;
+  late final ApiError? _error;
+  late final T? _data;
 
   void setException(ApiError error) {
     _error = error;

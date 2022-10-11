@@ -40,7 +40,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
   GlobalKey<FormFieldState> _amountKey = GlobalKey<FormFieldState>();
   GlobalKey<FormFieldState> _gasPriceKey = GlobalKey<FormFieldState>();
   GlobalKey<FormFieldState> _toAddressKey = GlobalKey<FormFieldState>();
-
+  late final TextEditingController _amountController;
   late final TransactionBloc _bloc;
   @override
   void initState() {
@@ -49,6 +49,8 @@ class _SendTransactionPageState extends State<SendTransactionPage>
       getIt.get<BaseWalletService>(),
       widget.wallet,
     );
+    _amountController =
+        TextEditingController(text: widget.initialData?["amount"].toString());
     if (widget.initialData != null) {
       _bloc.amount = widget.initialData?["amount"].toString();
       _bloc.toAddress = widget.initialData?["address"];
@@ -60,6 +62,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
   @override
   void dispose() {
     _bloc.close();
+    _amountController.dispose();
     super.dispose();
   }
 
@@ -160,12 +163,10 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                           textFieldDecoration("Address to")),
                                   const SizedBox(height: 8),
                                   TextFormField(
+                                      controller: _amountController,
                                       key: _amountKey,
                                       inputFormatters: [AmountFormatter()],
                                       validator: amountValidator,
-                                      initialValue: widget
-                                          .initialData?["amount"]
-                                          .toString(),
                                       onChanged: (value) {
                                         _bloc.add(TransactionValuesChangedEvent(
                                             amount: value));
@@ -174,8 +175,44 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                       textInputAction: TextInputAction.next,
                                       keyboardType: TextInputType.number,
                                       autocorrect: false,
-                                      decoration:
-                                          textFieldDecoration("Amount")),
+                                      decoration: InputDecoration(
+                                          labelText: "Amount",
+                                          suffixIcon: Container(
+                                            alignment: Alignment.center,
+                                            padding: EdgeInsets.only(right: 8),
+                                            width: 10,
+                                            child: InkWell(
+                                              onTap: _bloc.fromAddress != null
+                                                  ? () {
+                                                      if (_bloc.fromAddress !=
+                                                          null)
+                                                        _bloc.add(TransactionValuesChangedEvent(
+                                                            amount: _bloc
+                                                                .fromAddress
+                                                                ?.addressBalance
+                                                                .toString()));
+                                                      if (_bloc.fromAddress
+                                                              ?.addressBalance !=
+                                                          null)
+                                                        _amountController.text =
+                                                            _bloc.fromAddress!
+                                                                .addressBalance
+                                                                .toString();
+                                                      _amountKey.currentState
+                                                          ?.validate();
+                                                    }
+                                                  : null,
+                                              child: Text(
+                                                "MAX",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w800),
+                                              ),
+                                            ),
+                                          ))),
                                   const SizedBox(height: 16),
                                   BlocBuilder<TransactionBloc,
                                       TransactionState>(

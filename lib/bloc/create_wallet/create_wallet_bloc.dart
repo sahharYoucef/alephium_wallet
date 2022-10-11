@@ -28,6 +28,7 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     }
     on<CreateWalletEvent>((event, emit) async {
       if (event is CreateWalletGenerateMnemonic) {
+        emit(GenerateWalletLoading());
         var wallet = await compute<String, WalletStore>(
             walletService.generateWallet, event.passphrase);
         emit(

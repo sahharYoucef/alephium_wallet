@@ -19,11 +19,8 @@ import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/api/repositories/alephium/utils/interceptor.dart';
 
 class AlephiumApiRepository extends BaseApiRepository {
-  late WalletClient _walletClient;
   late AddressClient _addressClient;
-  late InfosClient _infosClient;
   late TransactionClient _transactionClient;
-  late BlockFlowClient _blockFlowClient;
   late ExplorerClient _explorerClient;
   late CoingeckoClient _coingeckoClient;
   late Dio _dio;
@@ -55,7 +52,7 @@ class AlephiumApiRepository extends BaseApiRepository {
 
   @override
   Future<Either<double>> getPrice(
-      {String coin = "aleph", String currency = "usd"}) async {
+      {String coin = "alephium", String currency = "usd"}) async {
     try {
       final data = await _coingeckoClient.getPrice(coin, currency);
       return Either<double>(data: double.tryParse("${data?[coin]?[currency]}"));

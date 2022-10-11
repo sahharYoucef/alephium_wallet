@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:bloc/bloc.dart';
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/api/utils/error_handler.dart';

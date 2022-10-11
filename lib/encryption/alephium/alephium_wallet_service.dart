@@ -9,21 +9,19 @@ class AlephiumWalletService extends BaseWalletService {
   AlephiumWalletService({Blockchain blockchain = Blockchain.Alephium})
       : super(blockchain);
 
-  final WalletService walletService = WalletService();
-
   @override
   String signTransaction(String txHash, String privetKey) {
-    return walletService.signTransaction(txHash, privetKey);
+    return WalletService.signTransaction(txHash, privetKey);
   }
 
   @override
   String addressFromPublicKey(String publicKey) {
-    return walletService.addressFromPublicKey(publicKey);
+    return WalletService.addressFromPublicKey(publicKey);
   }
 
   @override
   WalletStore importWallet(String mnemonic, String passphrase) {
-    var wallet = walletService.importWallet(mnemonic, passphrase);
+    var wallet = WalletService.importWallet(mnemonic, passphrase);
     final String id = Uuid().v1();
     return WalletStore(
       mainAddress: wallet.addresses.first.address,
@@ -49,7 +47,7 @@ class AlephiumWalletService extends BaseWalletService {
 
   @override
   WalletStore generateWallet(String passphrase) {
-    var wallet = walletService.generateWallet(passphrase);
+    var wallet = WalletService.generateWallet(passphrase);
     final String id = Uuid().v1();
     return WalletStore(
       id: id,
@@ -83,7 +81,7 @@ class AlephiumWalletService extends BaseWalletService {
     int? index,
     List<int> skipAddressIndexes = const <int>[],
   }) {
-    var address = walletService.deriveNewAddressData(seed, forGroup,
+    var address = WalletService.deriveNewAddressData(seed, forGroup,
         index: index, skipAddressIndexes: skipAddressIndexes);
     return AddressStore(
       title: title,
@@ -106,7 +104,7 @@ class AlephiumWalletService extends BaseWalletService {
     var skipAddressIndexes = wallet.addresses.map((e) => e.index).toList();
     return List.generate(4, (index) => index)
         .where((element) => !skipGroups.contains(element))
-        .map((group) => walletService.deriveNewAddressData(wallet.seed!, group,
+        .map((group) => WalletService.deriveNewAddressData(wallet.seed!, group,
             skipAddressIndexes: skipAddressIndexes))
         .map((address) => AddressStore(
               title: title,

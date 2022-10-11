@@ -1,3 +1,5 @@
+import 'package:alephium_wallet/utils/gradient_stadium_border.dart';
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -54,11 +56,16 @@ class MnemonicTextFieldState extends State<MnemonicTextField> {
       children: [
         Wrap(
           spacing: 4.0,
-          runSpacing: 2.0,
+          runSpacing: 0.0,
           children: [
             ...words.mapIndexed((index, value) {
               return Chip(
-                padding: EdgeInsets.symmetric(horizontal: 4),
+                shape: GradientStadiumBorder(),
+                backgroundColor: WalletTheme.instance.primary,
+                shadowColor: WalletTheme.instance.gradientOne,
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                labelPadding:
+                    const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
                 onDeleted: () {
                   words.removeAt(index);
                   isActive = words.length < 24;
@@ -66,9 +73,10 @@ class MnemonicTextFieldState extends State<MnemonicTextField> {
                 },
                 deleteIcon: Icon(
                   Icons.close,
+                  size: 14,
                 ),
                 label: Text(
-                  "${index + 1}-$value",
+                  "${index + 1} - $value",
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 elevation: 2,
@@ -90,9 +98,7 @@ class MnemonicTextFieldState extends State<MnemonicTextField> {
           },
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.all(16),
-            border: UnderlineInputBorder(),
             labelText: 'Mnemonic',
-            labelStyle: Theme.of(context).textTheme.bodyMedium,
           ),
           maxLines: 1,
         ),

@@ -37,3 +37,9 @@ class SaveWalletToDatabaseSuccess extends CreateWalletState {
   @override
   List<Object?> get props => [wallet.mnemonic];
 }
+
+class GenerateWalletLoading extends CreateWalletState {
+  GenerateWalletLoading();
+  @override
+  List<Object?> get props => [];
+}

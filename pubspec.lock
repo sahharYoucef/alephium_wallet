@@ -12,8 +12,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "3df6ae2bd4b822c18b76741ced7b20ed2bf1bcf7"
-      resolved-ref: "3df6ae2bd4b822c18b76741ced7b20ed2bf1bcf7"
+      ref: "127bd941e4e224eaf77f988720321ab7e7c1c2af"
+      resolved-ref: "127bd941e4e224eaf77f988720321ab7e7c1c2af"
       url: "https://github.com/sahharYoucef/alephium_dart.git"
     source: git
     version: "1.0.0"
@@ -894,14 +894,14 @@ packages:
       name: sqflite
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3+1"
+    version: "2.1.0+1"
   sqflite_common:
     dependency: transitive
     description:
       name: sqflite_common
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1+1"
+    version: "2.3.0"
   stack_trace:
     dependency: transitive
     description:
@@ -1064,5 +1064,5 @@ packages:
     source: hosted
     version: "3.1.1"
 sdks:
-  dart: ">=2.17.6 <3.0.0"
-  flutter: ">=3.0.0"
+  dart: ">=2.18.0-0 <3.0.0"
+  flutter: ">=3.3.0-0"

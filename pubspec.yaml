@@ -45,8 +45,8 @@ dependencies:
   alephium_dart:
     git:
       url: https://github.com/sahharYoucef/alephium_dart.git
-      ref: 3df6ae2bd4b822c18b76741ced7b20ed2bf1bcf7
-  sqflite: ^2.0.3+1
+      ref: 127bd941e4e224eaf77f988720321ab7e7c1c2af
+  sqflite: ^2.1.0+1
   intl: ^0.17.0
   google_fonts: ^3.0.1
   timeago: ^3.3.0

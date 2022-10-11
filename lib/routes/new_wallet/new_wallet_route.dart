@@ -59,108 +59,131 @@ class _NewWalletPageState extends State<NewWalletPage> {
         }
       }),
       child: Scaffold(
-        body: Column(
+        body: Stack(
           children: [
-            WalletAppBar(
-              label: Text(
-                'New Wallet',
-                style: Theme.of(context).textTheme.headlineMedium,
+            Positioned.fill(
+              child: Column(
+                children: [
+                  WalletAppBar(
+                    label: Text(
+                      'New Wallet',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Form(
+                          child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          NewWalletCheckbox(
+                            title: "New Wallet",
+                            description:
+                                "Create a wallet (keys and an address) from a randomly generated mnemonic.",
+                            value: "new",
+                            onTap: (value) {
+                              setState(() {
+                                if (selected == value)
+                                  selected = null;
+                                else
+                                  selected = value;
+                              });
+                            },
+                            selected: selected,
+                            icon: Icons.create,
+                          ),
+                          NewWalletCheckbox(
+                            title: "Restore Wallet",
+                            description:
+                                "Restores a wallet's keys and address from a mnemonic phrase.",
+                            value: "restore",
+                            selected: selected,
+                            onTap: (value) {
+                              setState(() {
+                                if (selected == value)
+                                  selected = null;
+                                else
+                                  selected = value;
+                              });
+                            },
+                            icon: Icons.restore,
+                          ),
+                          NewWalletCheckbox(
+                            title: "Read-only Wallet",
+                            description:
+                                "Add a wallet address in read-only mode. This won't save any secrets in this device.",
+                            value: "read-only",
+                            selected: selected,
+                            onTap: (value) {
+                              setState(() {
+                                if (selected == value)
+                                  selected = null;
+                                else
+                                  selected = value;
+                              });
+                            },
+                            icon: Icons.lock_rounded,
+                          ),
+                        ],
+                      )),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Hero(
+                      tag: "button",
+                      child: OutlinedButton(
+                        onPressed: selected != null
+                            ? () {
+                                if (selected == "new")
+                                  _createWalletBloc.add(
+                                    CreateWalletGenerateMnemonic(
+                                      passphrase: '',
+                                    ),
+                                  );
+                                else if (selected == "restore")
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.restoreWallet,
+                                    arguments: {
+                                      "bloc": _createWalletBloc,
+                                    },
+                                  );
+                                else if (selected == "read-only")
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.readOnlyWallet,
+                                    arguments: {
+                                      "bloc": _createWalletBloc,
+                                    },
+                                  );
+                              }
+                            : null,
+                        child: Text("Next"),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 42),
+                ],
               ),
             ),
-            Expanded(
-              child: Center(
-                child: Form(
-                    child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    NewWalletCheckbox(
-                      title: "New Wallet",
-                      description:
-                          "Create a wallet (keys and an address) from a randomly generated mnemonic.",
-                      value: "new",
-                      onTap: (value) {
-                        setState(() {
-                          if (selected == value)
-                            selected = null;
-                          else
-                            selected = value;
-                        });
-                      },
-                      selected: selected,
-                      icon: Icons.create,
-                    ),
-                    NewWalletCheckbox(
-                      title: "Restore Wallet",
-                      description:
-                          "Restores a wallet's keys and address from a mnemonic phrase.",
-                      value: "restore",
-                      selected: selected,
-                      onTap: (value) {
-                        setState(() {
-                          if (selected == value)
-                            selected = null;
-                          else
-                            selected = value;
-                        });
-                      },
-                      icon: Icons.restore,
-                    ),
-                    NewWalletCheckbox(
-                      title: "Read-only Wallet",
-                      description:
-                          "Add a wallet address in read-only mode. This won't save any secrets in this device.",
-                      value: "read-only",
-                      selected: selected,
-                      onTap: (value) {
-                        setState(() {
-                          if (selected == value)
-                            selected = null;
-                          else
-                            selected = value;
-                        });
-                      },
-                      icon: Icons.lock_rounded,
-                    ),
-                  ],
-                )),
-              ),
+            Positioned.fill(
+              child: BlocBuilder<CreateWalletBloc, CreateWalletState>(
+                  bloc: _createWalletBloc,
+                  builder: (context, state) {
+                    return Visibility(
+                      visible: state is GenerateWalletLoading,
+                      child: Container(
+                        height: double.infinity,
+                        width: double.infinity,
+                        color: Colors.black.withOpacity(0.3),
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    );
+                  }),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Hero(
-                tag: "button",
-                child: OutlinedButton(
-                  onPressed: selected != null
-                      ? () {
-                          if (selected == "new")
-                            _createWalletBloc.add(
-                              CreateWalletGenerateMnemonic(
-                                passphrase: '',
-                              ),
-                            );
-                          else if (selected == "restore")
-                            Navigator.pushNamed(
-                              context,
-                              Routes.restoreWallet,
-                              arguments: {
-                                "bloc": _createWalletBloc,
-                              },
-                            );
-                          else if (selected == "read-only")
-                            Navigator.pushNamed(
-                              context,
-                              Routes.readOnlyWallet,
-                              arguments: {
-                                "bloc": _createWalletBloc,
-                              },
-                            );
-                        }
-                      : null,
-                  child: Text("Next"),
-                ),
-              ),
-            ),
-            SizedBox(height: 42),
           ],
         ),
       ),
