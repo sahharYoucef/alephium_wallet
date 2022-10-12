@@ -89,17 +89,10 @@ class _HomePageState extends State<HomePage>
                               current is! WalletHomeError,
                           builder: (context, state) {
                             if (state is WalletHomeLoading) {
-                              return ListView.builder(
-                                padding: EdgeInsets.only(
-                                  top: 16,
-                                  bottom: 70,
+                              return Center(
+                                child: AlephiumIcon(
+                                  spinning: true,
                                 ),
-                                itemCount: 1,
-                                itemBuilder: (context, index) {
-                                  return WalletTile(
-                                    loading: true,
-                                  );
-                                },
                               );
                             } else if (state is WalletHomeCompleted) {
                               return RefreshIndicator(

@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -41,8 +42,8 @@ class _AnimatedGradientProgressIndicatorState
     return SizedBox(
       height: 16,
       width: 16,
-      child: CircularProgressIndicator(
-        valueColor: _animation,
+      child: AlephiumIcon(
+        spinning: true,
       ),
     );
   }

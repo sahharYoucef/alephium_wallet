@@ -2,6 +2,7 @@ import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/main.dart';
+import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/send/widgets/address_from.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
@@ -182,26 +183,24 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                             padding: EdgeInsets.only(right: 8),
                                             width: 10,
                                             child: InkWell(
-                                              onTap: _bloc.fromAddress != null
-                                                  ? () {
-                                                      if (_bloc.fromAddress !=
-                                                          null)
-                                                        _bloc.add(TransactionValuesChangedEvent(
-                                                            amount: _bloc
-                                                                .fromAddress
-                                                                ?.addressBalance
-                                                                .toString()));
-                                                      if (_bloc.fromAddress
-                                                              ?.addressBalance !=
-                                                          null)
-                                                        _amountController.text =
-                                                            _bloc.fromAddress!
-                                                                .addressBalance
-                                                                .toString();
-                                                      _amountKey.currentState
-                                                          ?.validate();
-                                                    }
-                                                  : null,
+                                              onTap: () {
+                                                if (_bloc.fromAddress != null)
+                                                  _bloc.add(
+                                                      TransactionValuesChangedEvent(
+                                                          amount: _bloc
+                                                              .fromAddress
+                                                              ?.addressBalance
+                                                              .toString()));
+                                                if (_bloc.fromAddress
+                                                        ?.addressBalance !=
+                                                    null)
+                                                  _amountController.text = _bloc
+                                                      .fromAddress!
+                                                      .addressBalance
+                                                      .toString();
+                                                _amountKey.currentState
+                                                    ?.validate();
+                                              },
                                               child: Text(
                                                 "MAX",
                                                 style: Theme.of(context)
@@ -404,7 +403,9 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                     width: double.infinity,
                                     color: Colors.black.withOpacity(0.3),
                                     child: Center(
-                                      child: CircularProgressIndicator(),
+                                      child: AlephiumIcon(
+                                        spinning: true,
+                                      ),
                                     ),
                                   ),
                                 );

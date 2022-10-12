@@ -5,4 +5,5 @@ abstract class WalletIcons {
   static const String darkAlephiumIcon = "assets/icons/alephium_logo_dark.svg";
   static const String lightAlephiumIcon =
       "assets/icons/alephium_logo_light.svg";
+  static const String alephiumIcon = "assets/icons/alephium_icon.svg";
 }

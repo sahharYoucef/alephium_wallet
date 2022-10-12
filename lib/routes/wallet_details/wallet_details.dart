@@ -167,7 +167,9 @@ class _WalletDetailsState extends State<WalletDetails> {
                                     : SliverFillRemaining(
                                         hasScrollBody: false,
                                         child: Center(
-                                          child: CircularProgressIndicator(),
+                                          child: AlephiumIcon(
+                                            spinning: true,
+                                          ),
                                         ),
                                       ));
                           })

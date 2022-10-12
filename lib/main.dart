@@ -42,9 +42,6 @@ GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
 class AppBlocObserver extends BlocObserver {
   @override
   void onTransition(Bloc bloc, Transition transition) {
-    LoggerService.instance.log(
-        "onTransition (${transition.currentState == transition.nextState}) : ${transition.currentState} => ${transition.nextState}");
-
     super.onTransition(bloc, transition);
   }
 
@@ -76,7 +73,6 @@ Future<bool> _initApp() async {
   await AppStorage.instance.initHive();
   Bloc.observer = AppBlocObserver();
   await Hive.openBox("settings");
-  print(AppStorage.instance.network);
   var firstRun = AppStorage.instance.firstRun;
   var network = AppStorage.instance.network;
   getIt.registerLazySingleton<BaseApiRepository>(
@@ -115,8 +111,9 @@ class MyApp extends StatelessWidget {
               SystemChrome.setSystemUIOverlayStyle(
                   AppStorage.instance.themeMode == ThemeMode.dark
                       ? SystemUiOverlayStyle.light
-                      : SystemUiOverlayStyle.dark
-                          .copyWith(statusBarColor: Colors.transparent));
+                      : SystemUiOverlayStyle.dark.copyWith(
+                          statusBarColor: Colors.transparent,
+                        ));
             }
             return MaterialApp(
               scaffoldMessengerKey: scaffoldMessengerKey,

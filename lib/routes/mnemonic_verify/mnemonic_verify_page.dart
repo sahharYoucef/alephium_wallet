@@ -48,14 +48,12 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
   _fillIndexes() {
     var random = Random();
     indexes = [];
-    indexes.add(1);
-    indexes.add(5);
-    // indexes.add(random.nextInt(24));
-    // late int newIndex;
-    // do {
-    //   newIndex = random.nextInt(24);
-    // } while (newIndex == indexes[0]);
-    // indexes.add(newIndex);
+    indexes.add(random.nextInt(24));
+    late int newIndex;
+    do {
+      newIndex = random.nextInt(24);
+    } while (newIndex == indexes[0]);
+    indexes.add(newIndex);
     indexes.sort();
   }
 
@@ -246,14 +244,6 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
                   child: Column(
                     children: [
                       const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          "Reorder the words to verify the mnemonic",
-                          style: Theme.of(context).textTheme.bodyLarge,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 16),

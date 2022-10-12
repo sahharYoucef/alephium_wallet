@@ -1,12 +1,6 @@
-import 'dart:math';
-
-import 'package:alephium_wallet/utils/helpers.dart';
+import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_paint.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_svg/svg.dart';
-
-import '../../../utils/constants.dart';
 
 class AlephiumIcon extends StatefulWidget {
   final bool spinning;
@@ -30,7 +24,7 @@ class _AlephiumIconState extends State<AlephiumIcon>
         AnimationController(vsync: this, duration: Duration(seconds: 2));
     _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
     if (widget.spinning) {
-      _controller.reset();
+      _controller.repeat();
     }
   }
 
@@ -53,15 +47,18 @@ class _AlephiumIconState extends State<AlephiumIcon>
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = WalletTheme.themeMode == ThemeMode.dark;
-    return RotationTransition(
-      turns: _animation,
-      child: SvgPicture.asset(
-        isDarkMode
-            ? WalletIcons.lightAlephiumIcon
-            : WalletIcons.darkAlephiumIcon,
-        height: 40,
-        width: 40,
-      ),
+    return AnimatedBuilder(
+      builder: (context, child) {
+        return SizedBox(
+            height: 50,
+            width: 35,
+            child: CustomPaint(
+                painter: AlephiumCustomPainter(
+              _animation.value,
+              isDarkMode ? Colors.white : Colors.black,
+            )));
+      },
+      animation: _animation,
     );
   }
 }

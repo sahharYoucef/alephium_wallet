@@ -1,6 +1,7 @@
 import 'package:alephium_wallet/api/dto_models/balance_dto.dart';
 import 'package:alephium_wallet/bloc/create_wallet/create_wallet_bloc.dart';
 import 'package:alephium_wallet/routes/constants.dart';
+import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/new_wallet/widgets/new_wallet_checkbox.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
@@ -178,7 +179,9 @@ class _NewWalletPageState extends State<NewWalletPage> {
                         width: double.infinity,
                         color: Colors.black.withOpacity(0.3),
                         child: Center(
-                          child: CircularProgressIndicator(),
+                          child: AlephiumIcon(
+                            spinning: true,
+                          ),
                         ),
                       ),
                     );

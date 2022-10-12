@@ -17,7 +17,7 @@ class MnemonicTextFieldState extends State<MnemonicTextField> {
   bool isActive = true;
   int? editIndex;
 
-  List<String> words = <String>[];
+  late List<String> words;
 
   String get mnemonic {
     return words.join(" ").trim();
@@ -25,6 +25,7 @@ class MnemonicTextFieldState extends State<MnemonicTextField> {
 
   @override
   void initState() {
+    words = <String>[];
     _controller = TextEditingController()
       ..addListener(() {
         if (_controller.value.text.contains(" ")) {
@@ -56,43 +57,61 @@ class MnemonicTextFieldState extends State<MnemonicTextField> {
       children: [
         Wrap(
           spacing: 4.0,
-          runSpacing: 0.0,
+          runSpacing: 6.0,
           children: [
             ...words.mapIndexed((index, value) {
-              return Chip(
-                shape: GradientStadiumBorder(),
-                backgroundColor: WalletTheme.instance.primary,
+              return Material(
+                color: WalletTheme.instance.primary,
                 shadowColor: WalletTheme.instance.gradientOne,
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-                labelPadding:
-                    const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-                onDeleted: () {
-                  words.removeAt(index);
-                  isActive = words.length < 24;
-                  setState(() {});
-                },
-                deleteIcon: Icon(
-                  Icons.close,
-                  size: 14,
-                ),
-                label: Text(
-                  "${index + 1} - $value",
-                  style: Theme.of(context).textTheme.bodyMedium,
+                shape: GradientStadiumBorder(),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "${index + 1} - $value",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: IconButton(
+                          iconSize: 24,
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            words.removeAt(index);
+                            isActive = words.length < 24;
+                            setState(() {});
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            size: 18,
+                            color: WalletTheme.instance.textColor,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
                 elevation: 2,
               );
             }).toList(),
           ],
         ),
+        const SizedBox(
+          height: 10,
+        ),
         TextFormField(
           enabled: isActive,
           autofocus: true,
           inputFormatters: [MnemonicInputFormatter()],
           textCapitalization: TextCapitalization.none,
-          style: Theme.of(context).textTheme.headline6,
           controller: _controller,
           autocorrect: false,
           enableSuggestions: false,
+          style: Theme.of(context).textTheme.headlineMedium,
           onFieldSubmitted: (value) {
             _addNewWord();
           },

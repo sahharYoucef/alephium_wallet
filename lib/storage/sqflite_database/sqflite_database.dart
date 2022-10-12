@@ -138,8 +138,6 @@ class SQLiteDBHelper extends BaseDBHelper {
         ON balances.address_id = addresses.address
         AND balances.network = '${network.name}';
       """);
-    LoggerService.instance.log(data);
-
     return List<Map<String, dynamic>>.from(data)
         .combine()
         .map((e) => WalletStore.fromDb(e))
@@ -245,7 +243,6 @@ class SQLiteDBHelper extends BaseDBHelper {
       }
     });
     var data = await batch.commit();
-    LoggerService.instance.log(data);
   }
 
   @override

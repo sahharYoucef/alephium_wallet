@@ -52,6 +52,7 @@ class CircleNavigationBar extends StatelessWidget {
                       indicatorColor: Colors.transparent,
                       unselectedLabelColor: navBarUnselectedIconsColor,
                       labelColor: navBarSelectedIconsColor,
+                      indicatorSize: TabBarIndicatorSize.label,
                       tabs: <Widget>[
                         ...List.generate(navBarIcons.length, (index) {
                           return Icon(

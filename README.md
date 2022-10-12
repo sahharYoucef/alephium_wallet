@@ -1,6 +1,10 @@
 # alephium_wallet
 
-A new Flutter project.
+Alephium wallet for mobile made by Community
+
+<p align="center">
+<img src="assets/icons/alephium_icon.svg" alt="drawing" width="150"/>
+<p/>
 
 ## Getting Started
 
@@ -14,3 +18,5 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+### Screenshots
