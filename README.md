@@ -12,6 +12,17 @@ Author: Sahhar Youcef
 Language: Dart (>=2.17.0 <3.0.0)
 Frameworl: Flutter (>=3.3)
 ```
+## Features
+
+  - [X] Built for Alephium usage.
+  - [X] Support multiple networks (testnet , mainnet , localhost)
+  - [X] Check your alephium balance.
+  - [X] Send and receive alephium coins to other wallets.   
+  - [X] Mobile support , IOS and Android responsive UX.
+  
+**Release:**
+
+* Currently [`version v0.0.1-Beta`](https://github.com/sahharYoucef/alephium_wallet/releases/tag/Beta)
 
 ## Getting Started
 
