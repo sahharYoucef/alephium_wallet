@@ -7,10 +7,9 @@
 Alephium wallet for mobile made by Community members
 
 ```
-Licence: MIT Licence
 Author: Sahhar Youcef
 Language: Dart (>=2.17.0 <3.0.0)
-Frameworl: Flutter (>=3.3)
+Framework: Flutter (>=3.3)
 ```
 ## Features
 
