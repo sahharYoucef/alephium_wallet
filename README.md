@@ -69,7 +69,8 @@ samples, guidance on mobile development, and a full API reference.
 5. Create new Pull Request
 
 If you like the project and want to donate.
-**Release:**
+
+**Addresses:**
  - Alephium => 1279QsTUT4uA7GqdmqRA8e3LHpnS7osDgiPeZBME35oZv
  - ERGO => 9hTr7HpgSnjwdiP6CAwtP4VVZEBmU42gDG4zNArMyWEprmR7daV
 
