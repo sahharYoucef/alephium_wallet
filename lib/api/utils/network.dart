@@ -2,7 +2,7 @@ enum Network {
   mainnet(
     'https://mainnet-wallet.alephium.org',
     'https://mainnet-backend.alephium.org',
-    'https://explorer.alephium.org',
+    'https://explorer.alephium.org/#',
   ),
   testnet(
     'https://testnet-wallet.alephium.org',
