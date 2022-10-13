@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 abstract class Format {
   static var _format = NumberFormat(
-    "##0.0000",
+    "##0.0###",
     "en_US",
   );
 
@@ -26,7 +26,9 @@ abstract class Format {
     if (AppStorage.instance.price == null) return null;
     final symbol =
         getCurrencySymbol(AppStorage.instance.currency.toUpperCase());
-    var _currencyFormat = NumberFormat.currency(symbol: symbol);
+    var _currencyFormat = NumberFormat.currency(
+      symbol: symbol,
+    );
     return _currencyFormat.format(value * AppStorage.instance.price!);
   }
 

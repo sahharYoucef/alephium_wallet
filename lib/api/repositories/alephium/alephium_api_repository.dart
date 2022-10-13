@@ -105,7 +105,7 @@ class AlephiumApiRepository extends BaseApiRepository {
                         ?.map((e) => TransactionRefStore(
                               transactionId: '$address${transaction.hash}',
                               address: e.address,
-                              amount: int.tryParse("${e.amount}"),
+                              amount: e.amount,
                               txHashRef: e.txHashRef,
                               unlockScript: e.unlockScript,
                               type: "in",
@@ -116,7 +116,7 @@ class AlephiumApiRepository extends BaseApiRepository {
                         ?.map((e) => TransactionRefStore(
                               transactionId: '$address${transaction.hash}',
                               address: e.address,
-                              amount: int.tryParse("${e.amount}"),
+                              amount: e.amount,
                               type: "out",
                             ))
                         .toList() ??

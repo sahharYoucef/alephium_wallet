@@ -28,10 +28,10 @@ class SQLiteDBHelper extends BaseDBHelper {
 
   dropTables(Database _db) async {
     final batch = _db.batch();
-    batch.execute('DROP TABLE IF EXISTS $_addressesTable');
+    // batch.execute('DROP TABLE IF EXISTS $_addressesTable');
     batch.execute('DROP TABLE IF EXISTS $_transactionRefsTable');
     batch.execute('DROP TABLE IF EXISTS $_transactionTable');
-    batch.execute('DROP TABLE IF EXISTS $_walletTable');
+    // batch.execute('DROP TABLE IF EXISTS $_walletTable');
     batch.execute('DROP TABLE IF EXISTS $_balancesTable');
     await batch.commit();
   }
@@ -68,7 +68,7 @@ class SQLiteDBHelper extends BaseDBHelper {
       CREATE TABLE IF NOT EXISTS $_transactionRefsTable (
           ref_address TEXT NOT NULL,
           unlockScript TEXT,
-          amount INTEGER,
+          amount TEXT,
           txHashRef TEXT,
           type TEXT,
           transaction_id TEXT NOT NULL,
@@ -242,7 +242,7 @@ class SQLiteDBHelper extends BaseDBHelper {
         );
       }
     });
-    var data = await batch.commit();
+    await batch.commit();
   }
 
   @override

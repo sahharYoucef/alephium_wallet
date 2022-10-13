@@ -12,7 +12,7 @@ class TransactionRefStore {
 
   final String? address;
   final String? unlockScript;
-  final int? amount;
+  final String? amount;
   final String? txHashRef;
   final String? transactionId;
   final String? type;
@@ -29,7 +29,7 @@ class TransactionRefStore {
   factory TransactionRefStore.fromDb(Map<String, dynamic> data) {
     final _address = data["ref_address"] as String;
     final _unlockScript = data["unlockScript"];
-    final _amount = data["amount"] as int;
+    final _amount = data["amount"] as String?;
     final _txHashRef = data["txHashRef"];
     final _transactionId = data["transaction_id"];
     final _type = data["type"];

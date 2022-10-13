@@ -247,13 +247,13 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       refsIn: [
         TransactionRefStore(
           address: _fromAddress.address,
-          amount: amountValue.toInt(),
+          amount: amountValue.toString(),
           transactionId: data.id,
           type: "in",
         ),
         TransactionRefStore(
           address: _fromAddress.address,
-          amount: fee,
+          amount: fee.toString(),
           transactionId: data.id,
           type: "out",
         )
@@ -261,7 +261,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       refsOut: [
         TransactionRefStore(
           address: _toAddress,
-          amount: amountValue.toInt(),
+          amount: amountValue.toString(),
           transactionId: data.id,
           type: "out",
         ),

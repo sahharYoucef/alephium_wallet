@@ -119,19 +119,22 @@ class TransactionStore extends Equatable {
       );
 
   String get txAmount {
-    var value = 0.0;
+    double value = 0.0;
     if (inputAddresses.contains(address)) {
       var _inAddresses =
           refsIn.where((element) => element.address == address).toList();
       var _outAddresses =
           refsOut.where((element) => element.address == address).toList();
-      for (var ref in _inAddresses) value += (ref.amount ?? 0);
-      for (var ref in _outAddresses) value -= (ref.amount ?? 0);
+      for (var ref in _inAddresses)
+        value += (BigInt.tryParse("${ref.amount}")?.toDouble() ?? 0);
+      for (var ref in _outAddresses)
+        value -= (BigInt.tryParse("${ref.amount}")?.toDouble() ?? 0);
       value -= feeValue;
     } else {
       var _outAddresses =
           refsOut.where((element) => element.address == address).toList();
-      for (var ref in _outAddresses) value += (ref.amount ?? 0);
+      for (var ref in _outAddresses)
+        value += (BigInt.tryParse("${ref.amount}")?.toDouble() ?? 0);
     }
     return (value / 10e17).toStringAsFixed(3);
   }
