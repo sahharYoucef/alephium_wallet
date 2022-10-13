@@ -38,6 +38,13 @@ class SettingsPage extends StatelessWidget {
                   height: 4,
                 ),
                 Text(
+                  "v0.0.1",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(
                   "Brought to you by Sahhar Youcef 2022",
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),

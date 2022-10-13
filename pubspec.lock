@@ -12,7 +12,7 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "127bd941e4e224eaf77f988720321ab7e7c1c2af"
+      ref: master
       resolved-ref: "127bd941e4e224eaf77f988720321ab7e7c1c2af"
       url: "https://github.com/sahharYoucef/alephium_dart.git"
     source: git
@@ -178,6 +178,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  cli_util:
+    dependency: transitive
+    description:
+      name: cli_util
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.5"
   clock:
     dependency: transitive
     description:
@@ -341,6 +348,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  flutter_launcher_icons:
+    dependency: "direct dev"
+    description:
+      name: flutter_launcher_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -484,13 +498,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.1"
-  icons_launcher:
-    dependency: "direct dev"
-    description:
-      name: icons_launcher
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.5"
   image:
     dependency: transitive
     description:
@@ -848,13 +855,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
-  shimmer:
-    dependency: "direct main"
-    description:
-      name: shimmer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   sky_engine:
     dependency: transitive
     description: flutter

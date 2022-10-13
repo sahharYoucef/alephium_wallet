@@ -15,7 +15,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 0.0.1
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -45,7 +45,7 @@ dependencies:
   alephium_dart:
     git:
       url: https://github.com/sahharYoucef/alephium_dart.git
-      ref: 127bd941e4e224eaf77f988720321ab7e7c1c2af
+      ref: master
   sqflite: ^2.1.0+1
   intl: ^0.17.0
   google_fonts: ^3.0.1
@@ -60,7 +60,6 @@ dependencies:
   flutter_native_splash: ^2.2.11
   qr_flutter: ^4.0.0
   qr_code_scanner: ^1.0.1
-  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -80,16 +79,12 @@ dev_dependencies:
   objectbox_generator: ^1.6.2
   rename: ^2.0.1
   change_app_package_name: ^1.1.0
-  icons_launcher: ^2.0.5
-icons_launcher:
-  platforms:
-    android:
-      enable: true
-    ios:
-      enable: true
-  image_path: "assets/icons/alephium_logo_dark.png"
-  adaptive_background_color: "#191e6b"
-
+  flutter_launcher_icons: ^0.10.0
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/splash_screen_logo.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
 # The following section is specific to Flutter.
 flutter:
   # The following line ensures that the Material Icons font is
