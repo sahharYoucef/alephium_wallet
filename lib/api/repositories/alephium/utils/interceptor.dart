@@ -8,8 +8,8 @@ class ApiInterceptor extends QueuedInterceptorsWrapper {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     LoggerService.instance
-        .log("${options.method} : ${options.baseUrl}${options.path}");
-    LoggerService.instance.log(options.data);
+        .log("${options.method} : ${options.uri}", level: Level.debug);
+    LoggerService.instance.log(options.data, level: Level.debug);
     super.onRequest(options, handler);
   }
 
@@ -22,7 +22,7 @@ class ApiInterceptor extends QueuedInterceptorsWrapper {
         var res = await dio.fetch(err.requestOptions);
         handler.resolve(res);
       } catch (e, trace) {
-        print(trace);
+        LoggerService.instance.log(trace, level: Level.debug);
         handler.reject(err);
       }
     }

@@ -48,7 +48,7 @@ class _AddressesPageState extends State<AddressesPage> {
         return true;
       },
       child: Scaffold(
-        floatingActionButton: widget.bloc.wallet.mnemonic != null
+        floatingActionButton: !widget.bloc.wallet.readOnly
             ? FloatingOptionsButton(
                 isDialOpen: isDialOpen,
                 bloc: widget.bloc,

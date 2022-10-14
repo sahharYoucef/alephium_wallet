@@ -39,7 +39,9 @@ extension Helper on BuildContext {
     scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
       margin: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      backgroundColor: level == Level.error ? Colors.red : Colors.blueAccent,
+      backgroundColor: level == Level.error
+          ? Colors.red.withOpacity(.5)
+          : Colors.blueAccent.withOpacity(.5),
       behavior: SnackBarBehavior.floating,
       content: Row(
         children: [

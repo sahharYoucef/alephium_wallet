@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
 class LoggerService {
@@ -9,7 +10,7 @@ class LoggerService {
   }
 
   void log(dynamic message, {Level level = Level.info}) {
-    if (message == null) return;
+    if (message == null && !kDebugMode) return;
     switch (level) {
       case Level.info:
         _logger.i(message);

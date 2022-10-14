@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 abstract class Format {
   static var _format = NumberFormat(
-    "##0.0###",
+    "##0.0##",
     "en_US",
   );
 

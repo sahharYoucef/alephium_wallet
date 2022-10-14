@@ -57,8 +57,7 @@ class AlephiumApiRepository extends BaseApiRepository {
       final data = await _coingeckoClient.getPrice(coin, currency);
       return Either<double>(data: double.tryParse("${data?[coin]?[currency]}"));
     } on Exception catch (e, trace) {
-      return Either<double>()
-        ..setException(ApiError(exception: e, trace: trace));
+      return Either<double>(error: ApiError(exception: e, trace: trace));
     }
   }
 
@@ -85,8 +84,7 @@ class AlephiumApiRepository extends BaseApiRepository {
       );
       return Either<AddressStore>(data: addressData);
     } on Exception catch (e, trace) {
-      return Either<AddressStore>()
-        ..setException(ApiError(exception: e, trace: trace));
+      return Either<AddressStore>(error: ApiError(exception: e, trace: trace));
     }
   }
 
@@ -130,8 +128,8 @@ class AlephiumApiRepository extends BaseApiRepository {
           .toList();
       return Either<List<TransactionStore>>(data: transactions);
     } on Exception catch (e, trace) {
-      return Either<List<TransactionStore>>()
-        ..setException(ApiError(exception: e, trace: trace));
+      return Either<List<TransactionStore>>(
+          error: ApiError(exception: e, trace: trace));
     }
   }
 
@@ -168,8 +166,8 @@ class AlephiumApiRepository extends BaseApiRepository {
         gasPrice: data.gasPrice,
       ));
     } on Exception catch (e, trace) {
-      return Either<TransactionBuildDto>()
-        ..setException(ApiError(exception: e, trace: trace));
+      return Either<TransactionBuildDto>(
+          error: ApiError(exception: e, trace: trace));
     }
   }
 
@@ -186,8 +184,8 @@ class AlephiumApiRepository extends BaseApiRepository {
         toGroup: data.toGroup,
       ));
     } on Exception catch (e, trace) {
-      return Either<TransactionResultDTO>()
-        ..setException(ApiError(exception: e, trace: trace));
+      return Either<TransactionResultDTO>(
+          error: ApiError(exception: e, trace: trace));
     }
   }
 
@@ -217,8 +215,8 @@ class AlephiumApiRepository extends BaseApiRepository {
         toGroup: data.toGroup,
       ));
     } on Exception catch (e, trace) {
-      return Either<SweepResultDTO>()
-        ..setException(ApiError(exception: e, trace: trace));
+      return Either<SweepResultDTO>(
+          error: ApiError(exception: e, trace: trace));
     }
   }
 }
