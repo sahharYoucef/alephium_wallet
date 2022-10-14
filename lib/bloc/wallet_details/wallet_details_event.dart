@@ -22,6 +22,13 @@ class AddPendingTxs extends WalletDetailsEvent {
   List<Object> get props => [transactions];
 }
 
+class UpdateWalletBalance extends WalletDetailsEvent {
+  UpdateWalletBalance();
+
+  @override
+  List<Object> get props => [DateTime.now()];
+}
+
 class WalletDetailsRefreshData extends WalletDetailsEvent {
   WalletDetailsRefreshData();
 

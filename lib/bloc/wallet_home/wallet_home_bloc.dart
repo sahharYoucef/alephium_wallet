@@ -60,12 +60,16 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
             withLoadingIndicator: false,
           ));
         } catch (e, trace) {
-          print(trace);
           emit(WalletHomeError(message: e.toString()));
         }
       } else if (event is WalletHomeRefreshData) {
         if (state is WalletHomeCompleted &&
             (state as WalletHomeCompleted).wallets.isNotEmpty) {
+          var currency = AppStorage.instance.currency;
+          var _price = await apiRepository.getPrice(currency: currency);
+          if (_price.hasException) {
+            emit(WalletHomeError(message: _price.getException?.message));
+          }
           wallets = (state as WalletHomeCompleted).wallets;
           emit(WalletHomeCompleted(
             wallets: List<WalletStore>.from(wallets),

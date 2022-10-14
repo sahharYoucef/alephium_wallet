@@ -162,7 +162,6 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
           _transactions.sort(((a, b) => a.timeStamp.compareTo(b.timeStamp)));
           getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
               ?[wallet.id] = _transactions;
-
           periodic = Timer.periodic(Duration(seconds: 10), (value) {
             var tx = _transactions.firstWhereOrNull(
                 (element) => element.txStatus == TXStatus.pending);
@@ -177,6 +176,7 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
             withLoadingIndicator: true,
             wallet: wallet,
           ));
+          add(UpdateWalletBalance());
           getIt
               .get<BaseDBHelper>()
               .insertTransactions(wallet.id, event.transactions);
@@ -185,6 +185,29 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
             message: ApiError(exception: e).message,
           ));
         }
+      } else if (event is UpdateWalletBalance) {
+        var addressesBalances = await Future.wait<Either<AddressStore>>([
+          for (var address in wallet.addresses)
+            apiRepository.getAddressBalance(
+              address: address,
+            )
+        ]);
+        var updatedAddresses = <AddressStore>[];
+        for (var address in addressesBalances) {
+          if (address.hasData && address.getData != null) {
+            updatedAddresses.add(address.getData!);
+          }
+        }
+        getIt.get<BaseDBHelper>().updateAddressBalance(
+              updatedAddresses,
+            );
+        wallet = wallet.copyWith(addresses: updatedAddresses);
+        walletHomeBloc.add(HomeUpdateWalletDetails(wallet));
+        emit(WalletDetailsCompleted(
+          transactions: List.from(_transactions.reversed),
+          wallet: wallet,
+          withLoadingIndicator: false,
+        ));
       } else if (event is GenerateNewAddress) {
         var indexes = wallet.addresses.map((e) => e.index).toList();
         var newAddress = walletService.deriveNewAddress(

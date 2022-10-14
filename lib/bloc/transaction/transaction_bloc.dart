@@ -241,13 +241,12 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       transactionGas: transaction?.gasAmount,
       network: apiRepository.network,
     );
-    var amountValue = (double.tryParse('${amount}') ?? 0.0) * 10e17;
-    var fee = ((double.tryParse("${data.fee}") ?? 0) * 10e17).toInt();
+    var fee = data.fee.parseToAlphValue;
     data = data.copyWith(
       refsIn: [
         TransactionRefStore(
           address: _fromAddress.address,
-          amount: amountValue.toString(),
+          amount: amount?.parseToAlphValue.toString(),
           transactionId: data.id,
           type: "in",
         ),
@@ -255,18 +254,24 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           address: _fromAddress.address,
           amount: fee.toString(),
           transactionId: data.id,
-          type: "out",
+          type: "in",
         )
       ],
       refsOut: [
         TransactionRefStore(
           address: _toAddress,
-          amount: amountValue.toString(),
+          amount: amount?.parseToAlphValue.toString(),
           transactionId: data.id,
           type: "out",
         ),
       ],
     );
     return data;
+  }
+}
+
+extension _Parser on String {
+  int get parseToAlphValue {
+    return ((double.tryParse('${this}') ?? 0.0) * 10e17).toInt();
   }
 }
