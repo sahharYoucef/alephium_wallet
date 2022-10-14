@@ -47,7 +47,35 @@ class BalanceTile extends StatelessWidget {
                   ),
                 ]
               ])),
-            )
+            ),
+            if (wallet.lockedBalance != 0.00) ...[
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Locked balance :',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              const Divider(),
+              Align(
+                alignment: Alignment.center,
+                child: RichText(
+                    text: TextSpan(children: [
+                  TextSpan(
+                    text: "${wallet.lockedBalanceConverted}",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  TextSpan(
+                    text: " = ",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  TextSpan(
+                    text: "${wallet.lockedBalanceConverted}",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ])),
+              )
+            ]
           ],
         ),
       ),

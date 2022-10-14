@@ -96,7 +96,7 @@ class _WalletSettingState extends State<WalletSetting> {
                         return null;
                       }),
                       onChanged: (value) {},
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      style: Theme.of(context).textTheme.bodyMedium,
                       decoration: InputDecoration(
                         labelText: 'Wallet name',
                       ),
@@ -120,7 +120,7 @@ class _WalletSettingState extends State<WalletSetting> {
                       height: 10,
                     ),
                     const Divider(),
-                    if (widget.detailsBloc.wallet.mnemonic != null) ...[
+                    if (!widget.detailsBloc.wallet.readOnly) ...[
                       const SizedBox(
                         height: 10,
                       ),

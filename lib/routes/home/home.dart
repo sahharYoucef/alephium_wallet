@@ -60,202 +60,209 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: onWillPop,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            Positioned.fill(
-                child: Column(
-              children: [
-                SizedBox(
-                  height: 70 + context.topPadding,
-                ),
-                Expanded(
-                  child: TabBarView(
-                      physics: NeverScrollableScrollPhysics(),
-                      controller: _tabController,
-                      children: [
-                        BlocConsumer<WalletHomeBloc, WalletHomeState>(
-                          bloc: _walletHomeBloc,
-                          listener: (context, state) {
-                            if (state is WalletHomeError) {
-                              if (state.message != null)
-                                context.showSnackBar(state.message!,
-                                    level: Level.error);
-                            }
-                          },
-                          buildWhen: (previous, current) =>
-                              previous is WalletHomeCompleted &&
-                              current is! WalletHomeError,
-                          builder: (context, state) {
-                            if (state is WalletHomeLoading) {
-                              return Center(
-                                child: AlephiumIcon(
-                                  spinning: true,
-                                ),
-                              );
-                            } else if (state is WalletHomeCompleted) {
-                              return RefreshIndicator(
-                                onRefresh: () async {
-                                  if (state.withLoadingIndicator) return;
-                                  _walletHomeBloc.add(WalletHomeRefreshData());
-                                },
-                                child: ListView.builder(
-                                  padding: EdgeInsets.only(
-                                    top: 16,
-                                    bottom: 70,
+      child: BlocListener<WalletHomeBloc, WalletHomeState>(
+        bloc: _walletHomeBloc,
+        listener: (context, state) {
+          if (state is WalletHomeError) {
+            if (state.message != null)
+              context.showSnackBar(state.message!, level: Level.error);
+          }
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Stack(
+            children: [
+              Positioned.fill(
+                  child: Column(
+                children: [
+                  SizedBox(
+                    height: 70 + context.topPadding,
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                        physics: NeverScrollableScrollPhysics(),
+                        controller: _tabController,
+                        children: [
+                          BlocBuilder<WalletHomeBloc, WalletHomeState>(
+                            bloc: _walletHomeBloc,
+                            buildWhen: (previous, current) {
+                              return current is! WalletHomeError;
+                            },
+                            builder: (context, state) {
+                              if (state is WalletHomeLoading) {
+                                return Center(
+                                  child: AlephiumIcon(
+                                    spinning: true,
                                   ),
-                                  itemCount: state.wallets.length,
-                                  itemBuilder: (context, index) {
-                                    return WalletTile(
-                                        wallet: state.wallets[index]);
+                                );
+                              } else if (state is WalletHomeCompleted) {
+                                return RefreshIndicator(
+                                  backgroundColor: WalletTheme.instance.primary,
+                                  color: WalletTheme.instance.gradientTwo,
+                                  onRefresh: () async {
+                                    if (state.withLoadingIndicator) return;
+                                    _walletHomeBloc
+                                        .add(WalletHomeRefreshData());
                                   },
-                                ),
-                              );
-                            } else {
-                              return SizedBox();
-                            }
-                          },
-                        ),
-                        SettingsPage()
-                      ]),
-                ),
-              ],
-            )),
-            BlocBuilder<WalletHomeBloc, WalletHomeState>(
-              builder: (context, state) {
-                return WalletAppBar(
-                  color: WalletTheme.instance.primary,
-                  elevation: 1,
-                  action: _walletHomeBloc.wallets.isNotEmpty
-                      ? IconButton(
-                          icon: Icon(
-                            Icons.qr_code_scanner,
-                          ),
-                          onPressed: () async {
-                            var data =
-                                await showGeneralDialog<Map<String, dynamic>?>(
-                              barrierDismissible: true,
-                              barrierLabel: "receive",
-                              context: context,
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      Padding(
-                                padding: EdgeInsets.only(
-                                    top: 16,
-                                    bottom: 16 + context.viewInsetsBottom,
-                                    left: 16,
-                                    right: 16),
-                                child: Center(
-                                  child: Material(
-                                    color: Theme.of(context).primaryColor,
-                                    borderRadius: BorderRadius.circular(
-                                      16,
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.only(
+                                      top: 16,
+                                      bottom: 70,
                                     ),
-                                    elevation: 6,
-                                    child: ClipRRect(
+                                    itemCount: state.wallets.length,
+                                    itemBuilder: (context, index) {
+                                      return WalletTile(
+                                          wallet: state.wallets[index]);
+                                    },
+                                  ),
+                                );
+                              } else {
+                                return SizedBox();
+                              }
+                            },
+                          ),
+                          SettingsPage()
+                        ]),
+                  ),
+                ],
+              )),
+              BlocBuilder<WalletHomeBloc, WalletHomeState>(
+                builder: (context, state) {
+                  return WalletAppBar(
+                    color: WalletTheme.instance.primary,
+                    elevation: 1,
+                    action: _walletHomeBloc.wallets.isNotEmpty
+                        ? IconButton(
+                            icon: Icon(
+                              Icons.qr_code_scanner,
+                            ),
+                            onPressed: () async {
+                              var data = await showGeneralDialog<
+                                  Map<String, dynamic>?>(
+                                barrierDismissible: true,
+                                barrierLabel: "receive",
+                                context: context,
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 16,
+                                      bottom: 16 + context.viewInsetsBottom,
+                                      left: 16,
+                                      right: 16),
+                                  child: Center(
+                                    child: Material(
+                                      color: Theme.of(context).primaryColor,
                                       borderRadius: BorderRadius.circular(
                                         16,
                                       ),
-                                      child: SizedBox(
-                                        width: context.width * .7,
-                                        height: context.height * .6,
-                                        child: const QRViewExample(),
+                                      elevation: 6,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                          16,
+                                        ),
+                                        child: SizedBox(
+                                          width: context.width * .7,
+                                          height: context.height * .6,
+                                          child: const QRViewExample(),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              transitionDuration:
-                                  const Duration(milliseconds: 300),
-                              transitionBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                return SlideTransition(
-                                  position: animation.drive(
-                                    Tween<Offset>(
-                                      begin: Offset(0, 1),
-                                      end: Offset.zero,
+                                transitionDuration:
+                                    const Duration(milliseconds: 300),
+                                transitionBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  return SlideTransition(
+                                    position: animation.drive(
+                                      Tween<Offset>(
+                                        begin: Offset(0, 1),
+                                        end: Offset.zero,
+                                      ),
                                     ),
-                                  ),
-                                  child: child,
-                                );
-                              },
-                            );
+                                    child: child,
+                                  );
+                                },
+                              );
 
-                            if (data != null) {
-                              Navigator.pushNamed(context, Routes.send,
-                                  arguments: {
-                                    "wallet": _walletHomeBloc.wallets.first,
-                                    "address": _walletHomeBloc
-                                        .wallets.first.addresses.first,
-                                    "initial-data": data,
-                                  });
-                            }
-                          },
-                        )
-                      : null,
-                  leading: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        AlephiumIcon(
-                          spinning: state is WalletHomeCompleted &&
-                              state.withLoadingIndicator,
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${AppStorage.instance.formattedPrice ?? ''}",
-                              style: Theme.of(context).textTheme.headlineMedium,
-                            ),
-                            Text(
-                              'Alephium Wallet',
-                              style: Theme.of(context).textTheme.headlineMedium,
-                            ),
-                          ],
-                        )
-                      ],
+                              if (data != null) {
+                                Navigator.pushNamed(context, Routes.send,
+                                    arguments: {
+                                      "wallet": _walletHomeBloc.wallets.first,
+                                      "address": _walletHomeBloc
+                                          .wallets.first.addresses.first,
+                                      "initial-data": data,
+                                    });
+                              }
+                            },
+                          )
+                        : null,
+                    leading: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          AlephiumIcon(
+                            spinning: state is WalletHomeCompleted &&
+                                state.withLoadingIndicator,
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${AppStorage.instance.formattedPrice ?? ''}",
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
+                              ),
+                              Text(
+                                'Alephium Wallet',
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  withLoadingIndicator: state is WalletHomeCompleted &&
-                      state.withLoadingIndicator,
-                );
-              },
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: CircleNavigationBar(
-                tabController: _tabController,
-                navBarSelectedIconsColor:
-                    Theme.of(context).textTheme.headlineMedium!.color!,
-                navBarColor: Theme.of(context).primaryColor,
-                onTap: () {
-                  Navigator.pushNamed(context, Routes.createWallet);
+                    withLoadingIndicator: state is WalletHomeCompleted &&
+                        state.withLoadingIndicator,
+                  );
                 },
-                navbarHeight: 60,
-                circleIconsColor: WalletTheme.instance.secondary,
-                navBarIcons: [
-                  CustomIcon(
-                      icon: Icons.home,
-                      onPressed: () {
-                        _tabController.animateTo(0);
-                      }),
-                  CustomIcon(
-                      icon: Icons.settings,
-                      onPressed: () {
-                        _tabController.animateTo(1);
-                      }),
-                ],
-                margin: 16.0,
-                borderRadius: BorderRadius.circular(16),
               ),
-            ),
-          ],
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: CircleNavigationBar(
+                  tabController: _tabController,
+                  navBarSelectedIconsColor:
+                      Theme.of(context).textTheme.headlineMedium!.color!,
+                  navBarColor: Theme.of(context).primaryColor,
+                  onTap: () {
+                    Navigator.pushNamed(context, Routes.createWallet);
+                  },
+                  navbarHeight: 60,
+                  circleIconsColor: WalletTheme.instance.secondary,
+                  navBarIcons: [
+                    CustomIcon(
+                        icon: Icons.home,
+                        onPressed: () {
+                          _tabController.animateTo(0);
+                        }),
+                    CustomIcon(
+                        icon: Icons.settings,
+                        onPressed: () {
+                          _tabController.animateTo(1);
+                        }),
+                  ],
+                  margin: 16.0,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

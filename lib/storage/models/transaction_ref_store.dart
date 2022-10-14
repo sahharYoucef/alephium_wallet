@@ -1,4 +1,3 @@
-import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable

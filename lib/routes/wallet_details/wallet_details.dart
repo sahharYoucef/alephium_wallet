@@ -59,24 +59,24 @@ class _WalletDetailsState extends State<WalletDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RefreshIndicator(
-        backgroundColor: WalletTheme.instance.background,
-        color: Colors.white,
-        onRefresh: () async {
-          if (_refresh != null) return;
-          _refresh = Completer();
-          _walletDetailsBloc.add(WalletDetailsRefreshData());
-          await _refresh?.future;
-          _refresh = null;
-        },
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                SizedBox(
-                  height: 70 + context.topPadding,
-                ),
-                Expanded(
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              SizedBox(
+                height: 70 + context.topPadding,
+              ),
+              Expanded(
+                child: RefreshIndicator(
+                  backgroundColor: WalletTheme.instance.primary,
+                  color: WalletTheme.instance.gradientTwo,
+                  onRefresh: () async {
+                    if (_refresh != null) return;
+                    _refresh = Completer();
+                    _walletDetailsBloc.add(WalletDetailsRefreshData());
+                    await _refresh?.future;
+                    _refresh = null;
+                  },
                   child: CustomScrollView(
                     controller: scrollController,
                     slivers: [
@@ -155,7 +155,6 @@ class _WalletDetailsState extends State<WalletDetails> {
                                           if (transaction == null)
                                             return const SizedBox();
                                           return TransactionTile(
-                                            _walletDetailsBloc,
                                             transaction: transaction,
                                           );
                                         },
@@ -176,32 +175,32 @@ class _WalletDetailsState extends State<WalletDetails> {
                     ],
                   ),
                 ),
-              ],
-            ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: WalletAppBar(
-                  controller: scrollController,
-                  label: Text(
-                    '${widget.wallet.title} Wallet',
-                    style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            ],
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: WalletAppBar(
+                controller: scrollController,
+                label: Text(
+                  '${widget.wallet.title} Wallet',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                action: IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, Routes.walletSettings,
+                        arguments: {
+                          "wallet-details": _walletDetailsBloc,
+                        });
+                  },
+                  icon: Icon(
+                    Icons.settings,
                   ),
-                  action: IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, Routes.walletSettings,
-                          arguments: {
-                            "wallet-details": _walletDetailsBloc,
-                          });
-                    },
-                    icon: Icon(
-                      Icons.settings,
-                    ),
-                  )),
-            ),
-          ],
-        ),
+                )),
+          ),
+        ],
       ),
-      floatingActionButton: (widget.wallet.mnemonic != null)
+      floatingActionButton: (!widget.wallet.readOnly)
           ? FloatingActionButton.extended(
               heroTag: "button",
               label: Text(

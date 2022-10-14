@@ -25,6 +25,7 @@ class WalletStore extends Equatable {
   final String? mnemonic;
   final String? seed;
   late final List<AddressStore> _addresses;
+  late final bool readOnly;
   final String mainAddress;
 
   WalletStore({
@@ -38,6 +39,7 @@ class WalletStore extends Equatable {
     List<AddressStore> addresses = const [],
   }) {
     _addresses = addresses;
+    readOnly = mnemonic == null;
   }
 
   factory WalletStore.redOnly(String address) {
@@ -141,8 +143,23 @@ class WalletStore extends Equatable {
     return Format.formatNumber(value / 10e17);
   }
 
+  String get lockedBalance {
+    var value = 0.0;
+    for (var address in _addresses) {
+      double? addressBalance;
+      addressBalance = address.balance?.lockedBalance;
+      value += addressBalance ?? 0;
+    }
+    return Format.formatNumber(value / 10e17);
+  }
+
   String? get balanceConverted {
     var value = double.parse(balance);
+    return Format.convertToCurrency(value);
+  }
+
+  String? get lockedBalanceConverted {
+    var value = double.parse(lockedBalance);
     return Format.convertToCurrency(value);
   }
 

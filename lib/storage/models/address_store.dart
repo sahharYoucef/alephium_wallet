@@ -82,7 +82,7 @@ class AddressStore extends Equatable {
   }
 
   String get formattedBalance {
-    return (addressBalance).toStringAsPrecision(3);
+    return Format.formatNumber(addressBalance);
   }
 
   double get addressBalance {
