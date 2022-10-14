@@ -111,7 +111,7 @@ class MnemonicTextFieldState extends State<MnemonicTextField> {
           controller: _controller,
           autocorrect: false,
           enableSuggestions: false,
-          style: Theme.of(context).textTheme.headlineMedium,
+          style: Theme.of(context).textTheme.bodyMedium,
           onFieldSubmitted: (value) {
             _addNewWord();
           },

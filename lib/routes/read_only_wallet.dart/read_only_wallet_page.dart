@@ -71,7 +71,7 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                           return null;
                         },
                         onChanged: (value) {},
-                        style: Theme.of(context).textTheme.headlineMedium,
+                        style: Theme.of(context).textTheme.bodyMedium,
                         decoration: InputDecoration(
                           labelText: 'Wallet name',
                         ),
@@ -91,7 +91,7 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                         //   return null;
                         // }),
                         onChanged: (value) {},
-                        style: Theme.of(context).textTheme.headlineMedium,
+                        style: Theme.of(context).textTheme.bodyMedium,
                         decoration: InputDecoration(
                           labelText: 'Address or Public Key',
                         ),

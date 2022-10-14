@@ -3,7 +3,6 @@ import 'package:alephium_wallet/utils/format.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class ReceiveAmountField extends StatefulWidget {
@@ -95,6 +94,7 @@ class _ReceiveAmountFieldState extends State<ReceiveAmountField> {
           keyboardType: TextInputType.number,
           autocorrect: false,
           decoration: textFieldDecoration("Amount"),
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         Row(
           children: [

@@ -1,5 +1,6 @@
 import 'package:alephium_wallet/routes/receive/widgets/amount_field.dart';
 import 'package:alephium_wallet/routes/send/widgets/address_from.dart';
+import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
@@ -70,16 +71,6 @@ class _ReceivePageState extends State<ReceivePage> {
                   backgroundColor: WalletTheme.instance.primary,
                   foregroundColor: WalletTheme.instance.textColor,
                   version: QrVersions.auto,
-                  embeddedImage: AssetImage(
-                      WalletTheme.themeMode == ThemeMode.light
-                          ? "assets/icons/alephium_logo_light.png"
-                          : "assets/icons/alephium_logo_dark.png"),
-                  embeddedImageStyle: QrEmbeddedImageStyle(
-                    size: Size(
-                      50,
-                      50,
-                    ),
-                  ),
                   size: 200.0,
                 );
               }),
