@@ -73,6 +73,7 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
           _transactions.sort(((a, b) => a.timeStamp.compareTo(b.timeStamp)));
           getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
               ?[wallet.id] = List.from(_transactions.reversed);
+          await Future.delayed(Duration(seconds: 2));
           emit(WalletDetailsCompleted(
             transactions: List.from(_transactions.reversed),
             wallet: wallet,
@@ -137,7 +138,7 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
           _transactions.addAll(updateTransactions);
           _transactions.sort(((a, b) => a.timeStamp.compareTo(b.timeStamp)));
           getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
-              ?[wallet.id] = _transactions;
+              ?[wallet.id] = _transactions.reversed.toList();
           emit(WalletDetailsCompleted(
             transactions: List.from(_transactions.reversed),
             wallet: wallet,

@@ -71,7 +71,9 @@ class _WalletDetailsState extends State<WalletDetails> {
                   backgroundColor: WalletTheme.instance.primary,
                   color: WalletTheme.instance.gradientTwo,
                   onRefresh: () async {
-                    if (_refresh != null) return;
+                    if (_refresh != null ||
+                        (_walletDetailsBloc.periodic?.isActive ?? false))
+                      return;
                     _refresh = Completer();
                     _walletDetailsBloc.add(WalletDetailsRefreshData());
                     await _refresh?.future;
@@ -211,7 +213,7 @@ class _WalletDetailsState extends State<WalletDetails> {
               icon: Icon(Icons.send_outlined),
               onPressed: () {
                 Navigator.pushNamed(context, Routes.send, arguments: {
-                  "wallet": widget.wallet,
+                  "wallet": _walletDetailsBloc.wallet,
                   "wallet-details": _walletDetailsBloc
                 });
               },

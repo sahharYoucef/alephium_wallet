@@ -28,7 +28,7 @@ class TransactionRefStore {
   factory TransactionRefStore.fromDb(Map<String, dynamic> data) {
     final _address = data["ref_address"] as String;
     final _unlockScript = data["unlockScript"];
-    final _amount = data["amount"] as String?;
+    final _amount = data["amount"]?.toString();
     final _txHashRef = data["txHashRef"];
     final _transactionId = data["transaction_id"];
     final _type = data["type"];
