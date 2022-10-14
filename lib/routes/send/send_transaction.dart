@@ -52,10 +52,12 @@ class _SendTransactionPageState extends State<SendTransactionPage>
     );
     _amountController =
         TextEditingController(text: widget.initialData?["amount"].toString());
+    if (widget.addressStore != null) {
+      _bloc.fromAddress = widget.addressStore;
+    }
     if (widget.initialData != null) {
       _bloc.amount = widget.initialData?["amount"].toString();
       _bloc.toAddress = widget.initialData?["address"];
-      _bloc.fromAddress = widget.addressStore;
     }
     super.initState();
   }
@@ -156,6 +158,9 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                           widget.initialData?["address"],
                                       autocorrect: false,
                                       validator: addressToValidator,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
                                       onChanged: ((value) {
                                         _bloc.add(TransactionValuesChangedEvent(
                                             toAddress: value));
@@ -167,6 +172,9 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                       controller: _amountController,
                                       key: _amountKey,
                                       inputFormatters: [AmountFormatter()],
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
                                       validator: amountValidator,
                                       onChanged: (value) {
                                         _bloc.add(TransactionValuesChangedEvent(
@@ -290,6 +298,9 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                                 )
                                               else ...[
                                                 TextFormField(
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium,
                                                   key: _gasAmountKey,
                                                   inputFormatters: [
                                                     AmountFormatter()
@@ -313,6 +324,9 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                                 SizedBox(height: 8),
                                                 TextFormField(
                                                     key: _gasPriceKey,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium,
                                                     inputFormatters: [
                                                       AmountFormatter()
                                                     ],

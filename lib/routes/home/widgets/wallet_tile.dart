@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 import '../../constants.dart';
 
 class WalletTile extends StatelessWidget {
-  final WalletStore? wallet;
+  final WalletStore wallet;
   WalletTile({
     Key? key,
-    this.wallet,
+    required this.wallet,
   });
 
   @override
@@ -45,24 +45,24 @@ class WalletTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          wallet!.title.isEmpty
+                          wallet.title.isEmpty
                               ? "Alephium wallet"
-                              : wallet!.title,
+                              : wallet.title,
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         RichText(
                             text: TextSpan(children: [
                           TextSpan(
-                              text: "${wallet!.balance}",
+                              text: "${wallet.balance}",
                               style: Theme.of(context).textTheme.headlineSmall),
-                          if (wallet!.balanceConverted != null &&
-                              wallet!.balanceConverted != "0.000") ...[
+                          if (wallet.balanceConverted != null &&
+                              wallet.balanceConverted != "0.000") ...[
                             TextSpan(
                               text: " = ",
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             TextSpan(
-                                text: "${wallet!.balanceConverted}",
+                                text: "${wallet.balanceConverted}",
                                 style: Theme.of(context).textTheme.bodyMedium),
                           ]
                         ]))
@@ -88,7 +88,7 @@ class WalletTile extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    if (wallet?.mnemonic != null) ...[
+                    if (!wallet.readOnly) ...[
                       Expanded(
                           child: OutlinedButton(
                         child: Text("Send"),
@@ -128,7 +128,7 @@ class WalletTile extends StatelessWidget {
                                   child: Padding(
                                     padding: const EdgeInsets.all(16.0),
                                     child: ReceivePage(
-                                      wallet: wallet!,
+                                      wallet: wallet,
                                     ),
                                   )),
                             ),

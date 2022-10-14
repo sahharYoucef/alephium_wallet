@@ -1,6 +1,5 @@
 import 'package:alephium_wallet/api/repositories/alephium/alephium_api_repository.dart';
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
-import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/routes/widgets/animated_gradient_icon.dart';
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
@@ -12,9 +11,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class TransactionTile extends StatelessWidget {
   final TransactionStore transaction;
-  final WalletDetailsBloc _walletDetailsBloc;
-  const TransactionTile(
-    this._walletDetailsBloc, {
+  const TransactionTile({
     Key? key,
     required this.transaction,
   }) : super(key: key);
