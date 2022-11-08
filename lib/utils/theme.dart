@@ -1,4 +1,4 @@
-import 'package:alephium_wallet/utils/gradient_input_bordder.dart';
+import 'package:alephium_wallet/utils/gradient_input_border.dart';
 import 'package:alephium_wallet/utils/gradient_stadium_border.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,7 +11,7 @@ class WalletTheme {
   late final Color background;
   late final Color gradientOne;
   late final Color gradientTwo;
-  late final fontFamily = GoogleFonts.montserrat().fontFamily;
+  final fontFamily = GoogleFonts.montserrat().fontFamily;
 
   static ThemeMode themeMode = ThemeMode.dark;
 
@@ -60,7 +60,7 @@ class WalletTheme {
             textStyle: TextStyle(
               fontFamily: fontFamily,
               color: textColor,
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.w100,
             ),
           ),

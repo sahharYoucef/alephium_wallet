@@ -52,11 +52,23 @@ class CircleNavigationBar extends StatelessWidget {
                       indicatorColor: Colors.transparent,
                       unselectedLabelColor: navBarUnselectedIconsColor,
                       labelColor: navBarSelectedIconsColor,
-                      indicatorSize: TabBarIndicatorSize.label,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      splashBorderRadius: borderRadius,
+                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                        (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.pressed))
+                            return WalletTheme.instance.background
+                                .withOpacity(.9);
+                          return null;
+                        },
+                      ),
                       tabs: <Widget>[
                         ...List.generate(navBarIcons.length, (index) {
-                          return Icon(
-                            navBarIcons[index].icon,
+                          return SizedBox(
+                            height: 80,
+                            child: Icon(
+                              navBarIcons[index].icon,
+                            ),
                           );
                         })
                       ],
