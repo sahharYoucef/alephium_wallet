@@ -76,7 +76,7 @@ class AppStorage {
     var settings = Hive.box("settings");
     var _network = settings.get("network") as String?;
     if (_network == null) {
-      network = Network.testnet;
+      network = Network.mainnet;
       _network = network.name;
     }
     return Network.network(_network);
