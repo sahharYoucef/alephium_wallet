@@ -9,7 +9,7 @@ enum Network {
     'https://testnet-backend.alephium.org',
     'https://testnet.alephium.org',
   ),
-  custom(
+  localHost(
     'http://localhost:12973',
     'http://localhost:9090',
     'http://localhost:3000',

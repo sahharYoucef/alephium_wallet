@@ -36,19 +36,7 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
             emit(WalletHomeError(message: _price.getException?.message));
           }
           AppStorage.instance.price = _price.getData;
-          var data = await Future.wait<Either<AddressStore>>([
-            for (var wallet in wallets)
-              for (var address in wallet.addresses)
-                apiRepository.getAddressBalance(
-                  address: address,
-                )
-          ]);
-          var updatedAddresses = <AddressStore>[];
-          for (var address in data) {
-            if (address.hasData && address.getData != null) {
-              updatedAddresses.add(address.getData!);
-            }
-          }
+          final updatedAddresses = await _updateAddresses();
           await getIt
               .get<BaseDBHelper>()
               .updateAddressBalance(updatedAddresses);
@@ -76,19 +64,7 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
             withLoadingIndicator: true,
           ));
           try {
-            var data = await Future.wait<Either<AddressStore>>([
-              for (var wallet in wallets)
-                for (var address in wallet.addresses)
-                  apiRepository.getAddressBalance(
-                    address: address,
-                  )
-            ]);
-            var updatedAddresses = <AddressStore>[];
-            for (var address in data) {
-              if (address.hasData && address.getData != null) {
-                updatedAddresses.add(address.getData!);
-              }
-            }
+            final updatedAddresses = await _updateAddresses();
             await getIt
                 .get<BaseDBHelper>()
                 .updateAddressBalance(updatedAddresses);
@@ -122,5 +98,35 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
         ));
       }
     });
+  }
+
+  Future<List<AddressStore>> _updateAddresses() async {
+    var addresses = <AddressStore>[];
+    for (var wallet in wallets) {
+      for (var address in wallet.addresses) addresses.add(address);
+    }
+    List<Either<AddressStore>> data = [];
+    var chunks = <List<AddressStore>>[];
+    int chunkSize = 15;
+    for (var i = 0; i < addresses.length; i += chunkSize) {
+      chunks.add(addresses.sublist(i,
+          i + chunkSize > addresses.length ? addresses.length : i + chunkSize));
+    }
+    for (var element in chunks) {
+      var subData = await Future.wait<Either<AddressStore>>(
+        element.map((e) => apiRepository.getAddressBalance(address: e)),
+      );
+      data.addAll(subData);
+      await Future.delayed(
+        const Duration(seconds: 2),
+      );
+    }
+    var updatedAddresses = <AddressStore>[];
+    for (var address in data) {
+      if (address.hasData && address.getData != null) {
+        updatedAddresses.add(address.getData!);
+      }
+    }
+    return updatedAddresses;
   }
 }

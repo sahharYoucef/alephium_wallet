@@ -55,7 +55,8 @@ class AlephiumApiRepository extends BaseApiRepository {
       {String coin = "alephium", String currency = "usd"}) async {
     try {
       final data = await _coingeckoClient.getPrice(coin, currency);
-      return Either<double>(data: double.tryParse("${data?[coin]?[currency]}"));
+      final price = double.parse("${data?[coin]?[currency]}");
+      return Either<double>(data: price);
     } on Exception catch (e, trace) {
       return Either<double>(error: ApiError(exception: e, trace: trace));
     }
