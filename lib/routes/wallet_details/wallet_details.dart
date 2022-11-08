@@ -14,7 +14,7 @@ import 'package:alephium_wallet/routes/wallet_details/widgets/transaction_tile.d
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/theme.dart';
-import 'package:flutter/foundation.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
@@ -185,7 +185,7 @@ class _WalletDetailsState extends State<WalletDetails> {
             child: WalletAppBar(
                 controller: scrollController,
                 label: Text(
-                  '${widget.wallet.title} Wallet',
+                  '${widget.wallet.title} ${'wallet'.tr()}',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 action: IconButton(
@@ -206,7 +206,7 @@ class _WalletDetailsState extends State<WalletDetails> {
           ? FloatingActionButton.extended(
               heroTag: "button",
               label: Text(
-                'Send',
+                'send'.tr(),
               ),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),

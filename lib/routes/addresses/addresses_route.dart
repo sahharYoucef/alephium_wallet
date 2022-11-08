@@ -1,16 +1,11 @@
 import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
-import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/routes/addresses/widgets/address_tile.dart';
-import 'package:alephium_wallet/routes/addresses/widgets/advanced_option_dialog.dart';
-import 'package:alephium_wallet/routes/addresses/widgets/generate_address_dialog.dart';
 import 'package:alephium_wallet/routes/addresses/widgets/options_floating_button.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
-import 'package:alephium_wallet/utils/constants.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../constants.dart';
 
@@ -94,7 +89,7 @@ class _AddressesPageState extends State<AddressesPage> {
             WalletAppBar(
               controller: controller,
               label: Text(
-                'Wallet Addresses',
+                'walletAddresses'.tr(),
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),

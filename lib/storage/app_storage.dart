@@ -1,9 +1,7 @@
 import 'package:alephium_wallet/api/utils/network.dart';
-import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/utils/format.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AppStorage {
@@ -44,6 +42,20 @@ class AppStorage {
   set price(double? value) {
     var settings = Hive.box("settings");
     settings.put("price", {currency: value});
+  }
+
+  String get language {
+    var settings = Hive.box("settings");
+    var _language = settings.get("language");
+    if (_language == null) {
+      language = _language = "en";
+    }
+    return _language;
+  }
+
+  set language(String? value) {
+    var settings = Hive.box("settings");
+    settings.put("language", value);
   }
 
   bool get firstRun {

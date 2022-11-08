@@ -8,6 +8,7 @@ import 'package:alephium_wallet/routes/widgets/confirmation_dialog.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class WalletSetting extends StatefulWidget {
   final WalletDetailsBloc detailsBloc;
@@ -98,7 +99,7 @@ class _WalletSettingState extends State<WalletSetting> {
                       onChanged: (value) {},
                       style: Theme.of(context).textTheme.bodyMedium,
                       decoration: InputDecoration(
-                        labelText: 'Wallet name',
+                        labelText: 'walletName'.tr(),
                       ),
                     ),
                     const SizedBox(
@@ -107,14 +108,17 @@ class _WalletSettingState extends State<WalletSetting> {
                     Hero(
                       tag: "button",
                       child: OutlinedButton(
-                          onPressed: () {
-                            _focusNode.unfocus();
-                            if (_nameKey.currentState?.value != null &&
-                                _nameKey.currentState!.value.trim().isNotEmpty)
-                              widget.detailsBloc.add(UpdateWalletName(
-                                  _nameKey.currentState?.value));
-                          },
-                          child: Text("Apply")),
+                        onPressed: () {
+                          _focusNode.unfocus();
+                          if (_nameKey.currentState?.value != null &&
+                              _nameKey.currentState!.value.trim().isNotEmpty)
+                            widget.detailsBloc.add(
+                                UpdateWalletName(_nameKey.currentState?.value));
+                        },
+                        child: Text(
+                          "apply".tr(),
+                        ),
+                      ),
                     ),
                     const SizedBox(
                       height: 10,
@@ -125,21 +129,24 @@ class _WalletSettingState extends State<WalletSetting> {
                         height: 10,
                       ),
                       Text(
-                        "A wallet can have multiple public addresses derived from the main address.",
+                        "derivedAddresses".tr(),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const SizedBox(
                         height: 10,
                       ),
                       OutlinedButton(
-                          onPressed: () {
-                            _focusNode.unfocus();
-                            Navigator.pushNamed(context, Routes.addresses,
-                                arguments: {
-                                  "wallet-details": widget.detailsBloc,
-                                });
-                          },
-                          child: Text("Addresses")),
+                        onPressed: () {
+                          _focusNode.unfocus();
+                          Navigator.pushNamed(context, Routes.addresses,
+                              arguments: {
+                                "wallet-details": widget.detailsBloc,
+                              });
+                        },
+                        child: Text(
+                          "addresses".tr(),
+                        ),
+                      ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -148,18 +155,21 @@ class _WalletSettingState extends State<WalletSetting> {
                         height: 10,
                       ),
                       Text(
-                        "You can add this wallet as a read only wallet to other wallet applications with your extended public key.No secret will be shared.",
+                        "readOnlyDescription".tr(),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const SizedBox(
                         height: 10,
                       ),
                       OutlinedButton(
-                          onPressed: () {
-                            _focusNode.unfocus();
-                            _settingBloc.add(WalletSettingDisplayPublicKey());
-                          },
-                          child: Text("Display public key")),
+                        onPressed: () {
+                          _focusNode.unfocus();
+                          _settingBloc.add(WalletSettingDisplayPublicKey());
+                        },
+                        child: Text(
+                          "displayPublicKey".tr(),
+                        ),
+                      ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -168,7 +178,7 @@ class _WalletSettingState extends State<WalletSetting> {
                         height: 10,
                       ),
                       Text(
-                        "You can display your mnemonic (seed phrase , paper key) in can you have lost your backup, or to confirm that your backup is correct.",
+                        "displayMnemonicDescription".tr(),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const SizedBox(
@@ -180,7 +190,7 @@ class _WalletSettingState extends State<WalletSetting> {
                             _settingBloc.add(WalletSettingDisplayMnemonic());
                           },
                           child: Text(
-                            "Display mnemonic",
+                            "displayMnemonic".tr(),
                           )),
                     ]
                   ],
@@ -189,7 +199,7 @@ class _WalletSettingState extends State<WalletSetting> {
               WalletAppBar(
                 controller: controller,
                 label: Text(
-                  'Wallet setting',
+                  'walletSetting'.tr(),
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 action: IconButton(
@@ -197,9 +207,8 @@ class _WalletSettingState extends State<WalletSetting> {
                       showDialog(
                           context: context,
                           builder: (context) => WalletConfirmationDialog(
-                                title: "Delete Wallet",
-                                data:
-                                    "Please make sure you saved your mnemonic before deleting this wallet , are you sure you want to continue?",
+                                title: "deleteWallet".tr(),
+                                data: "deleteWalletDescription".tr(),
                                 onConfirmTap: () {
                                   BlocProvider.of<WalletHomeBloc>(context).add(
                                       WalletHomeRemoveWallet(

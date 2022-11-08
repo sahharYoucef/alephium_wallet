@@ -1,5 +1,5 @@
 import 'package:alephium_wallet/bloc/create_wallet/create_wallet_bloc.dart';
-import 'package:alephium_wallet/routes/mnemonic_verify/mnemonic_verify_page.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/theme.dart';
@@ -79,7 +79,7 @@ class _WalletMnemonicPageState extends State<WalletMnemonicPage> {
               Padding(
                 padding: const EdgeInsets.all(4),
                 child: Text(
-                  "Please keep this mnemonic safe and secure.",
+                  "mnemonicSafe".tr(),
                   style: Theme.of(context).textTheme.bodyLarge,
                   textAlign: TextAlign.center,
                 ),
@@ -89,7 +89,7 @@ class _WalletMnemonicPageState extends State<WalletMnemonicPage> {
                 child: Hero(
                   tag: "Button",
                   child: OutlinedButton(
-                    child: Text("Next"),
+                    child: Text("next".tr()),
                     onPressed: () {
                       Navigator.pushNamed(
                         context,
@@ -108,7 +108,7 @@ class _WalletMnemonicPageState extends State<WalletMnemonicPage> {
         ),
         WalletAppBar(
           label: Text(
-            'Wallet Mnemonic',
+            'walletMnemonic'.tr(),
             style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),

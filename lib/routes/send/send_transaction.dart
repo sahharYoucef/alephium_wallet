@@ -14,6 +14,7 @@ import 'package:alephium_wallet/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../bloc/transaction/transaction_bloc.dart';
 
@@ -106,7 +107,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                 children: [
                   WalletAppBar(
                     label: Text(
-                      'Send Transaction',
+                      'sendTransaction'.tr(),
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ),
@@ -139,7 +140,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                   ),
                                   AddressFromDropDownMenu(
                                     initialAddress: widget.addressStore,
-                                    label: "from Address",
+                                    label: "fromAddress".tr(),
                                     addresses: widget.wallet.addresses
                                         .where(
                                           (element) => element.balance != 0,
@@ -185,7 +186,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                       keyboardType: TextInputType.number,
                                       autocorrect: false,
                                       decoration: InputDecoration(
-                                          labelText: "Amount",
+                                          labelText: "amount".tr(),
                                           suffixIcon: Container(
                                             alignment: Alignment.center,
                                             padding: EdgeInsets.only(right: 8),
@@ -210,7 +211,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                                     ?.validate();
                                               },
                                               child: Text(
-                                                "MAX",
+                                                "max".tr(),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyMedium!
@@ -229,7 +230,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 4),
                                         child: Text(
-                                          "Available Balance: ${_bloc.balance}",
+                                          "${'availableBalance'.tr()} : ${_bloc.balance}",
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodySmall,
@@ -276,7 +277,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                                             .start,
                                                     children: [
                                                       Text(
-                                                        "Expected Fees : ${_bloc.expectedFees}",
+                                                        "${'expectedFees'.tr()} : ${_bloc.expectedFees}",
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .bodyMedium,
@@ -285,7 +286,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                                         height: 4,
                                                       ),
                                                       Text(
-                                                        "Amount to Send : ${_bloc.amount}",
+                                                        "${'amountToSend'.tr()} : ${_bloc.amount}",
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .bodyMedium,
@@ -319,33 +320,35 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                                       TextInputType.number,
                                                   decoration:
                                                       textFieldDecoration(
-                                                          "Gas Amount"),
+                                                    "gasAmount".tr(),
+                                                  ),
                                                 ),
                                                 SizedBox(height: 8),
                                                 TextFormField(
-                                                    key: _gasPriceKey,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyMedium,
-                                                    inputFormatters: [
-                                                      AmountFormatter()
-                                                    ],
-                                                    validator:
-                                                        gasPriceValidator,
-                                                    onChanged: (value) {
-                                                      _bloc.add(
-                                                          TransactionValuesChangedEvent(
-                                                              gasPrice: value));
-                                                      _gasPriceKey.currentState
-                                                          ?.validate();
-                                                    },
-                                                    textInputAction:
-                                                        TextInputAction.done,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    decoration:
-                                                        textFieldDecoration(
-                                                            "Gas Price")),
+                                                  key: _gasPriceKey,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium,
+                                                  inputFormatters: [
+                                                    AmountFormatter()
+                                                  ],
+                                                  validator: gasPriceValidator,
+                                                  onChanged: (value) {
+                                                    _bloc.add(
+                                                        TransactionValuesChangedEvent(
+                                                            gasPrice: value));
+                                                    _gasPriceKey.currentState
+                                                        ?.validate();
+                                                  },
+                                                  textInputAction:
+                                                      TextInputAction.done,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  decoration:
+                                                      textFieldDecoration(
+                                                    "gasPrice".tr(),
+                                                  ),
+                                                ),
                                               ],
                                               const Spacer(),
                                               const SizedBox(
@@ -355,9 +358,14 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                                 tag: "button",
                                                 child: OutlinedButton(
                                                   child: Text(
-                                                      state.transaction != null
-                                                          ? 'SEND'
-                                                          : 'CHECK'),
+                                                    state.transaction != null
+                                                        ? 'send'
+                                                            .tr()
+                                                            .toUpperCase()
+                                                        : 'check'
+                                                            .tr()
+                                                            .toUpperCase(),
+                                                  ),
                                                   onPressed: _bloc
                                                           .activateButton
                                                       ? () {

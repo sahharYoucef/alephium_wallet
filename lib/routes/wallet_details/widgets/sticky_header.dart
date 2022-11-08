@@ -2,6 +2,7 @@ import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class StickyHeader extends StatelessWidget {
   final WalletDetailsState state;
@@ -21,7 +22,7 @@ class StickyHeader extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    'Transactions',
+                    'transactions'.tr(),
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   Spacer(),

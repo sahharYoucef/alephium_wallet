@@ -1,6 +1,6 @@
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
-import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class BalanceTile extends StatelessWidget {
   final WalletStore wallet;
@@ -23,7 +23,7 @@ class BalanceTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Balance :',
+              "${'balance'.tr()} :",
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const Divider(),
@@ -53,7 +53,7 @@ class BalanceTile extends StatelessWidget {
                 height: 20,
               ),
               Text(
-                'Locked balance :',
+                '${'lockedBalance'.tr()} :',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const Divider(),

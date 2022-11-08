@@ -4,6 +4,7 @@ import 'package:alephium_wallet/routes/addresses/widgets/generate_address_dialog
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class FloatingOptionsButton extends StatelessWidget {
   final ValueNotifier<bool> isDialOpen;
@@ -38,7 +39,7 @@ class FloatingOptionsButton extends StatelessWidget {
             elevation: 0,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0)),
-            label: 'Generate address',
+            label: 'generateAddress'.tr(),
             onTap: () {
               showGeneralDialog(
                 barrierDismissible: true,
@@ -73,7 +74,7 @@ class FloatingOptionsButton extends StatelessWidget {
             elevation: 0,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0)),
-            label: 'Advanced options',
+            label: "advancedOptions".tr(),
             onTap: () {
               showModalBottomSheet(
                   backgroundColor: Colors.transparent,

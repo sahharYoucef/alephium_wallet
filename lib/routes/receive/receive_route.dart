@@ -1,6 +1,6 @@
 import 'package:alephium_wallet/routes/receive/widgets/amount_field.dart';
 import 'package:alephium_wallet/routes/send/widgets/address_from.dart';
-import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
@@ -40,7 +40,7 @@ class _ReceivePageState extends State<ReceivePage> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          "Receive :",
+          "${'receive'.tr()} :",
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         const SizedBox(
@@ -52,7 +52,7 @@ class _ReceivePageState extends State<ReceivePage> {
         ),
         AddressFromDropDownMenu(
           addresses: widget.wallet.addresses,
-          label: "Address",
+          label: "address".tr(),
           initialAddress: _addressStore,
           onChanged: (value) {
             _addressStore = value;
@@ -97,7 +97,7 @@ class _ReceivePageState extends State<ReceivePage> {
                       text: widget.wallet.addresses.first.address);
                   await Clipboard.setData(data);
                   context.showSnackBar(
-                    "address copied to clipboard!",
+                    "addressCopied".tr(),
                   );
                 },
                 icon: Icon(

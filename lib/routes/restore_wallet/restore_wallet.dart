@@ -1,6 +1,7 @@
 import 'package:alephium_wallet/routes/restore_wallet/widgets/mnemonic_text_field.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../bloc/create_wallet/create_wallet_bloc.dart';
 
@@ -32,7 +33,7 @@ class RestoreWallet extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        "Enter your mnemonic to restore your wallet :",
+                        "enterMnemonic".tr(),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
@@ -68,7 +69,7 @@ class RestoreWallet extends StatelessWidget {
                                       ),
                                     );
                                 },
-                                child: Text("Restore Wallet"),
+                                child: Text("restoreWallet".tr()),
                               ),
                             ),
                           ),
@@ -81,7 +82,7 @@ class RestoreWallet extends StatelessWidget {
             ),
             WalletAppBar(
               label: Text(
-                'Restore Wallet',
+                'restoreWallet'.tr(),
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),

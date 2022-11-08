@@ -1,8 +1,8 @@
 import 'package:alephium_dart/alephium_dart.dart' as alephium;
-import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/bloc/transaction/transaction_bloc.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:collection/collection.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 mixin InputValidators {
   WalletStore get wallet;
@@ -10,7 +10,7 @@ mixin InputValidators {
   String? addressToValidator(value) {
     var validator = RegExp(r'^[1-9A-HJ-NP-Za-km-z]+$');
     if (!validator.hasMatch(value!)) {
-      return 'Invalid Address';
+      return 'invalidAddress'.tr();
     }
     return null;
   }
@@ -26,10 +26,10 @@ mixin InputValidators {
       return null;
     }
     if (amountNumber == 0) {
-      return "Amount must be greater than 0";
+      return "amountExceeded".tr(args: ["0"]);
     }
     if (amountNumber > balance) {
-      return 'Amount must be less than ${balance}';
+      return "amountExceeded".tr(args: [balance.toString()]);
     }
     return null;
   }
@@ -40,7 +40,9 @@ mixin InputValidators {
       return null;
     }
     if ((amountNumber * 10e17) < alephium.minimalGasPrice) {
-      return 'Gas price must be greater than ${(alephium.minimalGasPrice / 10e17).toStringAsFixed(7)}';
+      final minimalGasPrice =
+          (alephium.minimalGasPrice / 10e17).toStringAsFixed(7);
+      return 'gasPriceExceeded'.tr(args: [minimalGasPrice]);
     }
     return null;
   }
@@ -51,7 +53,8 @@ mixin InputValidators {
       return null;
     }
     if (amountNumber < alephium.minimalGasAmount) {
-      return 'Amount must be greater than ${alephium.minimalGasAmount}';
+      final minimalGasAmount = alephium.minimalGasAmount.toString();
+      return 'minimalGasAmount'.tr(args: [minimalGasAmount]);
     }
     return null;
   }

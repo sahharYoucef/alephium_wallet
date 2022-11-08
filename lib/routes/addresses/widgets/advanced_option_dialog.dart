@@ -2,11 +2,10 @@ import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/routes/addresses/widgets/generate_address_dialog.dart';
 import 'package:alephium_wallet/routes/constants.dart';
 import 'package:alephium_wallet/utils/constants.dart';
-import 'package:alephium_wallet/utils/gradient_input_bordder.dart';
+import 'package:alephium_wallet/utils/gradient_input_border.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AdvancedOptionsDialog extends StatelessWidget {
@@ -32,7 +31,7 @@ class AdvancedOptionsDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Advanced operations :",
+              "advancedOperations".tr(),
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(
@@ -43,7 +42,7 @@ class AdvancedOptionsDialog extends StatelessWidget {
               height: 6,
             ),
             Text(
-              "Advanced operations reserved to more experienced users. A \"normal\" user should not need to use them very often, if not at all.",
+              "advancedOperationsDescription".tr(),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(
@@ -81,7 +80,7 @@ class AdvancedOptionsDialog extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "Consolidate UTXOs",
+                              "consolidateUTXOs".tr(),
                               style: Theme.of(context).textTheme.bodyMedium,
                               textAlign: TextAlign.center,
                             ),
@@ -89,7 +88,7 @@ class AdvancedOptionsDialog extends StatelessWidget {
                             SvgPicture.asset(WalletIcons.utxoIcon),
                             const Spacer(),
                             Text(
-                              "Consolidate (merge) your UTXOs into one.",
+                              "consolidateUTXOsDescription".tr(),
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
@@ -152,7 +151,7 @@ class AdvancedOptionsDialog extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "Generate one address per group",
+                              "generateOneAddress".tr(),
                               style: Theme.of(context).textTheme.bodyMedium,
                               textAlign: TextAlign.center,
                             ),
@@ -164,7 +163,7 @@ class AdvancedOptionsDialog extends StatelessWidget {
                               height: 10,
                             ),
                             Text(
-                              "Useful for miners or DeFi use.",
+                              "minersOrDeFiUse".tr(),
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!

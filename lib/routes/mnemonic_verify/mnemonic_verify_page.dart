@@ -6,6 +6,7 @@ import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class WalletMnemonicVerifyPage extends StatefulWidget {
   final WalletStore wallet;
@@ -63,7 +64,7 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
         children: [
           WalletAppBar(
             label: Text(
-              'Verify Mnemonic',
+              'verifyMnemonic'.tr(),
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ),
@@ -77,7 +78,7 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
                       padding: const EdgeInsets.only(
                           top: 16, left: 16, right: 16, bottom: 4),
                       child: Text(
-                        "Please put the correspondent word to the index.",
+                        "verifyMnemonicDescription".tr(),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
@@ -249,7 +250,7 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
                         child: Hero(
                           tag: "Button",
                           child: OutlinedButton(
-                            child: Text("Next"),
+                            child: Text("next".tr()),
                             onPressed: () {
                               var isValid = mnemonic[indexes[0]] ==
                                       _data[0]?["value"] &&
@@ -257,7 +258,7 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
                               if (!isValid) {
                                 setState(() {
                                   color = Color.fromARGB(255, 245, 120, 111);
-                                  message = "The mnemonic is not correct";
+                                  message = "mnemonicIncorrect".tr();
                                 });
                                 return;
                               }

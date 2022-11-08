@@ -1,6 +1,7 @@
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/utils/currencies.dart';
+import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +20,7 @@ class _CurrencyDropDownState extends State<CurrencyDropDown> {
     return ButtonTheme(
       alignedDropdown: true,
       child: DropdownButtonFormField<String>(
+        menuMaxHeight: context.height / 2,
         dropdownColor: WalletTheme.instance.primary,
         alignment: AlignmentDirectional.bottomEnd,
         elevation: 3,

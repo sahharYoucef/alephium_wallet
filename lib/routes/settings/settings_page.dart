@@ -1,6 +1,7 @@
-import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
-import 'package:alephium_wallet/routes/settings/widgets/currency_drop_down.dart';
 import 'package:alephium_wallet/routes/settings/widgets/network_drop_down.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:alephium_wallet/routes/settings/widgets/currency_drop_down.dart';
+import 'package:alephium_wallet/routes/settings/widgets/language_drop_down.dart';
 import 'package:alephium_wallet/routes/settings/widgets/theme_switch.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/utils/theme.dart';
@@ -31,7 +32,7 @@ class SettingsPage extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  "Alephium Wallet",
+                  "alephiumWallet".tr(),
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(
@@ -45,13 +46,13 @@ class SettingsPage extends StatelessWidget {
                   height: 4,
                 ),
                 Text(
-                  "Brought to you by Sahhar Youcef 2022",
+                  "broughtBy".tr(args: ["Sahhar Youcef"]),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 RichText(
                     text: TextSpan(children: [
                   TextSpan(
-                    text: "Licensed under ",
+                    text: "licensedUnder".tr(),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   TextSpan(
@@ -70,7 +71,7 @@ class SettingsPage extends StatelessWidget {
                     textAlign: TextAlign.center,
                     text: TextSpan(children: [
                       TextSpan(
-                        text: "This project is open source , find help on ",
+                        text: "socialLink".tr(),
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       TextSpan(
@@ -95,7 +96,7 @@ class SettingsPage extends StatelessWidget {
             textAlign: TextAlign.center,
             text: TextSpan(children: [
               TextSpan(
-                text: "Alephium Price is powered by ",
+                text: "priceSource".tr(),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               TextSpan(
@@ -124,7 +125,7 @@ class SettingsPage extends StatelessWidget {
           height: 10,
         ),
         Text(
-          "Currency",
+          "currency".tr(),
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(
@@ -139,13 +140,25 @@ class SettingsPage extends StatelessWidget {
           height: 10,
         ),
         Text(
-          "Network",
+          "language".tr(),
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(
           height: 10,
         ),
-        NetworkDropDown()
+        LanguageDropDown(),
+        const Divider(),
+        const SizedBox(
+          height: 10,
+        ),
+        Text(
+          "network".tr(),
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        NetworkDropDown(),
       ],
     );
   }

@@ -1,7 +1,7 @@
 import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 enum GenerationType { single, group }
 
@@ -59,8 +59,8 @@ class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
                       Expanded(
                         child: Text(
                           widget.type == GenerationType.single
-                              ? "Main address"
-                              : "Generate one address per group",
+                              ? "mainAddress".tr()
+                              : "generateOneAddress".tr(),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
@@ -76,7 +76,9 @@ class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
                   ),
                   if (widget.type == GenerationType.single) ...[
                     Text(
-                      "Default address for sending transactions. Note that if activated, \"${widget.bloc.wallet.mainAddress.substring(0, 10)}...\" will not be the main address anymore.",
+                      "generateAddressDescription".tr(args: [
+                        widget.bloc.wallet.mainAddress.substring(0, 10)
+                      ]),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
@@ -91,7 +93,7 @@ class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
                     controller: _controller,
                     autofocus: true,
                     decoration: InputDecoration(
-                      label: Text("Title"),
+                      label: Text("title".tr()),
                     ),
                   ),
                   const SizedBox(
@@ -122,7 +124,7 @@ class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
                                   child: SizedBox(
                                     width: 100,
                                     child: Text(
-                                      "Group $index",
+                                      "${'group'.tr()} $index",
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium,
@@ -158,8 +160,8 @@ class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
                       },
                       child: Text(
                         widget.type == GenerationType.single
-                            ? "Generate Address"
-                            : "Generate",
+                            ? "generateAddress".tr()
+                            : "generate".tr(),
                       ),
                     ),
                   ),

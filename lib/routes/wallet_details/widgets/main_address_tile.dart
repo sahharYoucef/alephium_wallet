@@ -3,6 +3,7 @@ import 'package:alephium_wallet/routes/constants.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class MainAddressTile extends StatelessWidget {
   final WalletStore wallet;
@@ -29,7 +30,7 @@ class MainAddressTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Main Address :',
+              "${'mainAddress'.tr()} :",
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             Divider(),
@@ -61,7 +62,7 @@ class MainAddressTile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           vertical: 4, horizontal: 16),
                       child: Text(
-                        'show more addresses',
+                        'showMoreAddresses'.tr(),
                         style: Theme.of(context).textTheme.bodyMedium!,
                       ),
                     ),

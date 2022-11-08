@@ -2,6 +2,7 @@ import 'package:alephium_wallet/bloc/create_wallet/create_wallet_bloc.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ReadOnlyWalletPage extends StatefulWidget {
   const ReadOnlyWalletPage({
@@ -50,7 +51,7 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                     children: [
                       Spacer(),
                       Text(
-                        "Enter your public wallet addresses or your extended public key to add wallet in read only mode",
+                        "enterAddressOrPublicKey".tr(),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const SizedBox(
@@ -73,7 +74,7 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                         onChanged: (value) {},
                         style: Theme.of(context).textTheme.bodyMedium,
                         decoration: InputDecoration(
-                          labelText: 'Wallet name',
+                          labelText: 'walletName'.tr(),
                         ),
                       ),
                       const SizedBox(
@@ -116,7 +117,7 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                                   ),
                                 );
                             },
-                            child: Text("Confirm")),
+                            child: Text("confirm".tr())),
                       ),
                     ],
                   ),
@@ -125,7 +126,7 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
             ),
             WalletAppBar(
               label: Text(
-                'Read Only Wallet',
+                'readOnlyWallet'.tr(),
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             )

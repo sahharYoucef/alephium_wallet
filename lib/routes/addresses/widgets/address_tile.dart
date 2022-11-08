@@ -1,7 +1,7 @@
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
-import 'package:alephium_wallet/storage/app_storage.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
-import 'package:alephium_wallet/utils/gradient_input_bordder.dart';
+import 'package:alephium_wallet/utils/gradient_input_border.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
@@ -59,14 +59,14 @@ class AddressTile extends StatelessWidget {
                       width: 10,
                     ),
                     Text(
-                      "index : ${address.index}",
+                      "${'index'.tr()} : ${address.index}",
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(
                       width: 10,
                     ),
                     Text(
-                      "Group : ${address.group.toString()}",
+                      "${'group'.tr()} : ${address.group.toString()}",
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
@@ -75,7 +75,7 @@ class AddressTile extends StatelessWidget {
                 RichText(
                     text: TextSpan(children: [
                   TextSpan(
-                      text: "Balance : ",
+                      text: "${'balance'.tr()} : ",
                       style: Theme.of(context).textTheme.headlineSmall),
                   TextSpan(
                       text: "${address.formattedBalance}",
@@ -107,7 +107,7 @@ class AddressTile extends StatelessWidget {
                         onPressed: () async {
                           var data = ClipboardData(text: address.address);
                           await Clipboard.setData(data);
-                          context.showSnackBar("address copied to clipboard!");
+                          context.showSnackBar("addressCopied".tr());
                         },
                         icon: Icon(Icons.copy))
                   ],

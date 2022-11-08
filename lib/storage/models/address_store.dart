@@ -1,9 +1,5 @@
 import 'dart:convert';
 
-import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
-import 'package:alephium_wallet/api/utils/network.dart';
-import 'package:alephium_wallet/main.dart';
-import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/storage/models/balance_store.dart';
 import 'package:alephium_wallet/utils/format.dart';
 import 'package:equatable/equatable.dart';

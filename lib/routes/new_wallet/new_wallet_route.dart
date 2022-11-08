@@ -8,6 +8,7 @@ import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class NewWalletPage extends StatefulWidget {
   const NewWalletPage({Key? key}) : super(key: key);
@@ -67,7 +68,7 @@ class _NewWalletPageState extends State<NewWalletPage> {
                 children: [
                   WalletAppBar(
                     label: Text(
-                      'New Wallet',
+                      'newWallet'.tr(),
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ),
@@ -78,9 +79,8 @@ class _NewWalletPageState extends State<NewWalletPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           NewWalletCheckbox(
-                            title: "New Wallet",
-                            description:
-                                "Create a wallet (keys and an address) from a randomly generated mnemonic.",
+                            title: "newWallet".tr(),
+                            description: "newWalletDescription".tr(),
                             value: "new",
                             onTap: (value) {
                               setState(() {
@@ -94,9 +94,8 @@ class _NewWalletPageState extends State<NewWalletPage> {
                             icon: Icons.create,
                           ),
                           NewWalletCheckbox(
-                            title: "Restore Wallet",
-                            description:
-                                "Restores a wallet's keys and address from a mnemonic phrase.",
+                            title: "restoreWallet".tr(),
+                            description: "restoreWalletDescription".tr(),
                             value: "restore",
                             selected: selected,
                             onTap: (value) {
@@ -110,9 +109,8 @@ class _NewWalletPageState extends State<NewWalletPage> {
                             icon: Icons.restore,
                           ),
                           NewWalletCheckbox(
-                            title: "Read-only Wallet",
-                            description:
-                                "Add a wallet address in read-only mode. This won't save any secrets in this device.",
+                            title: "readOnlyWallet".tr(),
+                            description: "readOnlyWalletDescription".tr(),
                             value: "read-only",
                             selected: selected,
                             onTap: (value) {
@@ -160,7 +158,7 @@ class _NewWalletPageState extends State<NewWalletPage> {
                                   );
                               }
                             : null,
-                        child: Text("Next"),
+                        child: Text("next".tr()),
                       ),
                     ),
                   ),

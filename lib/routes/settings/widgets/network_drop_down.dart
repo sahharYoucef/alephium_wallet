@@ -4,6 +4,7 @@ import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
+import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +23,7 @@ class _NetworkDropDownState extends State<NetworkDropDown> {
     return ButtonTheme(
       alignedDropdown: true,
       child: DropdownButtonFormField<Network>(
+        menuMaxHeight: context.height / 2,
         dropdownColor: WalletTheme.instance.primary,
         alignment: AlignmentDirectional.bottomEnd,
         elevation: 3,

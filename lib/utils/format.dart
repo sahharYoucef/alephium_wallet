@@ -18,8 +18,11 @@ abstract class Format {
   static String formatCurrency(double value) {
     final symbol =
         getCurrencySymbol(AppStorage.instance.currency.toUpperCase());
-    var _currencyFormat = NumberFormat.currency(symbol: "$symbol ");
-    return _currencyFormat.format(value);
+    var decimalDigits = value >= 1.0 ? 2 : 3;
+    var _currencyFormat =
+        NumberFormat.currency(symbol: "$symbol ", decimalDigits: decimalDigits);
+    final formattedValue = _currencyFormat.format(value);
+    return formattedValue;
   }
 
   static String? convertToCurrency(double value) {

@@ -8,6 +8,7 @@ import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:easy_localization/easy_localization.dart';
 
 class TransactionTile extends StatelessWidget {
   final TransactionStore transaction;
@@ -58,7 +59,7 @@ class TransactionTile extends StatelessWidget {
                             width: 8,
                           ),
                           Text(
-                            status ? "Confirmed" : "Pending",
+                            status ? "confirmed".tr() : "pending".tr(),
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineSmall!
@@ -85,7 +86,7 @@ class TransactionTile extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Text('Amount',
+                              Text('amount'.tr(),
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -113,7 +114,7 @@ class TransactionTile extends StatelessWidget {
                               ),
                               Spacer(),
                               if (type == TransactionType.withdraw) ...[
-                                Text('Fee',
+                                Text('fee'.tr(),
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyMedium!

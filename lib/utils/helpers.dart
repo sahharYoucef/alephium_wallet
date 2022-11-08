@@ -1,9 +1,26 @@
+import 'package:alephium_wallet/app.dart';
 import 'package:alephium_wallet/log/logger_service.dart';
-import 'package:alephium_wallet/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 export 'package:alephium_wallet/log/logger_service.dart';
+
+Color darken(Color c, [int percent = 10]) {
+  assert(1 <= percent && percent <= 100);
+  var f = 1 - percent / 100;
+  return Color.fromARGB(c.alpha, (c.red * f).round(), (c.green * f).round(),
+      (c.blue * f).round());
+}
+
+Color lighten(Color c, [int percent = 10]) {
+  assert(1 <= percent && percent <= 100);
+  var p = percent / 100;
+  return Color.fromARGB(
+      c.alpha,
+      c.red + ((255 - c.red) * p).round(),
+      c.green + ((255 - c.green) * p).round(),
+      c.blue + ((255 - c.blue) * p).round());
+}
 
 class AmountFormatter extends TextInputFormatter {
   @override

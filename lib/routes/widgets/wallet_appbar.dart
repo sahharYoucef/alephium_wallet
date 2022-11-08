@@ -1,11 +1,13 @@
 import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
+import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class WalletAppBar extends StatefulWidget {
   final IconButton? action;
-  final Widget? label;
+  final Text? label;
   final bool withLoadingIndicator;
   final ScrollController? controller;
   final Widget? leading;
@@ -68,7 +70,11 @@ class _WalletAppBarState extends State<WalletAppBar> {
               Row(
                 children: [
                   if (widget.leading != null)
-                    widget.leading!
+                    ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: context.width - 80,
+                        ),
+                        child: widget.leading!)
                   else
                     ModalRoute.of(context)!.canPop
                         ? AppBarIconButton(
@@ -83,10 +89,20 @@ class _WalletAppBarState extends State<WalletAppBar> {
                             width: 50,
                           ),
                   Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Align(
-                    alignment: Alignment.center,
-                    child: widget.label ?? const SizedBox(),
-                  )),
+                        alignment: Alignment.center,
+                        child: widget.label != null
+                            ? AutoSizeText(
+                                widget.label!.data!,
+                                style: widget.label!.style,
+                                maxLines: 1,
+                              )
+                            : const SizedBox(),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: widget.action == null

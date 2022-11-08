@@ -1,6 +1,7 @@
+import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class WalletConfirmationDialog extends StatelessWidget {
   final String data;
@@ -60,9 +61,9 @@ class WalletConfirmationDialog extends StatelessWidget {
                           },
                           style: OutlinedButton.styleFrom(
                               backgroundColor:
-                                  WalletTheme.instance.primary.withOpacity(.5)),
+                                  darken(WalletTheme.instance.primary, 25)),
                           child: Text(
-                            "Close",
+                            "close".tr(),
                           ),
                         ),
                       ),
@@ -73,7 +74,7 @@ class WalletConfirmationDialog extends StatelessWidget {
                         child: OutlinedButton(
                           onPressed: onConfirmTap,
                           child: Text(
-                            "Confirm",
+                            "confirm".tr(),
                           ),
                         ),
                       ),

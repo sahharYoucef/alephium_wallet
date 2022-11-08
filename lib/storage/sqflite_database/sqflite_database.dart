@@ -28,10 +28,10 @@ class SQLiteDBHelper extends BaseDBHelper {
 
   dropTables(Database _db) async {
     final batch = _db.batch();
-    // batch.execute('DROP TABLE IF EXISTS $_addressesTable');
+    batch.execute('DROP TABLE IF EXISTS $_addressesTable');
     batch.execute('DROP TABLE IF EXISTS $_transactionRefsTable');
     batch.execute('DROP TABLE IF EXISTS $_transactionTable');
-    // batch.execute('DROP TABLE IF EXISTS $_walletTable');
+    batch.execute('DROP TABLE IF EXISTS $_walletTable');
     batch.execute('DROP TABLE IF EXISTS $_balancesTable');
     await batch.commit();
   }
@@ -39,12 +39,12 @@ class SQLiteDBHelper extends BaseDBHelper {
   _onConfigure(Database _db) async {
     // await dropTables(_db);
     final batch = _db.batch();
-    batch.execute('PRAGMA foreign_keys = ON');
+    await _db.execute("PRAGMA foreign_keys = ON");
     batch.execute("""
       CREATE TABLE IF NOT EXISTS $_walletTable (
           id TEXT PRIMARY KEY NOT NULL,
-          title TEXT,
-          passphrase TEXT,
+          title VARCHAR(20),
+          passphrase VARCHAR(20),
           blockchain TEXT NOT NULL,
           mnemonic TEXT,
           seed TEXT,
@@ -60,8 +60,8 @@ class SQLiteDBHelper extends BaseDBHelper {
           timeStamp INTEGER NOT NULL,
           transactionAmount INTEGER,
           transactionGas TEXT,
-          status TEXT NOT NULL,
-          network TEXT NOT NULL,
+          status VARCHAR(10) NOT NULL,
+          network VARCHAR(10) NOT NULL,
           FOREIGN KEY(wallet_id) REFERENCES $_walletTable(id) ON DELETE CASCADE
       )""");
     batch.execute("""
@@ -77,15 +77,15 @@ class SQLiteDBHelper extends BaseDBHelper {
     batch.execute("""
       CREATE TABLE IF NOT EXISTS $_addressesTable (
           address TEXT PRIMARY KEY NOT NULL,
-          address_title TEXT,
-          address_color TEXT,
+          address_title VARCHAR(20),
+          address_color VARCHAR(20),
           publicKey TEXT,
           privateKey TEXT,
           address_index INTEGER,
           group_index INTEGER,
           warning TEXT,
           wallet_id TEXT NOT NULL,
-          FOREIGN KEY(wallet_id) REFERENCES $_walletTable(id)  ON DELETE CASCADE
+          FOREIGN KEY(wallet_id) REFERENCES $_walletTable(id) ON DELETE CASCADE
       )
       """);
     batch.execute("""
@@ -96,7 +96,7 @@ class SQLiteDBHelper extends BaseDBHelper {
           balance_locked REAL,
           network TEXT NOT NULL,
           address_id TEXT NOT NULL,
-          FOREIGN KEY(address_id) REFERENCES $_walletTable(address)  ON DELETE CASCADE
+          FOREIGN KEY(address_id) REFERENCES $_addressesTable(address) ON DELETE CASCADE
       )
       """);
     await batch.commit();
@@ -130,6 +130,8 @@ class SQLiteDBHelper extends BaseDBHelper {
   @override
   Future<List<WalletStore>> getWallets({required Network network}) async {
     var _db = await db.future;
+    var addresses = await _db.query(_addressesTable);
+    print(addresses.length);
     var data = await _db.rawQuery("""
         SELECT * FROM ${_walletTable} wallets
         LEFT JOIN ${_addressesTable} addresses
@@ -138,6 +140,7 @@ class SQLiteDBHelper extends BaseDBHelper {
         ON balances.address_id = addresses.address
         AND balances.network = '${network.name}';
       """);
+
     return List<Map<String, dynamic>>.from(data)
         .combine()
         .map((e) => WalletStore.fromDb(e))
@@ -181,13 +184,11 @@ class SQLiteDBHelper extends BaseDBHelper {
   @override
   deleteWallet(String id) async {
     var _db = await db.future;
-    var batch = _db.batch();
-    batch.delete(
+    await _db.delete(
       _walletTable,
       where: "id = ?",
       whereArgs: [id],
     );
-    await batch.commit();
   }
 
   @override

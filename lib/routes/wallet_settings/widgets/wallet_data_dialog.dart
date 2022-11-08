@@ -1,6 +1,6 @@
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class WalletSettingDataDialog extends StatelessWidget {
   final String data;
@@ -55,7 +55,7 @@ class WalletSettingDataDialog extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     child: Text(
-                      "Close",
+                      "close".tr(),
                     ),
                   ),
                 ],

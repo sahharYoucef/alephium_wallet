@@ -12,6 +12,7 @@ import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../utils/helpers.dart';
 
@@ -69,7 +70,7 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
           children: [
             WalletAppBar(
               label: Text(
-                'Consolidate UTXOs',
+                'consolidateUTXOs'.tr(),
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
@@ -99,7 +100,7 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
                         ),
                       ),
                       AddressFromDropDownMenu(
-                        label: "from Address",
+                        label: "fromAddress".tr(),
                         addresses: fromAddresses,
                         onChanged: (value) {
                           setState(() {
@@ -111,7 +112,7 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
                         height: 20,
                       ),
                       AddressFromDropDownMenu(
-                        label: "to Address",
+                        label: "toAddress".tr(),
                         addresses: widget.wallet.addresses.toList(),
                         onChanged: (value) {
                           _toAddressStore = value;
@@ -121,14 +122,14 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
                         height: 20,
                       ),
                       Text(
-                        "Available Balance: ${_fromAddressStore.formattedBalance}",
+                        "${'availableBalance'.tr()}: ${_fromAddressStore.formattedBalance}",
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       Spacer(),
                       Hero(
                         tag: "button",
                         child: OutlinedButton(
-                          child: Text('SWEEP'),
+                          child: Text('sweep'.tr().toUpperCase()),
                           onPressed: () {
                             _bloc.add(SweepTransaction(
                                 _fromAddressStore, _toAddressStore));
