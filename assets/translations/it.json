@@ -83,5 +83,7 @@
   "fr": "Francese",
   "es": "Spagnolo",
   "it": "Italiano",
-  "system": "Sistema"
+  "system": "Sistema",
+  "license": "Licenza",
+  "errorMessageGenericError": "Qualcosa è andato storto!"
 }

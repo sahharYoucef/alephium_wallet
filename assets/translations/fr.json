@@ -83,5 +83,7 @@
   "fr": "Français",
   "es": "Espagnol",
   "it": "Italien",
-  "system": "Système"
+  "system": "Système",
+  "license": "Licence",
+  "errorMessageGenericError": "Quelque chose s'est mal passé !"
 }

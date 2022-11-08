@@ -83,5 +83,7 @@
   "fr": "Francés",
   "es": "Español",
   "it": "Italiano",
-  "system": "Sistema"
+  "system": "Sistema",
+  "license": "Licencia",
+  "errorMessageGenericError": "¡Algo salió mal!"
 }

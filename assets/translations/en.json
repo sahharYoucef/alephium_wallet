@@ -83,5 +83,7 @@
   "fr": "French",
   "es": "Spanish",
   "it": "Italian",
-  "system": "System"
+  "system": "System",
+  "license": "License",
+  "errorMessageGenericError": "Something went wrong!"
 }

@@ -39,7 +39,7 @@ class SettingsPage extends StatelessWidget {
                   height: 4,
                 ),
                 Text(
-                  "v0.0.3",
+                  "v0.1.0",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(
@@ -56,7 +56,7 @@ class SettingsPage extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   TextSpan(
-                    text: "Apache 2 License",
+                    text: "Apache 2 ${'license'.tr()}",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.blue,
                         decoration: TextDecoration.underline),

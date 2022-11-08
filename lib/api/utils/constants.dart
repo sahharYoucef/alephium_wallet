@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 const int kApiUnknownErrorCode = 0;
 const int kApiCanceledCode = -1;
 const int kApiConnectionTimeoutCode = -2;
@@ -18,5 +20,5 @@ const String kApiResponseError = 'RESPONSE_ERROR';
 // Common masked error messages
 const String kErrorMessageConnectionTimeout = 'Connection timed out';
 const String kErrorMessageNetworkError = 'Network error';
-const String kErrorMessageGenericError = 'Something went wrong';
+final String kErrorMessageGenericError = 'errorMessageGenericError'.tr();
 const String kApiHandshakeExceptionError = 'HANDSHAKE_EXCEPTION';
