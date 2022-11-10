@@ -25,6 +25,13 @@ class TransactionRefStore {
     this.type,
   });
 
+  String get txAmount {
+    double value = 0.0;
+    value += (BigInt.tryParse("${amount}")?.toDouble() ?? 0);
+    var _amount = (value / 10e17).toStringAsFixed(3);
+    return "$_amount ℵ";
+  }
+
   factory TransactionRefStore.fromDb(Map<String, dynamic> data) {
     final _address = data["ref_address"] as String;
     final _unlockScript = data["unlockScript"];

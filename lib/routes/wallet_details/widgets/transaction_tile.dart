@@ -1,14 +1,13 @@
-import 'package:alephium_wallet/api/repositories/alephium/alephium_api_repository.dart';
-import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
-import 'package:alephium_wallet/main.dart';
+import 'package:alephium_wallet/routes/constants.dart';
 import 'package:alephium_wallet/routes/widgets/animated_gradient_icon.dart';
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:easy_localization/easy_localization.dart';
+
+import 'address_text.dart';
 
 class TransactionTile extends StatelessWidget {
   final TransactionStore transaction;
@@ -16,13 +15,6 @@ class TransactionTile extends StatelessWidget {
     Key? key,
     required this.transaction,
   }) : super(key: key);
-
-  Future<void> _launchUrl() async {
-    final repo = getIt.get<BaseApiRepository>() as AlephiumApiRepository;
-    final url =
-        "${repo.network.explorerUrl}/transactions/${transaction.txHash}";
-    await launch(url);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +32,15 @@ class TransactionTile extends StatelessWidget {
         child: InkWell(
           customBorder:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-          onTap: _launchUrl,
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              Routes.transactionDetails,
+              arguments: {
+                "transaction": transaction,
+              },
+            );
+          },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Column(
@@ -146,13 +146,12 @@ class TransactionTile extends StatelessWidget {
                           const SizedBox(
                             height: 10,
                           ),
-                          Text(
-                            '${transaction.address}',
+                          AddressText(
+                            address: '${transaction.address}',
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!
                                 .copyWith(
-                                  overflow: TextOverflow.ellipsis,
                                   fontWeight: FontWeight.w600,
                                   foreground: Paint()
                                     ..shader = LinearGradient(

@@ -1,4 +1,6 @@
 import 'package:alephium_wallet/main.dart';
+import 'package:alephium_wallet/services/authentication_service.dart';
+import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:bloc/bloc.dart';
 import 'package:alephium_wallet/api/dto_models/transaction_build_dto.dart';
@@ -26,6 +28,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   String? signature;
   String? unsignedTx;
   TransactionBuildDto? transaction;
+  final AuthenticationService authenticationService;
 
   bool get activateButton {
     return amount != null && toAddress != null && fromAddress != null;
@@ -34,21 +37,6 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   double? get gas {
     return double.tryParse("${_gas}");
   }
-
-  // double get diducatedAmount {
-  //   var _amount = double.tryParse("${amount}");
-  //   if (_amount == null)
-  //     throw new ApiError(exception: Exception("Something went wrong!"));
-  //   _amount = _amount * 10e17;
-  //   var _balance = double.tryParse("${wallet.addressStore?.balance}");
-  //   if (_balance == null)
-  //     throw new ApiError(exception: Exception("Something went wrong!"));
-  //   if (_amount < _balance)
-  //     throw new ApiError(exception: Exception("not enough balance"));
-  //   // var _expectedFees = expectedFeesValue * 10e17;
-  //   if ((_amount + 20000) > _balance) return _balance - 20000;
-  //   return 0;
-  // }
 
   String get balance {
     var _balance = fromAddress?.formattedBalance ?? "";
@@ -85,6 +73,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final BaseApiRepository apiRepository;
   final BaseWalletService walletService;
   TransactionBloc(
+    this.authenticationService,
     this.apiRepository,
     this.walletService,
     this.wallet,
@@ -186,6 +175,17 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         );
       } else if (event is SignAndSendTransaction) {
         try {
+          if (AppStorage.instance.localAuth) {
+            final didAuthenticate = await authenticationService.authenticate(
+              "",
+            );
+            if (!didAuthenticate) {
+              emit(TransactionError(
+                message: 'Unknown error',
+              ));
+              return;
+            }
+          }
           if (fromAddress?.privateKey == null) return;
           emit(TransactionLoading());
           var signature = walletService.signTransaction(
