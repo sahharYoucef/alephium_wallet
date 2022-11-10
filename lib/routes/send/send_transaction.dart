@@ -167,7 +167,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                             toAddress: value));
                                       }),
                                       decoration:
-                                          textFieldDecoration("Address to")),
+                                          textFieldDecoration("toAddress".tr())),
                                   const SizedBox(height: 8),
                                   TextFormField(
                                       controller: _amountController,
