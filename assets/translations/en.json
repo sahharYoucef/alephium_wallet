@@ -92,5 +92,6 @@
   "status": "Status",
   "transactionDetails": "Transaction details",
   "authToSend": "Local authentication",
-  "activateLocalAuthentication": "Activate local authentication for sending transactions"
+  "activateLocalAuthentication": "Activate local authentication for sending transactions",
+  "authenticateToSendTransaction": "Authenticate to send transaction"
 }
