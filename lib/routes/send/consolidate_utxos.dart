@@ -5,6 +5,7 @@ import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/routes/send/widgets/address_from.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
+import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/constants.dart';
@@ -43,6 +44,7 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
         .toList();
     _fromAddressStore = fromAddresses.first;
     _bloc = TransactionBloc(
+      getIt.get<AuthenticationService>(),
       getIt.get<BaseApiRepository>(),
       getIt.get<BaseWalletService>(),
       widget.wallet,

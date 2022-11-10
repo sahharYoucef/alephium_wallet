@@ -7,11 +7,13 @@ import 'package:alephium_wallet/routes/read_only_wallet.dart/read_only_wallet_pa
 import 'package:alephium_wallet/routes/restore_wallet/restore_wallet.dart';
 import 'package:alephium_wallet/routes/send/consolidate_utxos.dart';
 import 'package:alephium_wallet/routes/send/send_transaction.dart';
+import 'package:alephium_wallet/routes/transaction_details/transaction_details.dart';
 import 'package:alephium_wallet/routes/wallet_details/wallet_details.dart';
 import 'package:alephium_wallet/routes/home/home.dart';
 import 'package:alephium_wallet/routes/wallet_settings/wallet_settings_route.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
+import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
@@ -169,6 +171,16 @@ class App extends StatelessWidget {
                   builder: (context) => ConsolidateUtxosRoute(
                     detailsBloc: detailsBloc,
                     wallet: wallet,
+                  ),
+                );
+              } else if (settings.name == Routes.transactionDetails) {
+                Map<String, dynamic> arguments =
+                    settings.arguments as Map<String, dynamic>;
+                final transaction =
+                    arguments["transaction"] as TransactionStore;
+                return MaterialPageRoute(
+                  builder: (context) => TransactionDetails(
+                    transaction: transaction,
                   ),
                 );
               }

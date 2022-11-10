@@ -52,8 +52,7 @@ class _ReceiveAmountFieldState extends State<ReceiveAmountField> {
       suffixIcon: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-              amountType ? AppStorage.instance.currency.toUpperCase() : "ALPH"),
+          Text(amountType ? AppStorage.instance.currency.toUpperCase() : "ℵ"),
           SizedBox(
             width: 4,
           ),

@@ -3,6 +3,7 @@ import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
+import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/send/widgets/address_from.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
@@ -47,6 +48,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
   @override
   void initState() {
     _bloc = TransactionBloc(
+      getIt.get<AuthenticationService>(),
       getIt.get<BaseApiRepository>(),
       getIt.get<BaseWalletService>(),
       widget.wallet,

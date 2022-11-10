@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:alephium_wallet/api/utils/constants.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -49,8 +50,7 @@ class _QRViewExampleState extends State<QRViewExample> {
             Navigator.pop<Map<String, dynamic>>(context, data);
           }
         } catch (e) {
-          context.showSnackBar("errorMessageGenericError".tr(),
-              level: Level.error);
+          context.showSnackBar(kErrorMessageGenericError, level: Level.error);
         }
       }
     });
