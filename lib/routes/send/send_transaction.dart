@@ -168,8 +168,8 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                         _bloc.add(TransactionValuesChangedEvent(
                                             toAddress: value));
                                       }),
-                                      decoration:
-                                          textFieldDecoration("toAddress".tr())),
+                                      decoration: textFieldDecoration(
+                                          "toAddress".tr())),
                                   const SizedBox(height: 8),
                                   TextFormField(
                                       controller: _amountController,
@@ -232,7 +232,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 4),
                                         child: Text(
-                                          "${'availableBalance'.tr()} : ${_bloc.balance}",
+                                          "${'availableBalance'.tr()} : ${_bloc.balance} ℵ",
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodySmall,
@@ -279,7 +279,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                                             .start,
                                                     children: [
                                                       Text(
-                                                        "${'expectedFees'.tr()} : ${_bloc.expectedFees}",
+                                                        "${'expectedFees'.tr()} : ${_bloc.expectedFees} ℵ",
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .bodyMedium,
@@ -288,7 +288,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                                         height: 4,
                                                       ),
                                                       Text(
-                                                        "${'amountToSend'.tr()} : ${_bloc.amount}",
+                                                        "${'amountToSend'.tr()} : ${_bloc.amount} ℵ",
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .bodyMedium,

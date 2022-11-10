@@ -136,7 +136,8 @@ class TransactionStore extends Equatable {
       for (var ref in _outAddresses)
         value += (BigInt.tryParse("${ref.amount}")?.toDouble() ?? 0);
     }
-    return (value / 10e17).toStringAsFixed(3);
+    final _amount = (value / 10e17).toStringAsFixed(3);
+    return "$_amount ℵ";
   }
 
   List<String> get inputAddresses {

@@ -1,5 +1,6 @@
 import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/routes/constants.dart';
+import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
@@ -37,14 +38,10 @@ class MainAddressTile extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                for (var address in wallet.addresses.take(2))
-                  Text(
-                    address.address,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(overflow: TextOverflow.ellipsis),
-                    maxLines: 1,
+                for (var address in wallet.addresses.take(3))
+                  AddressText(
+                    address: "${address.address}",
+                    style: Theme.of(context).textTheme.bodySmall!,
                   ),
                 const SizedBox(
                   height: 4,

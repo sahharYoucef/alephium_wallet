@@ -32,7 +32,7 @@ class BalanceTile extends StatelessWidget {
               child: RichText(
                   text: TextSpan(children: [
                 TextSpan(
-                  text: "${wallet.balance}",
+                  text: "${wallet.balance} ℵ",
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 if (wallet.balanceConverted != null &&
@@ -48,7 +48,7 @@ class BalanceTile extends StatelessWidget {
                 ]
               ])),
             ),
-            if (wallet.lockedBalance != 0.00) ...[
+            if (wallet.lockedBalance != "0.00 ℵ") ...[
               SizedBox(
                 height: 20,
               ),
@@ -62,7 +62,7 @@ class BalanceTile extends StatelessWidget {
                 child: RichText(
                     text: TextSpan(children: [
                   TextSpan(
-                    text: "${wallet.lockedBalanceConverted}",
+                    text: "${wallet.lockedBalance} ℵ",
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   TextSpan(

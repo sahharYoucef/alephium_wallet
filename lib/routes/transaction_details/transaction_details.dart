@@ -67,33 +67,35 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Hash",
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          const SizedBox(
-                            height: 6,
-                          ),
-                          AddressText(
-                            address: "${widget.transaction.blockHash}",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  foreground: Paint()
-                                    ..shader = LinearGradient(
-                                      begin: Alignment.topRight,
-                                      end: Alignment.bottomLeft,
-                                      colors: [
-                                        WalletTheme.instance.gradientOne,
-                                        WalletTheme.instance.gradientTwo,
-                                      ],
-                                    ).createShader(
-                                        Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
-                                ),
-                          ),
-                          const Divider(),
+                          if (widget.transaction.blockHash != null) ...[
+                            Text(
+                              "Hash",
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            const SizedBox(
+                              height: 6,
+                            ),
+                            AddressText(
+                              address: "${widget.transaction.blockHash}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    foreground: Paint()
+                                      ..shader = LinearGradient(
+                                        begin: Alignment.topRight,
+                                        end: Alignment.bottomLeft,
+                                        colors: [
+                                          WalletTheme.instance.gradientOne,
+                                          WalletTheme.instance.gradientTwo,
+                                        ],
+                                      ).createShader(
+                                          Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                                  ),
+                            ),
+                            const Divider(),
+                          ],
                           Row(
                             children: [
                               Text(

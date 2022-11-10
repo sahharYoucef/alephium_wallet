@@ -1,5 +1,6 @@
 import 'package:alephium_wallet/routes/receive/widgets/amount_field.dart';
 import 'package:alephium_wallet/routes/send/widgets/address_from.dart';
+import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
@@ -81,11 +82,9 @@ class _ReceivePageState extends State<ReceivePage> {
         Row(
           children: [
             Expanded(
-              child: Text(
-                _addressStore.address,
+              child: AddressText(
+                address: _addressStore.address,
                 style: Theme.of(context).textTheme.bodyMedium,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(
@@ -104,6 +103,9 @@ class _ReceivePageState extends State<ReceivePage> {
                   Icons.copy,
                 )),
           ],
+        ),
+        const SizedBox(
+          height: 10,
         ),
         ReceiveAmountField(
           onChanged: (_value) {

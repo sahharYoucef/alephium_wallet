@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
@@ -78,7 +79,7 @@ class AddressTile extends StatelessWidget {
                       text: "${'balance'.tr()} : ",
                       style: Theme.of(context).textTheme.headlineSmall),
                   TextSpan(
-                      text: "${address.formattedBalance}",
+                      text: "${address.formattedBalance} ℵ",
                       style: Theme.of(context).textTheme.headlineSmall),
                   if (address.balanceConverted != null &&
                       address.balance?.balance != "0.0000") ...[
@@ -93,11 +94,9 @@ class AddressTile extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        address.address,
+                      child: AddressText(
+                        address: address.address,
                         style: Theme.of(context).textTheme.bodyMedium,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     const SizedBox(

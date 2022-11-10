@@ -56,7 +56,7 @@ class WalletTile extends StatelessWidget {
                           RichText(
                               text: TextSpan(children: [
                             TextSpan(
-                                text: "${wallet.balance}",
+                                text: "${wallet.balance} ℵ",
                                 style:
                                     Theme.of(context).textTheme.headlineSmall),
                             if (wallet.balanceConverted != null &&

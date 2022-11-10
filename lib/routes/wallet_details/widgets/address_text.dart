@@ -28,7 +28,7 @@ class _AddressTextState extends State<AddressText> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         setState(() {
           if (overflow == TextOverflow.ellipsis)

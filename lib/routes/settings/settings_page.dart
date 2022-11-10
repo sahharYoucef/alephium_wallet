@@ -40,7 +40,7 @@ class SettingsPage extends StatelessWidget {
                   height: 4,
                 ),
                 Text(
-                  "v0.1.0",
+                  "v0.1.3",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(
@@ -115,57 +115,57 @@ class SettingsPage extends StatelessWidget {
         ),
         const Divider(),
         const SizedBox(
-          height: 10,
+          height: 5,
         ),
         LocalAuthSwitch(),
         const SizedBox(
-          height: 20,
+          height: 5,
         ),
         const Divider(),
         const SizedBox(
-          height: 10,
+          height: 5,
         ),
         ThemeSwitch(),
         const SizedBox(
-          height: 20,
+          height: 5,
         ),
         const Divider(),
         const SizedBox(
-          height: 10,
+          height: 5,
         ),
         Text(
           "currency".tr(),
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(
-          height: 10,
+          height: 5,
         ),
         CurrencyDropDown(),
         const SizedBox(
-          height: 10,
+          height: 5,
         ),
         const Divider(),
         const SizedBox(
-          height: 10,
+          height: 5,
         ),
         Text(
           "language".tr(),
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(
-          height: 10,
+          height: 5,
         ),
         LanguageDropDown(),
         const Divider(),
         const SizedBox(
-          height: 10,
+          height: 5,
         ),
         Text(
           "network".tr(),
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(
-          height: 10,
+          height: 5,
         ),
         NetworkDropDown(),
       ],
