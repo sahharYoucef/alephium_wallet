@@ -15,3 +15,12 @@ class ChangeAppTheme extends SettingsEvent {
   @override
   List<Object> get props => [themeMode];
 }
+
+class LocalAuthToSend extends SettingsEvent {
+  final bool value;
+
+  LocalAuthToSend(this.value);
+
+  @override
+  List<Object> get props => [value];
+}

@@ -7,7 +7,14 @@ abstract class SettingsState extends Equatable {
   List<Object> get props => [];
 }
 
-class SettingsInitial extends SettingsState {}
+class SettingsError extends SettingsState {
+  final String error;
+
+  SettingsError(this.error);
+
+  @override
+  List<Object> get props => [error];
+}
 
 class AppThemeState extends SettingsState {
   final ThemeMode themeMode;
@@ -16,4 +23,13 @@ class AppThemeState extends SettingsState {
 
   @override
   List<Object> get props => [themeMode];
+}
+
+class LocalAuthToSendState extends SettingsState {
+  final bool value;
+
+  LocalAuthToSendState(this.value);
+
+  @override
+  List<Object> get props => [value];
 }

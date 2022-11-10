@@ -5,6 +5,7 @@ import 'package:alephium_wallet/bloc/settings/settings_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/encryption/alephium/alephium_wallet_service.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
+import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:alephium_wallet/storage/sqflite_database/sqflite_database.dart';
@@ -42,8 +43,6 @@ class AppBlocObserver extends BlocObserver {
 
 void main() async {
   final _firstRun = await _initApp();
-  final language = AppStorage.instance.language;
-  print("language : ${language}");
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MultiBlocProvider(
     providers: [
@@ -54,7 +53,9 @@ void main() async {
         lazy: true,
       ),
       BlocProvider<SettingsBloc>(
-        create: (context) => SettingsBloc(),
+        create: (context) => SettingsBloc(
+          getIt.get<AuthenticationService>(),
+        ),
       ),
     ],
     child: EasyLocalization(
@@ -79,6 +80,8 @@ Future<bool> _initApp() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await EasyLocalization.ensureInitialized();
   getIt.registerLazySingleton<BaseWalletService>(() => AlephiumWalletService());
+  getIt.registerLazySingleton<AuthenticationService>(
+      () => AuthenticationService());
   getIt.registerSingleton<BaseDBHelper>(SQLiteDBHelper());
   await AppStorage.instance.initHive();
   Bloc.observer = AppBlocObserver();

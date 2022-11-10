@@ -85,5 +85,12 @@
   "it": "Italien",
   "system": "Système",
   "license": "Licence",
-  "errorMessageGenericError": "Quelque chose s'est mal passé !"
+  "errorMessageGenericError": "Quelque chose s'est mal passé !",
+  "incomingAmounts": "Montants entrants",
+  "outgoingAmounts": "Montants sortants",
+  "timestamp": "Horodatage",
+  "status": "statut",
+  "transactionDetails": "Détails de la transaction",
+  "authToSend": "Authentification locale",
+  "activateLocalAuthentication": "Activer l'authentification locale pour l'envoi de transactions"
 }

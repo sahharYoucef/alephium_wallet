@@ -1,7 +1,9 @@
 import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_setting/wallet_setting_bloc.dart';
+import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/routes/constants.dart';
+import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/wallet_settings/widgets/wallet_data_dialog.dart';
 import 'package:alephium_wallet/routes/widgets/confirmation_dialog.dart';
@@ -30,7 +32,10 @@ class _WalletSettingState extends State<WalletSetting> {
   @override
   void initState() {
     _nameKey = GlobalKey<FormFieldState>();
-    _settingBloc = WalletSettingBloc(widget.detailsBloc.wallet);
+    _settingBloc = WalletSettingBloc(
+      widget.detailsBloc.wallet,
+      getIt.get<AuthenticationService>(),
+    );
     _focusNode = FocusNode();
     controller = ScrollController();
     super.initState();

@@ -85,5 +85,12 @@
   "it": "Italiano",
   "system": "Sistema",
   "license": "Licencia",
-  "errorMessageGenericError": "¡Algo salió mal!"
+  "errorMessageGenericError": "¡Algo salió mal!",
+  "incomingAmounts": "Cantidades entrantes",
+  "outgoingAmounts": "Importes salientes",
+  "timestamp": "Marca de tiempo",
+  "status": "Estado",
+  "transactionDetails": "Detalles de la transacción",
+  "authToSend": "Autenticación local",
+  "activateLocalAuthentication": "Activar autenticación local para enviar transacciones"
 }

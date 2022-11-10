@@ -85,5 +85,12 @@
   "it": "Italiano",
   "system": "Sistema",
   "license": "Licenza",
-  "errorMessageGenericError": "Qualcosa è andato storto!"
+  "errorMessageGenericError": "Qualcosa è andato storto!",
+  "incomingAmounts": "Entrate",
+  "outgoingAmounts": "Importi in uscita",
+  "timestamp": "Timestamp",
+  "status": "stato",
+  "transactionDetails": "Dettagli transazione",
+  "authToSend": "Autenticazione locale",
+  "activateLocalAuthentication": "Attiva l'autenticazione locale per l'invio di transazioni"
 }

@@ -85,5 +85,12 @@
   "it": "Italian",
   "system": "System",
   "license": "License",
-  "errorMessageGenericError": "Something went wrong!"
+  "errorMessageGenericError": "Something went wrong!",
+  "incomingAmounts": "Incoming amounts",
+  "outgoingAmounts": "Outgoing amounts",
+  "timestamp": "Timestamp",
+  "status": "Status",
+  "transactionDetails": "Transaction details",
+  "authToSend": "Local authentication",
+  "activateLocalAuthentication": "Activate local authentication for sending transactions"
 }

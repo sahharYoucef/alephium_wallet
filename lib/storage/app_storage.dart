@@ -101,4 +101,19 @@ class AppStorage {
     var settings = Hive.box("settings");
     settings.put("themeMode", value.name);
   }
+
+  bool get localAuth {
+    var settings = Hive.box("settings");
+    var _localAuth = settings.get("localAuth") as bool?;
+    if (_localAuth == null) {
+      localAuth = false;
+      _localAuth = localAuth;
+    }
+    return _localAuth;
+  }
+
+  set localAuth(bool value) {
+    var settings = Hive.box("settings");
+    settings.put("localAuth", value);
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/routes/settings/widgets/local_auth_switch.dart';
 import 'package:alephium_wallet/routes/settings/widgets/network_drop_down.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/routes/settings/widgets/currency_drop_down.dart';
@@ -109,6 +110,14 @@ class SettingsPage extends StatelessWidget {
                   },
               ),
             ])),
+        const SizedBox(
+          height: 20,
+        ),
+        const Divider(),
+        const SizedBox(
+          height: 10,
+        ),
+        LocalAuthSwitch(),
         const SizedBox(
           height: 20,
         ),
