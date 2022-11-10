@@ -150,7 +150,7 @@ class AlephiumApiRepository extends BaseApiRepository {
         destinations: [
           TransactionDestination(
             address: toAddress,
-            alphAmount: (double.parse(amount) * 10e17).toStringAsFixed(0),
+            attoAlphAmount: (double.parse(amount) * 10e17).toStringAsFixed(0),
             lockTime: lockTime,
           ),
         ],
@@ -167,6 +167,7 @@ class AlephiumApiRepository extends BaseApiRepository {
         gasPrice: data.gasPrice,
       ));
     } on Exception catch (e, trace) {
+      print(trace);
       return Either<TransactionBuildDto>(
           error: ApiError(exception: e, trace: trace));
     }

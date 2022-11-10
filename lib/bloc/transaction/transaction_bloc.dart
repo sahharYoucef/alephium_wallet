@@ -12,6 +12,7 @@ import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_ref_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:equatable/equatable.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../storage/models/wallet_store.dart';
 
@@ -177,7 +178,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         try {
           if (AppStorage.instance.localAuth) {
             final didAuthenticate = await authenticationService.authenticate(
-              "",
+              "authenticateToSendTransaction".tr(),
             );
             if (!didAuthenticate) {
               emit(TransactionError(
