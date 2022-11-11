@@ -1,63 +1,76 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:alephium_wallet/api/utils/constants.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-class QRViewExample extends StatefulWidget {
-  const QRViewExample({Key? key}) : super(key: key);
+class QRScannerView extends StatefulWidget {
+  const QRScannerView({Key? key}) : super(key: key);
 
   @override
-  State<QRViewExample> createState() => _QRViewExampleState();
+  State<QRScannerView> createState() => _QRScannerViewState();
 }
 
-class _QRViewExampleState extends State<QRViewExample> {
+class _QRScannerViewState extends State<QRScannerView> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
   QRViewController? controller;
-
-  // In order to get hot reload to work we need to pause the camera if the platform
-  // is android, or resume the camera if the platform is iOS.
+  bool isClosed = true;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 5,
-            child: QRView(
-              key: qrKey,
-              onQRViewCreated: _onQRViewCreated,
-            ),
-          ),
-        ],
-      ),
+    return QRView(
+      key: qrKey,
+      onQRViewCreated: _onQRViewCreated,
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  void _onQRViewCreated(QRViewController controller) async {
     this.controller = controller;
-    controller.resumeCamera();
-    controller.scannedDataStream.listen((scanData) {
+    await controller.resumeCamera();
+    controller.scannedDataStream
+        .distinct(((previous, next) => !isClosed))
+        .listen((scanData) async {
       if (scanData.code != null) {
         try {
-          var data = json.decode(scanData.code!) as Map<String, dynamic>;
+          isClosed = false;
+          var data = <String, dynamic>{};
+          if (scanData.code is String) {
+            data["address"] = scanData.code;
+            data["Type"] = "ALEPHIUM";
+          } else {
+            data = json.decode(scanData.code!) as Map<String, dynamic>;
+          }
           if (data["Type"] == "ALEPHIUM") {
             controller.pauseCamera();
             Navigator.pop<Map<String, dynamic>>(context, data);
+            return;
           }
+          isClosed = true;
         } catch (e) {
-          context.showSnackBar(kErrorMessageGenericError, level: Level.error);
+          var closedReason = context.showSnackBar(kErrorMessageGenericError,
+              level: Level.error);
+          isClosed = (await closedReason?.closed != null);
         }
       }
     });
   }
 
   @override
+  void reassemble() {
+    super.reassemble();
+    if (Platform.isAndroid) {
+      controller!.pauseCamera();
+    } else if (Platform.isIOS) {
+      controller!.resumeCamera();
+    }
+  }
+
+  @override
   void dispose() {
+    controller!.pauseCamera();
     controller?.dispose();
     super.dispose();
   }

@@ -171,7 +171,7 @@ class _HomePageState extends State<HomePage>
                                           child: SizedBox(
                                             width: context.width * .7,
                                             height: context.height * .6,
-                                            child: const QRViewExample(),
+                                            child: const QRScannerView(),
                                           ),
                                         ),
                                       ),

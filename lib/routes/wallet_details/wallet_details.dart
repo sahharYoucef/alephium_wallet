@@ -81,6 +81,7 @@ class _WalletDetailsState extends State<WalletDetails> {
                   },
                   child: CustomScrollView(
                     controller: scrollController,
+                    physics: AlwaysScrollableScrollPhysics(),
                     slivers: [
                       const SliverToBoxAdapter(
                         child: SizedBox(

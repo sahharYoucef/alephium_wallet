@@ -52,8 +52,10 @@ extension Helper on BuildContext {
     return MediaQuery.of(this).padding.top;
   }
 
-  showSnackBar(String content, {Level level = Level.info}) {
-    scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? showSnackBar(
+      String content,
+      {Level level = Level.info}) {
+    return scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
       margin: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       backgroundColor: level == Level.error ? Colors.red : Colors.blueAccent,
