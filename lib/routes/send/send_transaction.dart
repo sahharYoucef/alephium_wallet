@@ -53,15 +53,17 @@ class _SendTransactionPageState extends State<SendTransactionPage>
       getIt.get<BaseWalletService>(),
       widget.wallet,
     );
-    _amountController =
-        TextEditingController(text: widget.initialData?["amount"].toString());
+    if (widget.initialData != null) {
+      if (widget.initialData?["amount"] != null)
+        _bloc.amount = widget.initialData?["amount"].toString();
+      if (widget.initialData?["address"] != null)
+        _bloc.toAddress = widget.initialData?["address"];
+    }
+    _amountController = TextEditingController(text: _bloc.amount);
     if (widget.addressStore != null) {
       _bloc.fromAddress = widget.addressStore;
     }
-    if (widget.initialData != null) {
-      _bloc.amount = widget.initialData?["amount"].toString();
-      _bloc.toAddress = widget.initialData?["address"];
-    }
+
     super.initState();
   }
 
