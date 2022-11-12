@@ -13,7 +13,7 @@ class TransactionStatusState extends TransactionState {
   final TransactionBuildDto? transaction;
   final bool isFinished;
   final String? amount;
-  final String? toAddress;
+  final List<String> toAddresses;
   final String? fromAddress;
 
   const TransactionStatusState({
@@ -21,7 +21,7 @@ class TransactionStatusState extends TransactionState {
     this.transaction,
     this.isFinished = false,
     this.amount,
-    this.toAddress,
+    required this.toAddresses,
   });
 
   @override
@@ -30,7 +30,7 @@ class TransactionStatusState extends TransactionState {
         transaction?.txId,
         transaction?.unsignedTx,
         isFinished,
-        toAddress,
+        toAddresses,
         amount,
       ];
 }

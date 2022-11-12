@@ -2,6 +2,7 @@ import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/main.dart';
+import 'package:alephium_wallet/routes/send/widgets/to_addresses.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
@@ -42,7 +43,6 @@ class _SendTransactionPageState extends State<SendTransactionPage>
   GlobalKey<FormFieldState> _gasAmountKey = GlobalKey<FormFieldState>();
   GlobalKey<FormFieldState> _amountKey = GlobalKey<FormFieldState>();
   GlobalKey<FormFieldState> _gasPriceKey = GlobalKey<FormFieldState>();
-  GlobalKey<FormFieldState> _toAddressKey = GlobalKey<FormFieldState>();
   late final TextEditingController _amountController;
   late final TransactionBloc _bloc;
   @override
@@ -57,7 +57,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
       if (widget.initialData?["amount"] != null)
         _bloc.amount = widget.initialData?["amount"].toString();
       if (widget.initialData?["address"] != null)
-        _bloc.toAddress = widget.initialData?["address"];
+        _bloc.toAddresses.add(widget.initialData?["address"]);
     }
     _amountController = TextEditingController(text: _bloc.amount);
     if (widget.addressStore != null) {
@@ -120,13 +120,16 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                       children: [
                         Positioned.fill(
                           child: CustomScrollView(
+                            keyboardDismissBehavior:
+                                ScrollViewKeyboardDismissBehavior.onDrag,
                             slivers: [
-                              SliverPadding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 16),
-                                sliver: SliverList(
-                                    delegate: SliverChildListDelegate([
-                                  ShaderMask(
+                              const SliverToBoxAdapter(
+                                child: SizedBox(height: 16),
+                              ),
+                              SliverToBoxAdapter(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  child: ShaderMask(
                                     shaderCallback: (bounds) {
                                       return LinearGradient(
                                         begin: Alignment.topRight,
@@ -142,7 +145,12 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                       color: Colors.white,
                                     ),
                                   ),
-                                  AddressFromDropDownMenu(
+                                ),
+                              ),
+                              SliverToBoxAdapter(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  child: AddressFromDropDownMenu(
                                     initialAddress: widget.addressStore,
                                     label: "fromAddress".tr(),
                                     addresses: widget.wallet.addresses
@@ -155,95 +163,96 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                           fromAddress: address));
                                     },
                                   ),
-                                  const SizedBox(height: 8),
-                                  TextFormField(
-                                      key: _toAddressKey,
-                                      textInputAction: TextInputAction.next,
-                                      initialValue:
-                                          widget.initialData?["address"],
-                                      autocorrect: false,
-                                      validator: addressToValidator,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                      onChanged: ((value) {
-                                        _bloc.add(TransactionValuesChangedEvent(
-                                            toAddress: value));
-                                      }),
-                                      decoration: textFieldDecoration(
-                                          "toAddress".tr())),
-                                  const SizedBox(height: 8),
-                                  TextFormField(
-                                      controller: _amountController,
-                                      key: _amountKey,
-                                      inputFormatters: [AmountFormatter()],
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                      validator: amountValidator,
-                                      onChanged: (value) {
-                                        _bloc.add(TransactionValuesChangedEvent(
-                                            amount: value));
-                                        _amountKey.currentState?.validate();
-                                      },
-                                      textInputAction: TextInputAction.next,
-                                      keyboardType: TextInputType.number,
-                                      autocorrect: false,
-                                      decoration: InputDecoration(
-                                          labelText: "amount".tr(),
-                                          suffixIcon: Container(
-                                            alignment: Alignment.center,
-                                            padding: EdgeInsets.only(right: 8),
-                                            width: 10,
-                                            child: InkWell(
-                                              onTap: () {
-                                                if (_bloc.fromAddress != null)
-                                                  _bloc.add(
-                                                      TransactionValuesChangedEvent(
-                                                          amount: _bloc
-                                                              .fromAddress
-                                                              ?.addressBalance
-                                                              .toString()));
-                                                if (_bloc.fromAddress
-                                                        ?.addressBalance !=
-                                                    null)
-                                                  _amountController.text = _bloc
-                                                      .fromAddress!
-                                                      .addressBalance
-                                                      .toString();
-                                                _amountKey.currentState
-                                                    ?.validate();
-                                              },
-                                              child: Text(
-                                                "max".tr(),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w800),
-                                              ),
-                                            ),
-                                          ))),
-                                  const SizedBox(height: 16),
-                                  BlocBuilder<TransactionBloc,
-                                      TransactionState>(
-                                    bloc: _bloc,
-                                    builder: (context, state) {
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 4),
-                                        child: Text(
-                                          "${'availableBalance'.tr()} : ${_bloc.balance} ℵ",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall,
-                                        ),
-                                      );
+                                ),
+                              ),
+                              const SliverToBoxAdapter(
+                                child: SizedBox(height: 8),
+                              ),
+                              ToAddressesField(
+                                bloc: bloc,
+                              ),
+                              const SliverToBoxAdapter(
+                                child: SizedBox(height: 8),
+                              ),
+                              SliverToBoxAdapter(
+                                  child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: TextFormField(
+                                    controller: _amountController,
+                                    key: _amountKey,
+                                    inputFormatters: [AmountFormatter()],
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                    validator: amountValidator,
+                                    onChanged: (value) {
+                                      _bloc.add(TransactionValuesChangedEvent(
+                                          amount: value));
+                                      _amountKey.currentState?.validate();
                                     },
-                                  ),
-                                  // const SizedBox(height: 8),
-                                ])),
+                                    textInputAction: TextInputAction.next,
+                                    keyboardType: TextInputType.number,
+                                    autocorrect: false,
+                                    decoration: InputDecoration(
+                                        labelText: "amount".tr(),
+                                        suffixIcon: Container(
+                                          alignment: Alignment.center,
+                                          padding: EdgeInsets.only(right: 8),
+                                          width: 10,
+                                          child: InkWell(
+                                            onTap: () {
+                                              if (_bloc.fromAddress != null)
+                                                _bloc.add(
+                                                    TransactionValuesChangedEvent(
+                                                        amount: _bloc
+                                                            .fromAddress
+                                                            ?.addressBalance
+                                                            .toString()));
+                                              if (_bloc.fromAddress
+                                                      ?.addressBalance !=
+                                                  null)
+                                                _amountController.text = _bloc
+                                                    .fromAddress!.addressBalance
+                                                    .toString();
+                                              _amountKey.currentState
+                                                  ?.validate();
+                                            },
+                                            child: Text(
+                                              "max".tr(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w800),
+                                            ),
+                                          ),
+                                        ))),
+                              )),
+                              const SliverToBoxAdapter(
+                                child: SizedBox(height: 16),
+                              ),
+                              SliverToBoxAdapter(
+                                  child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: BlocBuilder<TransactionBloc,
+                                    TransactionState>(
+                                  bloc: _bloc,
+                                  builder: (context, state) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 4),
+                                      child: Text(
+                                        "${'availableBalance'.tr()} : ${_bloc.balance} ℵ",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )),
+                              const SliverToBoxAdapter(
+                                child: SizedBox(height: 16),
                               ),
                               SliverFillRemaining(
                                 hasScrollBody: false,
@@ -446,4 +455,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
       ),
     );
   }
+
+  @override
+  List<String> get toAddresses => [];
 }

@@ -7,10 +7,14 @@ import 'package:easy_localization/easy_localization.dart';
 mixin InputValidators {
   WalletStore get wallet;
   TransactionBloc get bloc;
+  List<String> get toAddresses;
   String? addressToValidator(value) {
     var validator = RegExp(r'^[1-9A-HJ-NP-Za-km-z]+$');
     if (!validator.hasMatch(value!)) {
       return 'invalidAddress'.tr();
+    }
+    if (toAddresses.contains(value)) {
+      return "address already exists!";
     }
     return null;
   }

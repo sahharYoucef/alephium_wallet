@@ -8,14 +8,14 @@ abstract class TransactionEvent extends Equatable {
 }
 
 class TransactionValuesChangedEvent extends TransactionEvent {
-  final String? toAddress;
+  final List<String>? toAddresses;
   final AddressStore? fromAddress;
   final String? amount;
   final String? gas;
   final String? gasPrice;
 
   TransactionValuesChangedEvent({
-    this.toAddress,
+    this.toAddresses,
     this.fromAddress,
     this.amount,
     this.gas,
@@ -24,7 +24,7 @@ class TransactionValuesChangedEvent extends TransactionEvent {
 
   @override
   List<Object?> get props => [
-        toAddress,
+        toAddresses,
         amount,
         fromAddress,
         gas,

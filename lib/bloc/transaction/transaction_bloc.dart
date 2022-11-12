@@ -24,7 +24,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   AddressStore? fromAddress;
   String? _gas;
   String? gasPrice;
-  String? toAddress;
+  List<String> toAddresses = <String>[];
   String? txId;
   String? signature;
   String? unsignedTx;
@@ -32,7 +32,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final AuthenticationService authenticationService;
 
   bool get activateButton {
-    return amount != null && toAddress != null && fromAddress != null;
+    return amount != null && toAddresses.isNotEmpty && fromAddress != null;
   }
 
   double? get gas {
@@ -78,7 +78,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     this.apiRepository,
     this.walletService,
     this.wallet,
-  ) : super(TransactionStatusState()) {
+  ) : super(TransactionStatusState(
+          toAddresses: [],
+        )) {
     on<TransactionEvent>((event, emit) async {
       if (event is TransactionValuesChangedEvent) {
         if (event.fromAddress != null) {
@@ -96,15 +98,14 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           gasPrice = event.gasPrice;
           if (event.gasPrice!.isEmpty) gasPrice = null;
         }
-        if (event.toAddress != null) {
-          toAddress = event.toAddress;
-          if (event.toAddress!.isEmpty) toAddress = null;
+        if (event.toAddresses != null) {
+          toAddresses = event.toAddresses!;
         }
         transaction = null;
         emit(TransactionStatusState(
           fromAddress: fromAddress?.address,
           amount: amount,
-          toAddress: toAddress,
+          toAddresses: toAddresses,
         ));
       } else if (event is CheckTransactionEvent) {
         try {
@@ -115,7 +116,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           var data = await apiRepository.createTransaction(
             amount: amount!,
             fromPublicKey: fromAddress!.publicKey!,
-            toAddress: toAddress!,
+            toAddresses: toAddresses,
             gas: gas,
             gasPrice: gasPrice,
           );
@@ -126,7 +127,10 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             return;
           }
           transaction = data.getData;
-          emit(TransactionStatusState(transaction: data.getData!));
+          emit(TransactionStatusState(
+            transaction: data.getData!,
+            toAddresses: toAddresses,
+          ));
         } catch (e) {
           emit(TransactionError(
             message: e.toString(),
@@ -167,7 +171,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             return;
           }
           data.add(_createTransaction(
-              value.getData!, event.fromAddress, event.toAddress.address));
+              value.getData!, event.fromAddress, [event.toAddress.address]));
         }
         emit(
           TransactionSendingCompleted(
@@ -204,7 +208,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             return;
           }
           var data =
-              _createTransaction(sending.getData!, fromAddress!, toAddress!);
+              _createTransaction(sending.getData!, fromAddress!, toAddresses);
           if (getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
                   ?[wallet.id] ==
               null) {
@@ -231,7 +235,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   }
 
   TransactionStore _createTransaction(TransactionResultDTO value,
-      AddressStore _fromAddress, String _toAddress) {
+      AddressStore _fromAddress, List<String> _toAddresses) {
     var data = TransactionStore(
       address: _fromAddress.address,
       walletId: wallet.id,
@@ -259,11 +263,13 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         )
       ],
       refsOut: [
-        TransactionRefStore(
-          address: _toAddress,
-          amount: amount?.parseToAlphValue.toString(),
-          transactionId: data.id,
-          type: "out",
+        ..._toAddresses.map(
+          (_toAddress) => TransactionRefStore(
+            address: _toAddress,
+            amount: amount?.parseToAlphValue.toString(),
+            transactionId: data.id,
+            type: "out",
+          ),
         ),
       ],
     );

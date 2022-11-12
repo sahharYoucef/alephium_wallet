@@ -22,7 +22,7 @@ abstract class BaseApiRepository {
       {required String address, required String walletId});
   FutureOr<Either<TransactionBuildDto>> createTransaction(
       {required String fromPublicKey,
-      required String toAddress,
+      required List<String> toAddresses,
       required String amount,
       num? gas,
       int? lockTime,

@@ -137,26 +137,30 @@ class AlephiumApiRepository extends BaseApiRepository {
   @override
   Future<Either<TransactionBuildDto>> createTransaction(
       {required String fromPublicKey,
-      required String toAddress,
+      required List<String> toAddresses,
       required String amount,
       num? gas,
       int? lockTime,
       String? gasPrice,
       String? gasAmount}) async {
     try {
-      var data =
-          await _transactionClient.postTransactionsBuild(BuildTransaction(
-        fromPublicKey: fromPublicKey,
-        destinations: [
-          TransactionDestination(
-            address: toAddress,
-            attoAlphAmount: (double.parse(amount) * 10e17).toStringAsFixed(0),
-            lockTime: lockTime,
-          ),
-        ],
-        gasPrice: gasPrice != null && gasPrice.isNotEmpty ? gasPrice : null,
-        gas: gas,
-      ));
+      var data = await _transactionClient.postTransactionsBuild(
+        BuildTransaction(
+          fromPublicKey: fromPublicKey,
+          destinations: [
+            ...toAddresses.map(
+              (toAddress) => TransactionDestination(
+                address: toAddress,
+                attoAlphAmount:
+                    (double.parse(amount) * 10e17).toStringAsFixed(0),
+                lockTime: lockTime,
+              ),
+            ),
+          ],
+          gasPrice: gasPrice != null && gasPrice.isNotEmpty ? gasPrice : null,
+          gas: gas,
+        ),
+      );
       return Either<TransactionBuildDto>(
           data: TransactionBuildDto(
         unsignedTx: data.unsignedTx,
