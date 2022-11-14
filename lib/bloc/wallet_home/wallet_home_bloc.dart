@@ -33,9 +33,9 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
         try {
           var _price = await apiRepository.getPrice(currency: currency);
           if (_price.hasException) {
-            emit(WalletHomeError(message: _price.getException?.message));
+            emit(WalletHomeError(message: _price.exception?.message));
           }
-          AppStorage.instance.price = _price.getData;
+          AppStorage.instance.price = _price.data;
           final updatedAddresses = await _updateAddresses();
           await getIt
               .get<BaseDBHelper>()
@@ -56,7 +56,7 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
           var currency = AppStorage.instance.currency;
           var _price = await apiRepository.getPrice(currency: currency);
           if (_price.hasException) {
-            emit(WalletHomeError(message: _price.getException?.message));
+            emit(WalletHomeError(message: _price.exception?.message));
           }
           wallets = (state as WalletHomeCompleted).wallets;
           emit(WalletHomeCompleted(
@@ -123,8 +123,8 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
     }
     var updatedAddresses = <AddressStore>[];
     for (var address in data) {
-      if (address.hasData && address.getData != null) {
-        updatedAddresses.add(address.getData!);
+      if (address.hasData && address.data != null) {
+        updatedAddresses.add(address.data!);
       }
     }
     return updatedAddresses;

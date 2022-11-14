@@ -17,9 +17,9 @@ class Either<T> extends Equatable {
     _data = data;
   }
 
-  T? get getData => _data;
+  T? get data => _data;
 
-  ApiError? get getException => _error;
+  ApiError? get exception => _error;
 
   bool get hasException => _error != null;
 

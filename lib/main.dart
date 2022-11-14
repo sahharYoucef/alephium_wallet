@@ -77,6 +77,9 @@ void main() async {
 
 Future<bool> _initApp() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+    statusBarColor: Colors.transparent,
+  ));
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await EasyLocalization.ensureInitialized();
   getIt.registerLazySingleton<BaseWalletService>(() => AlephiumWalletService());

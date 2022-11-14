@@ -119,14 +119,14 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             gas: gas,
             gasPrice: gasPrice,
           );
-          if (data.hasException || data.getData == null) {
+          if (data.hasException || data.data == null) {
             emit(TransactionError(
-              message: data.getException?.message ?? 'Unknown error',
+              message: data.exception?.message ?? 'Unknown error',
             ));
             return;
           }
-          transaction = data.getData;
-          emit(TransactionStatusState(transaction: data.getData!));
+          transaction = data.data;
+          emit(TransactionStatusState(transaction: data.data!));
         } catch (e) {
           emit(TransactionError(
             message: e.toString(),
@@ -140,15 +140,15 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           toAddress: event.toAddress.address,
         );
         if (sending.hasException ||
-            sending.getData == null ||
-            sending.getData?.unsignedTxs == null) {
+            sending.data == null ||
+            sending.data?.unsignedTxs == null) {
           emit(TransactionError(
-            message: sending.getException?.message ?? 'Unknown error',
+            message: sending.exception?.message ?? 'Unknown error',
           ));
           return;
         }
         var transactions = await Future.wait<Either<TransactionResultDTO>>([
-          ...sending.getData!.unsignedTxs!.map((value) async {
+          ...sending.data!.unsignedTxs!.map((value) async {
             var signature = walletService.signTransaction(
                 value.txId!, event.fromAddress.privateKey!);
             var data = await apiRepository.sendTransaction(
@@ -160,14 +160,14 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         ]);
         var data = <TransactionStore>[];
         for (var value in transactions) {
-          if (value.hasException || value.getData == null) {
+          if (value.hasException || value.data == null) {
             emit(TransactionError(
-              message: sending.getException?.message ?? 'Unknown error',
+              message: sending.exception?.message ?? 'Unknown error',
             ));
             return;
           }
           data.add(_createTransaction(
-              value.getData!, event.fromAddress, event.toAddress.address));
+              value.data!, event.fromAddress, event.toAddress.address));
         }
         emit(
           TransactionSendingCompleted(
@@ -197,14 +197,14 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             signature: signature,
             unsignedTx: transaction!.unsignedTx!,
           );
-          if (sending.hasException || sending.getData == null) {
+          if (sending.hasException || sending.data == null) {
             emit(TransactionError(
-              message: sending.getException?.message ?? 'Unknown error',
+              message: sending.exception?.message ?? 'Unknown error',
             ));
             return;
           }
           var data =
-              _createTransaction(sending.getData!, fromAddress!, toAddress!);
+              _createTransaction(sending.data!, fromAddress!, toAddress!);
           if (getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
                   ?[wallet.id] ==
               null) {
