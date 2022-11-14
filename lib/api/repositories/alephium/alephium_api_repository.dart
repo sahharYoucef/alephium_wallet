@@ -23,6 +23,7 @@ class AlephiumApiRepository extends BaseApiRepository {
   late TransactionClient _transactionClient;
   late ExplorerClient _explorerClient;
   late CoingeckoClient _coingeckoClient;
+  late InfosClient _infosClient;
   late Dio _dio;
   Network network;
 
@@ -38,6 +39,7 @@ class AlephiumApiRepository extends BaseApiRepository {
     _addressClient = AddressClient(_dio, baseUrl: network.nodeHost);
     _explorerClient = ExplorerClient(_dio, baseUrl: network.explorerApiHost);
     _coingeckoClient = CoingeckoClient(_dio);
+    _infosClient = InfosClient(_dio);
   }
 
   set changeNetwork(Network network) {
@@ -48,6 +50,16 @@ class AlephiumApiRepository extends BaseApiRepository {
     _explorerClient =
         ExplorerClient(_dio, baseUrl: this.network.explorerApiHost);
     _coingeckoClient = CoingeckoClient(_dio);
+  }
+
+  @override
+  Future<Either<NodeVersion>> getNodeVersion() async {
+    try {
+      final data = await _infosClient.getNodeVersion();
+      return Either<NodeVersion>(data: data);
+    } on Exception catch (e, trace) {
+      return Either<NodeVersion>(error: ApiError(exception: e, trace: trace));
+    }
   }
 
   @override
@@ -151,7 +163,7 @@ class AlephiumApiRepository extends BaseApiRepository {
         destinations: [
           TransactionDestination(
             address: toAddress,
-            attoAlphAmount: (double.parse(amount) * 10e17).toStringAsFixed(0),
+            alphAmount: (double.parse(amount) * 10e17).toStringAsFixed(0),
             lockTime: lockTime,
           ),
         ],
@@ -168,7 +180,6 @@ class AlephiumApiRepository extends BaseApiRepository {
         gasPrice: data.gasPrice,
       ));
     } on Exception catch (e, trace) {
-      print(trace);
       return Either<TransactionBuildDto>(
           error: ApiError(exception: e, trace: trace));
     }
