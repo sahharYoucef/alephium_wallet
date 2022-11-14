@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/log/logger_service.dart';
 import 'package:alephium_wallet/storage/base_db_helper.dart';
+import 'package:alephium_wallet/storage/models/contact_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -14,6 +15,7 @@ final String _transactionTable = "transactions";
 final String _transactionRefsTable = "transaction_refs";
 final String _addressesTable = "addresses";
 final String _balancesTable = "balances";
+final String _contactsTable = "contacts";
 
 class SQLiteDBHelper extends BaseDBHelper {
   @override
@@ -99,6 +101,14 @@ class SQLiteDBHelper extends BaseDBHelper {
           FOREIGN KEY(address_id) REFERENCES $_addressesTable(address) ON DELETE CASCADE
       )
       """);
+    batch.execute("""
+      CREATE TABLE IF NOT EXISTS $_contactsTable (
+          id TEXT PRIMARY KEY NOT NULL,
+          firstName TEXT,
+          lastName TEXT,
+          addresses TEXT
+      )
+      """);
     await batch.commit();
   }
 
@@ -111,6 +121,26 @@ class SQLiteDBHelper extends BaseDBHelper {
       version: 1,
     );
     db.complete(_db);
+  }
+
+  @override
+  Future<List<ContactStore>> getContacts() async {
+    var _db = await db.future;
+    var data = await _db.query(_contactsTable);
+    return data.map((contact) => ContactStore.fromDb(contact)).toList();
+  }
+
+  @override
+  insertContact(ContactStore contactStore) async {
+    var _db = await db.future;
+    await _db.insert(_contactsTable, contactStore.toDb(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  @override
+  deleteContact(String id) async {
+    var _db = await db.future;
+    await _db.delete(_contactsTable, where: "id = ?", whereArgs: [id]);
   }
 
   @override

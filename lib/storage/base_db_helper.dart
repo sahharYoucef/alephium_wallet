@@ -1,5 +1,6 @@
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
+import 'package:alephium_wallet/storage/models/contact_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,12 @@ abstract class BaseDBHelper {
   }
 
   Future<void> init();
+
+  Future<List<ContactStore>> getContacts();
+
+  Future<void> insertContact(ContactStore contactStore);
+
+  Future<void> deleteContact(String id);
 
   Future<void> insertWallet(WalletStore wallet, AddressStore addressStore);
 
