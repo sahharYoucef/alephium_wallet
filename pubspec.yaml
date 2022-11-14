@@ -60,6 +60,8 @@ dependencies:
   flutter_native_splash: ^2.2.11
   qr_flutter: ^4.0.0
   qr_code_scanner: ^1.0.1
+  workmanager: ^0.5.1
+  flutter_local_notifications: ^12.0.3
 
 dev_dependencies:
   flutter_test:
