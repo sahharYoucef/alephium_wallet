@@ -4,6 +4,7 @@
   "mainAddress": "Indirizzo principale",
   "showMoreAddresses": "mostra più indirizzi",
   "transactions": "Transazione",
+  "transaction": "Transazione",
   "walletAddresses": "Indirizzi portafoglio",
   "amountExceeded": "L'importo deve essere maggiore di {}",
   "gasPriceExceeded": "Il prezzo del gas deve essere maggiore di {}",

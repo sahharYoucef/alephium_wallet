@@ -5,6 +5,7 @@
   "showMoreAddresses": "mostrar más direcciones",
   "walletAddresses": "Direcciones de billetera",
   "transactions": "Transacción",
+  "transaction": "Transacción",
   "amountExceeded": "La cantidad debe ser mayor que {}",
   "gasPriceExceeded": "El precio de la gasolina debe ser mayor que {}",
   "minimalGasAmount": "La cantidad debe ser mayor que {}",

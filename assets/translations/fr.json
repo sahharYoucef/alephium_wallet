@@ -5,6 +5,7 @@
   "showMoreAddresses": "Afficher plus d'adresses",
   "walletAddresses": "Adresses de portefeuille",
   "transactions": "Transactions",
+  "transaction": "Transaction",
   "amountExceeded": "Le montant doit être supérieur à {}",
   "gasPriceExceeded": "Le prix du gaz doit être supérieur à {}",
   "minimalGasAmount": "Le montant doit être supérieur à {}",
