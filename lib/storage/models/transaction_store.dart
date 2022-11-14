@@ -1,7 +1,5 @@
-import 'package:alephium_dart/alephium_dart.dart';
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/storage/models/transaction_ref_store.dart';
-import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
@@ -15,6 +13,7 @@ class TransactionStore extends Equatable {
   // status tx_status,
   // wallet_id INTEGER,
   final String address;
+  final String transactionID;
   final String txHash;
   final String? blockHash;
   final int timeStamp;
@@ -29,6 +28,7 @@ class TransactionStore extends Equatable {
   TransactionStore({
     required this.txHash,
     required this.address,
+    required this.transactionID,
     this.blockHash,
     required this.timeStamp,
     this.transactionGas,
@@ -55,7 +55,9 @@ class TransactionStore extends Equatable {
     final _refsIn = refs?.where((element) => element.type == "in").toList();
     final _refsOut = refs?.where((element) => element.type == "out").toList();
     final _network = Network.network(data["network"]);
+    final _transactionID = data["txID"] ?? "";
     return TransactionStore(
+      transactionID: _transactionID,
       address: _address,
       txHash: _txHash,
       blockHash: _blockHash,
@@ -82,8 +84,10 @@ class TransactionStore extends Equatable {
     List<TransactionRefStore>? refsIn,
     List<TransactionRefStore>? refsOut,
     Network? network,
+    String? transactionID,
   }) {
     return TransactionStore(
+      transactionID: transactionID ?? this.transactionID,
       txHash: txHash ?? this.txHash,
       address: address ?? this.address,
       timeStamp: timeStamp ?? this.timeStamp,
@@ -100,6 +104,7 @@ class TransactionStore extends Equatable {
 
   Map<String, dynamic> toDb() {
     return {
+      "txID": this.transactionID,
       "txHash": this.txHash,
       "blockHash": this.blockHash,
       "transactionGas": this.transactionGas,

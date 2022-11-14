@@ -2,6 +2,7 @@ import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/main.dart';
+import 'package:alephium_wallet/routes/send/widgets/success_dialog.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
@@ -95,13 +96,18 @@ class _SendTransactionPageState extends State<SendTransactionPage>
       child: Scaffold(
         body: BlocListener<TransactionBloc, TransactionState>(
             bloc: _bloc,
-            listener: (context, state) {
+            listener: (context, state) async {
               if (state is TransactionError) {
                 context.showSnackBar(state.message, level: Level.error);
               }
               if (state is TransactionSendingCompleted) {
                 if (widget.detailsBloc != null)
                   widget.detailsBloc?.add(AddPendingTxs(state.transactions));
+                await showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context) => TransactionSuccessDialog(
+                        transaction: state.transactions.first));
                 Navigator.pop(context);
               }
             },

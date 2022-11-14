@@ -233,6 +233,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   TransactionStore _createTransaction(TransactionResultDTO value,
       AddressStore _fromAddress, String _toAddress) {
     var data = TransactionStore(
+      transactionID: value.txId ?? "",
       address: _fromAddress.address,
       walletId: wallet.id,
       timeStamp: DateTime.now().millisecondsSinceEpoch,

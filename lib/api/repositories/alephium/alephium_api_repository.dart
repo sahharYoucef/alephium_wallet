@@ -96,6 +96,7 @@ class AlephiumApiRepository extends BaseApiRepository {
       var data = await _explorerClient.getAddressTransactions(address: address);
       List<TransactionStore> transactions = data
           .map((transaction) => TransactionStore(
+                transactionID: "",
                 address: address,
                 walletId: walletId,
                 txStatus: TXStatus.completed,
