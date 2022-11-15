@@ -40,7 +40,7 @@ class SettingsPage extends StatelessWidget {
                   height: 4,
                 ),
                 Text(
-                  "v0.1.6",
+                  "v0.2.0",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(
