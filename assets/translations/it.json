@@ -45,6 +45,8 @@
   "generateOneAddress": "Genera un indirizzo per gruppo",
   "minersOrDeFiUse": "Utile per minatori o uso DeFi.",
   "generateAddressDescription": "Indirizzo predefinito per l'invio delle transazioni. Nota che se attivato, {}... non sarà più l'indirizzo principale.",
+  "chooseWallet": "Scegli il portafoglio da cui inviare",
+  "sendTo": "Invia a",
   "title": "Titolo",
   "generateAddress": "Genera indirizzo",
   "generate": "Genera",

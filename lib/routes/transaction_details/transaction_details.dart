@@ -40,6 +40,12 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   @override
   Widget build(BuildContext context) {
     final status = widget.transaction.txStatus == TXStatus.completed;
+    final title = widget.transaction.blockHash != null
+        ? "Hash"
+        : "${'transaction'.tr()} id";
+    final value = widget.transaction.blockHash != null
+        ? widget.transaction.blockHash
+        : widget.transaction.transactionID;
     return Scaffold(
       body: Stack(
         children: [
@@ -67,7 +73,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (widget.transaction.blockHash != null) ...[
+                          if (value != null) ...[
                             Text(
                               "Hash",
                               style: Theme.of(context).textTheme.bodyMedium,

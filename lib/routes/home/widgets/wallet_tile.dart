@@ -131,11 +131,8 @@ class WalletTile extends StatelessWidget {
                                       16,
                                     ),
                                     elevation: 6,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: ReceivePage(
-                                        wallet: wallet,
-                                      ),
+                                    child: ReceivePage(
+                                      wallet: wallet,
                                     )),
                               ),
                             ),

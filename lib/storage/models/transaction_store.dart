@@ -13,7 +13,7 @@ class TransactionStore extends Equatable {
   // status tx_status,
   // wallet_id INTEGER,
   final String address;
-  final String transactionID;
+  final String? transactionID;
   final String txHash;
   final String? blockHash;
   final int timeStamp;
@@ -55,7 +55,7 @@ class TransactionStore extends Equatable {
     final _refsIn = refs?.where((element) => element.type == "in").toList();
     final _refsOut = refs?.where((element) => element.type == "out").toList();
     final _network = Network.network(data["network"]);
-    final _transactionID = data["txID"] ?? "";
+    final _transactionID = data["txID"];
     return TransactionStore(
       transactionID: _transactionID,
       address: _address,

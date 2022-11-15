@@ -168,10 +168,8 @@ class _HomePageState extends State<HomePage>
                                           borderRadius: BorderRadius.circular(
                                             16,
                                           ),
-                                          child: SizedBox(
-                                            width: context.width * .7,
-                                            height: context.height * .6,
-                                            child: const QRScannerView(),
+                                          child: QRScannerView(
+                                            bloc: _walletHomeBloc,
                                           ),
                                         ),
                                       ),
@@ -196,9 +194,9 @@ class _HomePageState extends State<HomePage>
                                 if (data != null) {
                                   Navigator.pushNamed(context, Routes.send,
                                       arguments: {
-                                        "wallet": _walletHomeBloc.wallets.first,
-                                        "address": _walletHomeBloc
-                                            .wallets.first.addresses.first,
+                                        "wallet": data["wallet"],
+                                        "address":
+                                            data["wallet"].addresses.first,
                                         "initial-data": data,
                                       });
                                 }

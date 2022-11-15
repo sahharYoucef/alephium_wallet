@@ -45,6 +45,8 @@
   "generateOneAddress": "Générer une adresse par groupe",
   "minersOrDeFiUse": "Utile pour les mineurs ou l'utilisation de DeFi.",
   "generateAddressDescription": "Adresse par défaut pour l'envoi des transactions. Notez que si activé, {}... ne sera plus l'adresse principale.",
+  "chooseWallet": "Veuillez choisir le portefeuille à partir duquel envoyer",
+  "sendTo": "Envoyer à",
   "title": "Titre",
   "generateAddress": "Générer l'adresse",
   "generate": "Générer",

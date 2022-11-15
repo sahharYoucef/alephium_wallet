@@ -21,7 +21,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         try {
           final bool canAuthenticate =
               await authenticationService.canAuthenticate;
-          print(canAuthenticate);
           if (!event.value) {
             AppStorage.instance.localAuth = event.value;
           } else if (canAuthenticate) {
@@ -35,7 +34,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           }
           emit(LocalAuthToSendState(AppStorage.instance.localAuth));
         } catch (e) {
-          print(e);
           emit(SettingsError(kErrorMessageGenericError));
         }
       }

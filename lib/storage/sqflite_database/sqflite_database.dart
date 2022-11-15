@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:alephium_wallet/api/utils/network.dart';
-import 'package:alephium_wallet/log/logger_service.dart';
 import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:alephium_wallet/storage/models/contact_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
@@ -26,9 +25,9 @@ class SQLiteDBHelper extends BaseDBHelper {
 
   SQLiteDBHelper() : super();
 
-  late Completer<Database> db;
+  late Completer<Database> _database;
 
-  dropTables(Database _db) async {
+  _dropTables(Database _db) async {
     final batch = _db.batch();
     batch.execute('DROP TABLE IF EXISTS $_addressesTable');
     batch.execute('DROP TABLE IF EXISTS $_transactionRefsTable');
@@ -38,10 +37,13 @@ class SQLiteDBHelper extends BaseDBHelper {
     await batch.commit();
   }
 
-  _onConfigure(Database _db) async {
-    // await dropTables(_db);
-    final batch = _db.batch();
+  Future<void> _onConfigure(Database _db) async {
+    // await _dropTables(_db);
     await _db.execute("PRAGMA foreign_keys = ON");
+  }
+
+  Future<void> _onCreate(Database _db, int version) async {
+    final batch = _db.batch();
     batch.execute("""
       CREATE TABLE IF NOT EXISTS $_walletTable (
           id TEXT PRIMARY KEY NOT NULL,
@@ -64,6 +66,7 @@ class SQLiteDBHelper extends BaseDBHelper {
           transactionGas TEXT,
           status VARCHAR(10) NOT NULL,
           network VARCHAR(10) NOT NULL,
+          txID VARCHAR(255),
           FOREIGN KEY(wallet_id) REFERENCES $_walletTable(id) ON DELETE CASCADE
       )""");
     batch.execute("""
@@ -112,40 +115,49 @@ class SQLiteDBHelper extends BaseDBHelper {
     await batch.commit();
   }
 
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    await db.execute("""
+          ALTER TABLE $_transactionTable
+          ADD txID VARCHAR(255)
+          """);
+  }
+
   @override
   init() async {
-    db = Completer<Database>();
+    _database = Completer<Database>();
     var _db = await openDatabase(
       "db.db",
       onConfigure: _onConfigure,
-      version: 1,
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
+      version: 2,
     );
-    db.complete(_db);
+    _database.complete(_db);
   }
 
   @override
   Future<List<ContactStore>> getContacts() async {
-    var _db = await db.future;
+    var _db = await _database.future;
     var data = await _db.query(_contactsTable);
     return data.map((contact) => ContactStore.fromDb(contact)).toList();
   }
 
   @override
   insertContact(ContactStore contactStore) async {
-    var _db = await db.future;
+    var _db = await _database.future;
     await _db.insert(_contactsTable, contactStore.toDb(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   @override
   deleteContact(String id) async {
-    var _db = await db.future;
+    var _db = await _database.future;
     await _db.delete(_contactsTable, where: "id = ?", whereArgs: [id]);
   }
 
   @override
   insertWallet(WalletStore wallet, AddressStore addressStore) async {
-    var _db = await db.future;
+    var _db = await _database.future;
     var value = await _db.query(_addressesTable,
         where: "address = ?", whereArgs: [addressStore.address]);
     if (value.isNotEmpty) {
@@ -159,9 +171,7 @@ class SQLiteDBHelper extends BaseDBHelper {
 
   @override
   Future<List<WalletStore>> getWallets({required Network network}) async {
-    var _db = await db.future;
-    var addresses = await _db.query(_addressesTable);
-    print(addresses.length);
+    var _db = await _database.future;
     var data = await _db.rawQuery("""
         SELECT * FROM ${_walletTable} wallets
         LEFT JOIN ${_addressesTable} addresses
@@ -170,7 +180,6 @@ class SQLiteDBHelper extends BaseDBHelper {
         ON balances.address_id = addresses.address
         AND balances.network = '${network.name}';
       """);
-
     return List<Map<String, dynamic>>.from(data)
         .combine()
         .map((e) => WalletStore.fromDb(e))
@@ -182,7 +191,7 @@ class SQLiteDBHelper extends BaseDBHelper {
     String id,
     String title,
   ) async {
-    var _db = await db.future;
+    var _db = await _database.future;
     await _db.update(
       _walletTable,
       {"title": title},
@@ -199,7 +208,7 @@ class SQLiteDBHelper extends BaseDBHelper {
     String id,
     String mainAddress,
   ) async {
-    var _db = await db.future;
+    var _db = await _database.future;
     await _db.update(
       _walletTable,
       {"mainAddress": mainAddress},
@@ -213,7 +222,7 @@ class SQLiteDBHelper extends BaseDBHelper {
 
   @override
   deleteWallet(String id) async {
-    var _db = await db.future;
+    var _db = await _database.future;
     await _db.delete(
       _walletTable,
       where: "id = ?",
@@ -223,7 +232,7 @@ class SQLiteDBHelper extends BaseDBHelper {
 
   @override
   insertAddress(List<AddressStore> addresses) async {
-    var _db = await db.future;
+    var _db = await _database.future;
     var batch = _db.batch();
     for (var address in addresses)
       batch.insert(_addressesTable, address.toDb());
@@ -232,7 +241,7 @@ class SQLiteDBHelper extends BaseDBHelper {
 
   @override
   updateAddressBalance(List<AddressStore> addresses) async {
-    var _db = await db.future;
+    var _db = await _database.future;
     var batch = await _db.batch();
     for (var address in addresses)
       if (address.balance != null)
@@ -250,7 +259,7 @@ class SQLiteDBHelper extends BaseDBHelper {
     List<TransactionStore> transactionStores,
   ) async {
     if (transactionStores.isEmpty) return;
-    var _db = await db.future;
+    var _db = await _database.future;
     var batch = _db.batch();
     transactionStores.forEach((element) {
       batch.insert(
@@ -279,7 +288,7 @@ class SQLiteDBHelper extends BaseDBHelper {
   @override
   Future<List<TransactionStore>> getTransactions(
       String walletID, Network network) async {
-    var _db = await db.future;
+    var _db = await _database.future;
     var data = await _db.rawQuery(
       '''SELECT * FROM $_transactionTable t 
            LEFT JOIN $_transactionRefsTable r 

@@ -45,6 +45,8 @@
   "generateOneAddress": "Generate one address per group",
   "minersOrDeFiUse": "Useful for miners or DeFi use.",
   "generateAddressDescription": "Default address for sending transactions. Note that if activated, {}... will not be the main address anymore.",
+  "chooseWallet": "Please choose the wallet to send from",
+  "sendTo": "Send to",
   "title": "Title",
   "generateAddress": "Generate address",
   "generate": "Generate",

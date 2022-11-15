@@ -31,12 +31,14 @@ class _ReceiveAmountFieldState extends State<ReceiveAmountField> {
   }
 
   _onChanged() {
-    if (widget.onChanged != null && amount != null)
-      widget.onChanged!(amountType
-          ? amount
-          : AppStorage.instance.price != null
+    if (widget.onChanged != null && amount != null) {
+      final double? value = amountType
+          ? AppStorage.instance.price != null
               ? amount! / AppStorage.instance.price!
-              : null);
+              : null
+          : amount;
+      widget.onChanged!(value);
+    }
   }
 
   @override

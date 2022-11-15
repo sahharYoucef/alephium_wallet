@@ -226,7 +226,6 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
     }
     var updateTransactions = <TransactionStore>[];
     for (var value in data) {
-      if (value.hasException) print(value.exception?.message);
       if (value.hasData && value.data != null) {
         for (var tx in value.data!) {
           var a = _transactions.firstWhereOrNull((element) {

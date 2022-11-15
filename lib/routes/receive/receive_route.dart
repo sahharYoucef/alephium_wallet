@@ -36,84 +36,87 @@ class _ReceivePageState extends State<ReceivePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          "${'receive'.tr()} :",
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-        const SizedBox(
-          height: 6,
-        ),
-        Divider(),
-        const SizedBox(
-          height: 6,
-        ),
-        AddressFromDropDownMenu(
-          addresses: widget.wallet.addresses,
-          label: "address".tr(),
-          initialAddress: _addressStore,
-          onChanged: (value) {
-            _addressStore = value;
-            setState(() {});
-          },
-        ),
-        const SizedBox(
-          height: 6,
-        ),
-        Center(
-          child: Builder(
-              key: _key,
-              builder: (context) {
-                return QrImage(
-                  data: _addressStore.receiveAmount(amount),
-                  backgroundColor: WalletTheme.instance.primary,
-                  foregroundColor: WalletTheme.instance.textColor,
-                  version: QrVersions.auto,
-                  size: 200.0,
-                );
-              }),
-        ),
-        const SizedBox(
-          height: 6,
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: AddressText(
-                address: _addressStore.address,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-            const SizedBox(
-              width: 8,
-            ),
-            IconButton(
-                onPressed: () async {
-                  var data = ClipboardData(
-                      text: widget.wallet.addresses.first.address);
-                  await Clipboard.setData(data);
-                  context.showSnackBar(
-                    "addressCopied".tr(),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ListView(
+        padding: EdgeInsets.zero,
+        shrinkWrap: true,
+        children: [
+          Text(
+            "${'receive'.tr()} :",
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          Divider(),
+          const SizedBox(
+            height: 6,
+          ),
+          AddressFromDropDownMenu(
+            addresses: widget.wallet.addresses,
+            label: "address".tr(),
+            initialAddress: _addressStore,
+            onChanged: (value) {
+              _addressStore = value;
+              setState(() {});
+            },
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          Center(
+            child: Builder(
+                key: _key,
+                builder: (context) {
+                  return QrImage(
+                    data: _addressStore.receiveAmount(amount),
+                    backgroundColor: WalletTheme.instance.primary,
+                    foregroundColor: WalletTheme.instance.textColor,
+                    version: QrVersions.auto,
+                    size: 200.0,
                   );
-                },
-                icon: Icon(
-                  Icons.copy,
-                )),
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        ReceiveAmountField(
-          onChanged: (_value) {
-            amount = _value;
-            setState(() {});
-          },
-        ),
-      ],
+                }),
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: AddressText(
+                  address: _addressStore.address,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              IconButton(
+                  onPressed: () async {
+                    var data = ClipboardData(
+                        text: widget.wallet.addresses.first.address);
+                    await Clipboard.setData(data);
+                    context.showSnackBar(
+                      "addressCopied".tr(),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.copy,
+                  )),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          ReceiveAmountField(
+            onChanged: (_value) {
+              amount = _value;
+              setState(() {});
+            },
+          ),
+        ],
+      ),
     );
   }
 }

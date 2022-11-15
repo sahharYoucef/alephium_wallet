@@ -45,6 +45,8 @@
   "generateOneAddress": "Generar una dirección por grupo",
   "minersOrDeFiUse": "Útil para mineros o uso de DeFi.",
   "generateAddressDescription": "Dirección predeterminada para enviar transacciones. Tenga en cuenta que si se activa, {}... ya no será la dirección principal.",
+  "chooseWallet": "Por favor, elija la billetera desde la que enviar",
+  "sendTo": "Enviar a",
   "title": "Título",
   "generateAddress": "Generar dirección",
   "generate": "Generar",
