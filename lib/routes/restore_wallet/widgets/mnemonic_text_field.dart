@@ -2,7 +2,6 @@ import 'package:alephium_wallet/utils/gradient_stadium_border.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:collection/collection.dart';
 
 class MnemonicTextField extends StatefulWidget {

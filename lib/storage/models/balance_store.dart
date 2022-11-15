@@ -1,5 +1,4 @@
 import 'package:alephium_wallet/api/utils/network.dart';
-import 'package:alephium_wallet/utils/helpers.dart';
 
 class BalanceStore {
   final double balance;

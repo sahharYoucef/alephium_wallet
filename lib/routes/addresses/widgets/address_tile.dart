@@ -103,6 +103,7 @@ class AddressTile extends StatelessWidget {
                       width: 8,
                     ),
                     IconButton(
+                        tooltip: "copy".tr(),
                         onPressed: () async {
                           var data = ClipboardData(text: address.address);
                           await Clipboard.setData(data);

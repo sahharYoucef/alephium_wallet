@@ -1,5 +1,7 @@
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart'
+    show StringTranslateExtension;
 
 class CircleNavigationBar extends StatelessWidget {
   final double navbarHeight;
@@ -66,8 +68,11 @@ class CircleNavigationBar extends StatelessWidget {
                         ...List.generate(navBarIcons.length, (index) {
                           return SizedBox(
                             height: 80,
-                            child: Icon(
-                              navBarIcons[index].icon,
+                            child: Tooltip(
+                              message: navBarIcons[index].tooltip,
+                              child: Icon(
+                                navBarIcons[index].icon,
+                              ),
                             ),
                           );
                         })
@@ -79,6 +84,7 @@ class CircleNavigationBar extends StatelessWidget {
           Positioned(
             bottom: navBarHeight - 50,
             child: AddButton(
+              tooltip: "newWallet".tr(),
               onTap: onTap,
               color: circleIconsColor,
             ),
@@ -92,8 +98,10 @@ class CircleNavigationBar extends StatelessWidget {
 class AddButton extends StatelessWidget {
   final void Function() onTap;
   final Color color;
+  final String tooltip;
   const AddButton({
     Key? key,
+    required this.tooltip,
     required this.onTap,
     required this.color,
   }) : super(key: key);
@@ -101,6 +109,7 @@ class AddButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       heroTag: "button",
+      tooltip: tooltip,
       onPressed: onTap,
       elevation: 2,
       backgroundColor: color,
@@ -163,14 +172,15 @@ class CustomBorder extends ShapeBorder {
 
   @override
   ShapeBorder scale(double t) {
-    // TODO: implement scale
     throw UnimplementedError();
   }
 }
 
 class CustomIcon {
-  IconData icon;
+  final String tooltip;
+  final IconData icon;
   void Function() onPressed;
 
-  CustomIcon({required this.icon, required this.onPressed});
+  CustomIcon(
+      {required this.tooltip, required this.icon, required this.onPressed});
 }

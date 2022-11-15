@@ -3,7 +3,6 @@ import 'package:bloc/bloc.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
-import 'package:local_auth/local_auth.dart';
 
 part 'wallet_setting_event.dart';
 part 'wallet_setting_state.dart';

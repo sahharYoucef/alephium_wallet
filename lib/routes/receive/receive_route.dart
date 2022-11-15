@@ -93,6 +93,7 @@ class _ReceivePageState extends State<ReceivePage> {
                 width: 8,
               ),
               IconButton(
+                  tooltip: "copy".tr(),
                   onPressed: () async {
                     var data = ClipboardData(
                         text: widget.wallet.addresses.first.address);

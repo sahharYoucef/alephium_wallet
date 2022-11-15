@@ -2,7 +2,6 @@ import 'package:alephium_wallet/api/dto_models/balance_dto.dart';
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/utils/format.dart';
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';

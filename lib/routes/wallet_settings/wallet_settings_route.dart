@@ -3,6 +3,7 @@ import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_setting/wallet_setting_bloc.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/routes/constants.dart';
+import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/wallet_settings/widgets/wallet_data_dialog.dart';
@@ -207,7 +208,8 @@ class _WalletSettingState extends State<WalletSetting> {
                   'walletSetting'.tr(),
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
-                action: IconButton(
+                action: AppBarIconButton(
+                    tooltip: "deleteWallet".tr(),
                     onPressed: () {
                       showDialog(
                           context: context,

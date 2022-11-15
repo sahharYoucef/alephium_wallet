@@ -1,5 +1,6 @@
 {
   "alephiumWallet": "Alephium Wallet",
+  "walletHome": "Wallet home",
   "wallet": "Wallet",
   "mainAddress": "Main Address",
   "showMoreAddresses": "show more addresses",
@@ -36,6 +37,10 @@
   "index": "index",
   "group": "Group",
   "balance": "Balance",
+  "copy": "Copy",
+  "QRscanner": "QR scanner",
+  "launchUrl": "Launch url",
+  "back": "Back",
   "lockedBalance": "Locked balance",
   "addressCopied": "address copied to clipboard!",
   "advancedOperations": "Advanced operations :",

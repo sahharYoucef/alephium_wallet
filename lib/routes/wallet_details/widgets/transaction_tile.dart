@@ -1,5 +1,5 @@
 import 'package:alephium_wallet/routes/constants.dart';
-import 'package:alephium_wallet/routes/widgets/animated_gradient_icon.dart';
+import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:alephium_wallet/utils/theme.dart';
@@ -52,7 +52,13 @@ class TransactionTile extends StatelessWidget {
                       child: Row(
                         children: [
                           !status
-                              ? AnimatedGradientProgressIndicator()
+                              ? SizedBox(
+                                  height: 16,
+                                  width: 16,
+                                  child: AlephiumIcon(
+                                    spinning: true,
+                                  ),
+                                )
                               : GradientIcon(
                                   size: 16, icon: Icons.check_circle),
                           const SizedBox(

@@ -1,6 +1,7 @@
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/routes/home/widgets/qr_view.dart';
 import 'package:alephium_wallet/routes/settings/settings_page.dart';
+import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/home/widgets/circle_navigation_bar.dart';
 import 'package:alephium_wallet/routes/home/widgets/wallet_tile.dart';
@@ -139,7 +140,8 @@ class _HomePageState extends State<HomePage>
                       color: WalletTheme.instance.primary,
                       elevation: 1,
                       action: _walletHomeBloc.wallets.isNotEmpty
-                          ? IconButton(
+                          ? AppBarIconButton(
+                              tooltip: "QRscanner".tr(),
                               icon: Icon(
                                 Icons.qr_code_scanner,
                               ),
@@ -257,11 +259,13 @@ class _HomePageState extends State<HomePage>
                     circleIconsColor: WalletTheme.instance.secondary,
                     navBarIcons: [
                       CustomIcon(
+                          tooltip: "walletHome".tr(),
                           icon: Icons.home,
                           onPressed: () {
                             _tabController.animateTo(0);
                           }),
                       CustomIcon(
+                          tooltip: "walletSetting".tr(),
                           icon: Icons.settings,
                           onPressed: () {
                             _tabController.animateTo(1);

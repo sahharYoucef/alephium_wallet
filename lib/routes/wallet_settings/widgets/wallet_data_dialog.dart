@@ -63,6 +63,5 @@ class WalletSettingDataDialog extends StatelessWidget {
             )),
       ),
     );
-    ;
   }
 }

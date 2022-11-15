@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:alephium_wallet/api/dto_models/balance_dto.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 

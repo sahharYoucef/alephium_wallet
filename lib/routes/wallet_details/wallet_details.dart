@@ -6,6 +6,7 @@ import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/sticky_header.dart';
+import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/balance_tile.dart';
@@ -189,7 +190,8 @@ class _WalletDetailsState extends State<WalletDetails> {
                   '${widget.wallet.title} ${'wallet'.tr()}',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
-                action: IconButton(
+                action: AppBarIconButton(
+                  tooltip: "walletSetting".tr(),
                   onPressed: () {
                     Navigator.pushNamed(context, Routes.walletSettings,
                         arguments: {

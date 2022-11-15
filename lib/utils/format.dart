@@ -1,4 +1,3 @@
-import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:intl/intl.dart';
 

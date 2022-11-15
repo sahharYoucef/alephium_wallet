@@ -1,11 +1,8 @@
-import 'package:alephium_wallet/bloc/transaction/transaction_bloc.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
-import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AddressFromDropDownMenu extends StatefulWidget {
   final Function(AddressStore)? onChanged;

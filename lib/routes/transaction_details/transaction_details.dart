@@ -1,5 +1,6 @@
 import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
+import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
@@ -75,7 +76,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                         children: [
                           if (value != null) ...[
                             Text(
-                              "Hash",
+                              title,
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             const SizedBox(
@@ -358,7 +359,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                   'transactionDetails'.tr(),
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
-                action: IconButton(
+                action: AppBarIconButton(
+                  tooltip: "launchUrl".tr(),
                   onPressed: _launchUrl,
                   icon: Icon(
                     Icons.launch,

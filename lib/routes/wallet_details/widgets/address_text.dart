@@ -1,5 +1,4 @@
 import 'package:alephium_wallet/utils/helpers.dart';
-import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -19,6 +18,8 @@ class AddressText extends StatefulWidget {
 
 class _AddressTextState extends State<AddressText> {
   late TextOverflow overflow;
+  GlobalKey key = GlobalKey();
+  Offset tapPosition = Offset.zero;
 
   @override
   void initState() {
@@ -37,17 +38,115 @@ class _AddressTextState extends State<AddressText> {
             overflow = TextOverflow.ellipsis;
         });
       },
+      onTapDown: (details) {
+        // _getTapPosition(details);
+      },
       onLongPress: () async {
+        // _showContextMenu(context);
         var data = ClipboardData(text: widget.address);
         await Clipboard.setData(data);
         context.showSnackBar("addressCopied".tr());
       },
       child: Text(
         '${widget.address}',
+        key: key,
         style: widget.style != null
             ? widget.style!.copyWith(overflow: overflow)
             : TextStyle(overflow: overflow),
       ),
     );
+  }
+
+  void _getTapPosition(TapDownDetails details) {
+    final RenderBox referenceBox = context.findRenderObject() as RenderBox;
+    final _tapPosition = referenceBox.globalToLocal(details.globalPosition);
+    setState(() {
+      tapPosition = _tapPosition;
+    });
+    print(tapPosition);
+  }
+
+  void _showContextMenu(
+    BuildContext context,
+  ) async {
+    final RenderBox overlay =
+        Overlay.of(context)?.context.findRenderObject() as RenderBox;
+
+    final RenderBox button = context.findRenderObject() as RenderBox;
+
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(const Offset(0, -65), ancestor: overlay),
+        button.localToGlobal(
+            button.size.bottomRight(Offset.zero) + const Offset(-50, 0),
+            ancestor: overlay),
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    final result = await showMenu(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        context: context,
+        position: position,
+        items: [
+          PopupMenuItem(
+            enabled: false,
+            padding: EdgeInsets.zero,
+            child: Center(
+              child: IntrinsicHeight(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: kMinInteractiveDimension,
+                      child: InkWell(
+                        customBorder: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Center(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Copy'),
+                        )),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                    // VerticalDivider(
+                    //   thickness: 0.5,
+                    //   color: Colors.black,
+                    // ),
+                    SizedBox(
+                      height: kMinInteractiveDimension,
+                      child: InkWell(
+                        customBorder: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Center(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Save'),
+                        )),
+                        onTap: () {},
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ]);
+
+    // Implement the logic for each choice here
+    switch (result) {
+      case 'favorites':
+        debugPrint('Add To Favorites');
+        break;
+      case 'comment':
+        debugPrint('Write Comment');
+        break;
+      case 'hide':
+        debugPrint('Hide');
+        break;
+    }
   }
 }

@@ -47,7 +47,7 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
             wallets: List<WalletStore>.from(wallets),
             withLoadingIndicator: false,
           ));
-        } catch (e, trace) {
+        } catch (e, _) {
           emit(WalletHomeError(message: e.toString()));
         }
       } else if (event is WalletHomeRefreshData) {

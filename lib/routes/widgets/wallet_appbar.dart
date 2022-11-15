@@ -4,9 +4,10 @@ import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class WalletAppBar extends StatefulWidget {
-  final IconButton? action;
+  final AppBarIconButton? action;
   final Text? label;
   final bool withLoadingIndicator;
   final ScrollController? controller;
@@ -78,6 +79,7 @@ class _WalletAppBarState extends State<WalletAppBar> {
                   else
                     ModalRoute.of(context)!.canPop
                         ? AppBarIconButton(
+                            tooltip: "back".tr(),
                             icon: Icon(
                               CupertinoIcons.back,
                             ),
@@ -110,9 +112,7 @@ class _WalletAppBarState extends State<WalletAppBar> {
                             height: 50,
                             width: 50,
                           )
-                        : AppBarIconButton(
-                            icon: widget.action!.icon,
-                            onPressed: widget.action!.onPressed!),
+                        : widget.action,
                   ),
                 ],
               ),
