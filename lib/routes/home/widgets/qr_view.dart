@@ -148,7 +148,12 @@ class _QRScannerViewState extends State<QRScannerView> {
         try {
           isClosed = false;
           var data = <String, dynamic>{};
-          var scannedData = json.decode(scanData.code!);
+          var scannedData;
+          try {
+            scannedData = json.decode(scanData.code!);
+          } catch (_) {
+            scannedData = scanData.code;
+          }
           if (scannedData is String) {
             data["address"] = scanData.code;
             data["Type"] = "ALEPHIUM";
@@ -164,6 +169,7 @@ class _QRScannerViewState extends State<QRScannerView> {
           }
           isClosed = true;
         } catch (e) {
+          print(e);
           var closedReason = context.showSnackBar(kErrorMessageGenericError,
               level: Level.error);
           isClosed = (await closedReason?.closed != null);

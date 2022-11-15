@@ -22,11 +22,12 @@ mixin InputValidators {
             ?.balance
             ?.balance ??
         0;
+    balance = balance / 10e17;
     if (amountNumber == null) {
       return null;
     }
     if (amountNumber == 0) {
-      return "amountExceeded".tr(args: ["0"]);
+      return "amountIsZero".tr(args: ["0"]);
     }
     if (amountNumber > balance) {
       return "amountExceeded".tr(args: [balance.toString()]);
