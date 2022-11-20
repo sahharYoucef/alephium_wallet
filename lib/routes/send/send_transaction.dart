@@ -2,7 +2,11 @@ import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/main.dart';
+import 'package:alephium_wallet/routes/send/widgets/add_token_button.dart';
+import 'package:alephium_wallet/routes/send/widgets/added_tokens_list.dart';
 import 'package:alephium_wallet/routes/send/widgets/success_dialog.dart';
+import 'package:alephium_wallet/routes/send/widgets/tokens_dialog.dart';
+import 'package:alephium_wallet/routes/send/widgets/tokens_drop_down.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
@@ -56,11 +60,11 @@ class _SendTransactionPageState extends State<SendTransactionPage>
     );
     if (widget.initialData != null) {
       if (widget.initialData?["amount"] != null)
-        _bloc.amount = widget.initialData?["amount"].toString();
+        _bloc.amount = widget.initialData?["amount"];
       if (widget.initialData?["address"] != null)
         _bloc.toAddress = widget.initialData?["address"];
     }
-    _amountController = TextEditingController(text: _bloc.amount);
+    _amountController = TextEditingController(text: _bloc.amount?.toString());
     if (widget.addressStore != null) {
       _bloc.fromAddress = widget.addressStore;
     }
@@ -107,7 +111,9 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                     barrierDismissible: false,
                     context: context,
                     builder: (context) => TransactionSuccessDialog(
-                        transaction: state.transactions.first));
+                          amount: _bloc.amount!.toString(),
+                          transaction: state.transactions.first,
+                        ));
                 Navigator.pop(context);
               }
             },
@@ -248,6 +254,9 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                       );
                                     },
                                   ),
+                                  AddedTokensList(
+                                    bloc: _bloc,
+                                  )
                                   // const SizedBox(height: 8),
                                 ])),
                               ),
@@ -364,51 +373,70 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                               const SizedBox(
                                                 height: 10,
                                               ),
-                                              Hero(
-                                                tag: "button",
-                                                child: OutlinedButton(
-                                                  child: Text(
-                                                    state.transaction != null
-                                                        ? 'send'
-                                                            .tr()
-                                                            .toUpperCase()
-                                                        : 'check'
-                                                            .tr()
-                                                            .toUpperCase(),
-                                                  ),
-                                                  onPressed: _bloc
-                                                          .activateButton
-                                                      ? () {
-                                                          var isValid = _formKey
-                                                                  .currentState
-                                                                  ?.validate() ??
-                                                              false;
-                                                          if (!isValid) return;
-                                                          if (state
-                                                                  .transaction ==
-                                                              null) {
-                                                            _bloc.add(
-                                                              CheckTransactionEvent(
-                                                                _bloc
-                                                                    .fromAddress,
-                                                              ),
-                                                            );
-                                                          } else {
-                                                            _bloc.add(
-                                                                SignAndSendTransaction(
-                                                              privateKey: _bloc
-                                                                  .fromAddress!
-                                                                  .privateKey!,
-                                                              transactionID: _bloc
-                                                                  .transaction!
-                                                                  .txId!,
-                                                              unsignedTx: _bloc
-                                                                  .transaction!
-                                                                  .unsignedTx!,
-                                                            ));
-                                                          }
-                                                        }
-                                                      : null,
+                                              IntrinsicHeight(
+                                                child: Row(
+                                                  children: [
+                                                    Flexible(
+                                                        flex: 1,
+                                                        child: AddTokenButton(
+                                                          bloc: _bloc,
+                                                        )),
+                                                    SizedBox(
+                                                      width: 8,
+                                                    ),
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: Hero(
+                                                        tag: "button",
+                                                        child: OutlinedButton(
+                                                          child: Text(
+                                                            state.transaction !=
+                                                                    null
+                                                                ? 'send'
+                                                                    .tr()
+                                                                    .toUpperCase()
+                                                                : 'check'
+                                                                    .tr()
+                                                                    .toUpperCase(),
+                                                          ),
+                                                          onPressed: _bloc
+                                                                  .activateButton
+                                                              ? () {
+                                                                  var isValid = _formKey
+                                                                          .currentState
+                                                                          ?.validate() ??
+                                                                      false;
+                                                                  if (!isValid)
+                                                                    return;
+                                                                  if (state
+                                                                          .transaction ==
+                                                                      null) {
+                                                                    _bloc.add(
+                                                                      CheckTransactionEvent(
+                                                                        _bloc
+                                                                            .fromAddress,
+                                                                      ),
+                                                                    );
+                                                                  } else {
+                                                                    _bloc.add(
+                                                                        SignAndSendTransaction(
+                                                                      privateKey: _bloc
+                                                                          .fromAddress!
+                                                                          .privateKey!,
+                                                                      transactionID: _bloc
+                                                                          .transaction!
+                                                                          .txId!,
+                                                                      unsignedTx: _bloc
+                                                                          .transaction!
+                                                                          .unsignedTx!,
+                                                                    ));
+                                                                  }
+                                                                }
+                                                              : null,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                               const SizedBox(

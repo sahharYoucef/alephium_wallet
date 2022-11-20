@@ -20,7 +20,7 @@ class TransactionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final type = transaction.type;
     final date = DateTime.fromMillisecondsSinceEpoch(transaction.timeStamp);
-    final status = transaction.txStatus == TXStatus.completed;
+    final status = transaction.status == TXStatus.completed;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Material(
@@ -111,7 +111,7 @@ class TransactionTile extends StatelessWidget {
                                   color: WalletTheme.instance.background,
                                 ),
                                 child: Text(
-                                  '${transaction.txAmount}',
+                                  '${transaction.amount}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!

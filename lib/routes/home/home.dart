@@ -146,53 +146,10 @@ class _HomePageState extends State<HomePage>
                                 Icons.qr_code_scanner,
                               ),
                               onPressed: () async {
-                                var data = await showGeneralDialog<
-                                    Map<String, dynamic>?>(
-                                  barrierDismissible: true,
-                                  barrierLabel: "receive",
-                                  context: context,
-                                  pageBuilder: (context, animation,
-                                          secondaryAnimation) =>
-                                      Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 16,
-                                        bottom: 16 + context.viewInsetsBottom,
-                                        left: 16,
-                                        right: 16),
-                                    child: Center(
-                                      child: Material(
-                                        color: Theme.of(context).primaryColor,
-                                        borderRadius: BorderRadius.circular(
-                                          16,
-                                        ),
-                                        elevation: 6,
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            16,
-                                          ),
-                                          child: QRScannerView(
-                                            bloc: _walletHomeBloc,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  transitionDuration:
-                                      const Duration(milliseconds: 300),
-                                  transitionBuilder: (context, animation,
-                                      secondaryAnimation, child) {
-                                    return SlideTransition(
-                                      position: animation.drive(
-                                        Tween<Offset>(
-                                          begin: Offset(0, 1),
-                                          end: Offset.zero,
-                                        ),
-                                      ),
-                                      child: child,
-                                    );
-                                  },
+                                var data = await showQRView(
+                                  context,
+                                  walletHomeBloc: _walletHomeBloc,
                                 );
-
                                 if (data != null) {
                                   Navigator.pushNamed(context, Routes.send,
                                       arguments: {

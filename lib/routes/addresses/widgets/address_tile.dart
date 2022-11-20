@@ -96,7 +96,19 @@ class AddressTile extends StatelessWidget {
                     Expanded(
                       child: AddressText(
                         address: address.address,
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              foreground: Paint()
+                                ..shader = LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                    WalletTheme.instance.gradientOne,
+                                    WalletTheme.instance.gradientTwo,
+                                  ],
+                                ).createShader(
+                                    Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                            ),
                       ),
                     ),
                     const SizedBox(
@@ -109,7 +121,7 @@ class AddressTile extends StatelessWidget {
                           await Clipboard.setData(data);
                           context.showSnackBar("addressCopied".tr());
                         },
-                        icon: Icon(Icons.copy))
+                        icon: GradientIcon(icon: Icons.copy))
                   ],
                 )
               ],

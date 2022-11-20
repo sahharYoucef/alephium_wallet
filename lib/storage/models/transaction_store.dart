@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/storage/models/transaction_ref_store.dart';
+import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
@@ -17,9 +20,9 @@ class TransactionStore extends Equatable {
   final String txHash;
   final String? blockHash;
   final int timeStamp;
-  final String? transactionGas;
-  final int? transactionAmount;
-  final TXStatus txStatus;
+  final int? gasAmount;
+  final BigInt? gasPrice;
+  final TXStatus status;
   final String walletId;
   final List<TransactionRefStore> refsIn;
   final List<TransactionRefStore> refsOut;
@@ -31,44 +34,54 @@ class TransactionStore extends Equatable {
     required this.transactionID,
     this.blockHash,
     required this.timeStamp,
-    this.transactionGas,
-    this.transactionAmount,
-    required this.txStatus,
+    this.gasAmount,
+    this.gasPrice,
+    required this.status,
     required this.walletId,
     this.refsIn = const [],
     this.refsOut = const [],
     required this.network,
   });
 
+  static List<TransactionRefStore> _getRefs(Uint8List? data) {
+    if (data == null) return <TransactionRefStore>[];
+    var value = String.fromCharCodes(data);
+    var decoded = jsonDecode(value.toString()) as List<dynamic>;
+    var _refs = decoded.map((ref) => TransactionRefStore.fromDb(ref)).toList();
+    return _refs;
+  }
+
+  Uint8List _setRefs(List<TransactionRefStore> data) {
+    final encoded = json.encode(data.map((e) => e.toDb()).toList());
+    return Uint8List.fromList(encoded.codeUnits);
+  }
+
   factory TransactionStore.fromDb(Map<String, dynamic> data) {
-    final _txHash = data["txHash"] as String;
-    final _address = data["tx_address"] as String;
+    final _txHash = data["hash"] as String;
+    final _address = data["txAddress"] as String;
     final _blockHash = data["blockHash"];
-    final _gas = data["transactionGas"];
-    final _walletId = data["wallet_id"];
-    final _txStatus = status(data["status"] ?? "completed");
-    final _amount = data["transactionAmount"];
+    final _gasAmount = data["gasAmount"];
+    final _walletId = data["walletId"];
+    final _txStatus = _getStatus(data["status"] ?? "completed");
     final _timeStamp = data["timeStamp"];
-    final refs = (data["refs"] as List<Map<String, dynamic>>?)
-        ?.map((data) => TransactionRefStore.fromDb(data))
-        .toList();
-    final _refsIn = refs?.where((element) => element.type == "in").toList();
-    final _refsOut = refs?.where((element) => element.type == "out").toList();
     final _network = Network.network(data["network"]);
     final _transactionID = data["txID"];
+    final _gasPrice = BigInt.tryParse(data["gasPrice"]);
+    final _refsIn = _getRefs(data["refsIn"] as Uint8List?);
+    final _refsOut = _getRefs(data["refsOut"] as Uint8List?);
     return TransactionStore(
       transactionID: _transactionID,
       address: _address,
       txHash: _txHash,
       blockHash: _blockHash,
-      transactionGas: _gas,
+      gasAmount: _gasAmount,
       walletId: _walletId,
-      txStatus: _txStatus,
-      transactionAmount: _amount,
-      refsIn: _refsIn ?? [],
-      refsOut: _refsOut ?? [],
+      status: _txStatus,
+      refsIn: _refsIn,
+      refsOut: _refsOut,
       timeStamp: _timeStamp,
       network: _network,
+      gasPrice: _gasPrice,
     );
   }
 
@@ -77,8 +90,9 @@ class TransactionStore extends Equatable {
     String? txHash,
     String? blockHash,
     int? timeStamp,
-    String? gas,
-    int? amount,
+    int? gasAmount,
+    BigInt? gasPrice,
+    int? txAmount,
     TXStatus? txStatus,
     String? walletId,
     List<TransactionRefStore>? refsIn,
@@ -91,10 +105,10 @@ class TransactionStore extends Equatable {
       txHash: txHash ?? this.txHash,
       address: address ?? this.address,
       timeStamp: timeStamp ?? this.timeStamp,
-      txStatus: txStatus ?? this.txStatus,
+      status: txStatus ?? this.status,
       walletId: walletId ?? this.walletId,
-      transactionAmount: amount ?? this.transactionAmount,
-      transactionGas: gas ?? this.transactionGas,
+      gasAmount: gasAmount ?? this.gasAmount,
+      gasPrice: gasPrice ?? this.gasPrice,
       blockHash: blockHash ?? this.blockHash,
       refsIn: refsIn ?? this.refsIn,
       refsOut: refsOut ?? this.refsOut,
@@ -104,42 +118,41 @@ class TransactionStore extends Equatable {
 
   Map<String, dynamic> toDb() {
     return {
-      "txID": this.transactionID,
-      "txHash": this.txHash,
+      "txId": this.transactionID,
+      "hash": this.txHash,
       "blockHash": this.blockHash,
-      "transactionGas": this.transactionGas,
-      "wallet_id": this.walletId,
-      "tx_address": this.address,
-      "status": this.txStatus.title,
-      "transactionAmount": this.transactionAmount,
+      "gasAmount": this.gasAmount,
+      "gasPrice": this.gasPrice?.toString(),
+      "walletId": this.walletId,
+      "txAddress": this.address,
+      "status": this.status.title,
       "id": id,
       "timeStamp": this.timeStamp,
       "network": this.network.name,
+      "refsIn": _setRefs(this.refsIn),
+      "refsOut": _setRefs(this.refsOut),
     };
   }
 
-  static TXStatus status(String _status) => TXStatus.values.firstWhere(
+  static TXStatus _getStatus(String _status) => TXStatus.values.firstWhere(
         (blockchain) => blockchain.name == _status,
         orElse: () => TXStatus.completed,
       );
 
-  String get txAmount {
+  String get amount {
     double value = 0.0;
     if (inputAddresses.contains(address)) {
       var _inAddresses =
           refsIn.where((element) => element.address == address).toList();
       var _outAddresses =
           refsOut.where((element) => element.address == address).toList();
-      for (var ref in _inAddresses)
-        value += (BigInt.tryParse("${ref.amount}")?.toDouble() ?? 0);
-      for (var ref in _outAddresses)
-        value -= (BigInt.tryParse("${ref.amount}")?.toDouble() ?? 0);
-      value -= feeValue;
+      for (var ref in _inAddresses) value += ref.amount?.toDouble() ?? 0;
+      for (var ref in _outAddresses) value -= ref.amount?.toDouble() ?? 0;
+      value -= feeValue.toDouble();
     } else {
       var _outAddresses =
           refsOut.where((element) => element.address == address).toList();
-      for (var ref in _outAddresses)
-        value += (BigInt.tryParse("${ref.amount}")?.toDouble() ?? 0);
+      for (var ref in _outAddresses) value += ref.amount?.toDouble() ?? 0;
     }
     final _amount = (value / 10e17).toStringAsFixed(3);
     return "$_amount ℵ";
@@ -161,18 +174,18 @@ class TransactionStore extends Equatable {
     return addresses;
   }
 
-  double get feeValue {
-    var gasPrice = double.tryParse("${transactionGas}");
-    if (transactionAmount != null && gasPrice != null) {
-      return transactionAmount! * gasPrice;
+  BigInt get feeValue {
+    var _gasAmount = gasAmount;
+    if (gasPrice != null && _gasAmount != null) {
+      return gasPrice! * BigInt.from(_gasAmount);
     }
-    return 0;
+    return BigInt.zero;
   }
 
   String get fee {
-    var gasPrice = double.tryParse("${transactionGas}");
-    if (transactionAmount != null && gasPrice != null) {
-      return (transactionAmount! * gasPrice / 10e17).toStringAsFixed(3);
+    var _gasAmount = gasAmount;
+    if (gasPrice != null && _gasAmount != null) {
+      return (gasPrice!.toDouble() * _gasAmount / 10e17).toStringAsFixed(4);
     }
     return "???";
   }

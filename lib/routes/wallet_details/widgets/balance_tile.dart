@@ -1,4 +1,6 @@
+import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -48,7 +50,7 @@ class BalanceTile extends StatelessWidget {
                 ]
               ])),
             ),
-            if (wallet.lockedBalance != "0.00 ℵ") ...[
+            if (wallet.lockedBalance != "0.0") ...[
               SizedBox(
                 height: 20,
               ),
@@ -75,7 +77,54 @@ class BalanceTile extends StatelessWidget {
                   ),
                 ])),
               )
-            ]
+            ],
+            if (wallet.tokensBalances.isNotEmpty) ...[
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                '${'tokensBalances'.tr()} :',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              const Divider(),
+              ...wallet.tokensBalances.map((token) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                      vertical: 4,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AddressText(
+                          address: "${token.id}",
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    foreground: Paint()
+                                      ..shader = LinearGradient(
+                                        begin: Alignment.topRight,
+                                        end: Alignment.bottomLeft,
+                                        colors: [
+                                          WalletTheme.instance.gradientOne,
+                                          WalletTheme.instance.gradientTwo,
+                                        ],
+                                      ).createShader(
+                                          Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                                  ),
+                        ),
+                        Text(
+                          "${token.amount}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall!
+                              .copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ))
+            ],
           ],
         ),
       ),

@@ -2,6 +2,7 @@ import 'package:alephium_wallet/api/coingecko_api/coingecko_repository.dart';
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/balance_store.dart';
+import 'package:alephium_wallet/storage/models/token_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_ref_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'dart:async';
@@ -18,13 +19,16 @@ import 'package:alephium_wallet/api/utils/error_handler.dart';
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/api/repositories/alephium/utils/interceptor.dart';
 
-class AlephiumApiRepository extends BaseApiRepository {
+part "utils/repository_mixin.dart";
+
+class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
   late AddressClient _addressClient;
   late TransactionClient _transactionClient;
   late ExplorerClient _explorerClient;
   late CoingeckoClient _coingeckoClient;
   late InfosClient _infosClient;
   late Dio _dio;
+
   Network network;
 
   AlephiumApiRepository(this.network) : super(network) {
@@ -79,21 +83,9 @@ class AlephiumApiRepository extends BaseApiRepository {
       {required AddressStore address}) async {
     try {
       var data = await _addressClient.getAddressBalance(address.address);
-      final addressData = AddressStore(
-        group: address.group,
-        privateKey: address.privateKey,
-        publicKey: address.publicKey,
-        address: address.address,
-        walletId: address.walletId,
-        index: address.index,
-        warning: data.warning,
-        balance: BalanceStore(
-          balance: double.tryParse("${data.balance}") ?? 0,
-          balanceHint: double.tryParse("${data.balanceHint}") ?? 0,
-          lockedBalance: double.tryParse("${data.lockedBalance}") ?? 0,
-          address: address.address,
-          network: network,
-        ),
+      final addressData = updateAddressBalance(
+        data,
+        address: address,
       );
       return Either<AddressStore>(data: addressData);
     } on Exception catch (e, trace) {
@@ -106,40 +98,11 @@ class AlephiumApiRepository extends BaseApiRepository {
       {required String address, required String walletId}) async {
     try {
       var data = await _explorerClient.getAddressTransactions(address: address);
-      List<TransactionStore> transactions = data
-          .map((transaction) => TransactionStore(
-                transactionID: "",
-                address: address,
-                walletId: walletId,
-                txStatus: TXStatus.completed,
-                network: network,
-                refsIn: transaction.inputs
-                        ?.map((e) => TransactionRefStore(
-                              transactionId: '$address${transaction.hash}',
-                              address: e.address,
-                              amount: e.amount,
-                              txHashRef: e.txHashRef,
-                              unlockScript: e.unlockScript,
-                              type: "in",
-                            ))
-                        .toList() ??
-                    [],
-                refsOut: transaction.outputs
-                        ?.map((e) => TransactionRefStore(
-                              transactionId: '$address${transaction.hash}',
-                              address: e.address,
-                              amount: e.amount,
-                              type: "out",
-                            ))
-                        .toList() ??
-                    [],
-                txHash: transaction.hash!,
-                blockHash: transaction.blockHash,
-                timeStamp: transaction.timeStamp!.toInt(),
-                transactionGas: transaction.gasPrice,
-                transactionAmount: transaction.gasAmount?.toInt(),
-              ))
-          .toList();
+      List<TransactionStore> transactions = parseAddressTransactions(
+        data,
+        address: address,
+        walletId: walletId,
+      );
       return Either<List<TransactionStore>>(data: transactions);
     } on Exception catch (e, trace) {
       return Either<List<TransactionStore>>(
@@ -148,14 +111,15 @@ class AlephiumApiRepository extends BaseApiRepository {
   }
 
   @override
-  Future<Either<TransactionBuildDto>> createTransaction(
-      {required String fromPublicKey,
-      required String toAddress,
-      required String amount,
-      num? gas,
-      int? lockTime,
-      String? gasPrice,
-      String? gasAmount}) async {
+  Future<Either<TransactionBuildDto>> createTransaction({
+    required String fromPublicKey,
+    required String toAddress,
+    required BigInt amount,
+    int? lockTime,
+    BigInt? gasPrice,
+    int? gasAmount,
+    List<TokenStore>? tokens,
+  }) async {
     try {
       var data =
           await _transactionClient.postTransactionsBuild(BuildTransaction(
@@ -163,12 +127,18 @@ class AlephiumApiRepository extends BaseApiRepository {
         destinations: [
           TransactionDestination(
             address: toAddress,
-            alphAmount: (double.parse(amount) * 10e17).toStringAsFixed(0),
+            attoAlphAmount: amount,
             lockTime: lockTime,
+            tokens: tokens
+                ?.map<Token>((token) => Token(
+                      id: token.id,
+                      amount: token.amount,
+                    ))
+                .toList(),
           ),
         ],
-        gasPrice: gasPrice != null && gasPrice.isNotEmpty ? gasPrice : null,
-        gas: gas,
+        gasPrice: gasPrice,
+        gasAmount: gasAmount,
       ));
       return Either<TransactionBuildDto>(
           data: TransactionBuildDto(
@@ -221,7 +191,7 @@ class AlephiumApiRepository extends BaseApiRepository {
             ?.map((e) => TransactionBuildDto.fromSweep(
                   unsignedTx: e.unsignedTx,
                   txId: e.txId,
-                  gasAmount: e.gasAmount.toString(),
+                  gasAmount: e.gasAmount,
                   gasPrice: e.gasPrice,
                 ))
             .toList(),

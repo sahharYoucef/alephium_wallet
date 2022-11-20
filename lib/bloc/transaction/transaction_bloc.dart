@@ -2,6 +2,7 @@ import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/storage/base_db_helper.dart';
+import 'package:alephium_wallet/storage/models/token_store.dart';
 import 'package:bloc/bloc.dart';
 import 'package:alephium_wallet/api/dto_models/transaction_build_dto.dart';
 import 'package:alephium_wallet/api/dto_models/transaction_result_dto.dart';
@@ -20,23 +21,20 @@ part 'transaction_event.dart';
 part 'transaction_state.dart';
 
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
-  String? amount;
   AddressStore? fromAddress;
-  String? _gas;
-  String? gasPrice;
+  double? amount;
+  int? gasAmount;
+  BigInt? gasPrice;
   String? toAddress;
   String? txId;
   String? signature;
   String? unsignedTx;
   TransactionBuildDto? transaction;
+  List<TokenStore> tokens = [];
   final AuthenticationService authenticationService;
 
   bool get activateButton {
     return amount != null && toAddress != null && fromAddress != null;
-  }
-
-  double? get gas {
-    return double.tryParse("${_gas}");
   }
 
   String get balance {
@@ -45,7 +43,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   }
 
   String get total {
-    var _amount = double.tryParse("${amount}");
+    var _amount = amount?.toDouble();
     if (_amount == null) {
       return '???';
     }
@@ -53,8 +51,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   }
 
   double get expectedFeesValue {
-    var _gasPrice = double.tryParse("${transaction?.gasPrice}");
-    var _gasAmount = double.tryParse("${transaction?.gasAmount}");
+    var _gasPrice = transaction?.gasPrice?.toDouble();
+    var _gasAmount = transaction?.gasAmount?.toDouble();
     if (_gasAmount == null || _gasPrice == null) {
       return 0;
     }
@@ -62,8 +60,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   }
 
   String get expectedFees {
-    var _gasPrice = double.tryParse("${transaction?.gasPrice}");
-    var _gasAmount = double.tryParse("${transaction?.gasAmount}");
+    var _gasPrice = transaction?.gasPrice?.toDouble();
+    var _gasAmount = transaction?.gasAmount?.toDouble();
     if (_gasAmount == null || _gasPrice == null) {
       return "0";
     }
@@ -85,15 +83,15 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           fromAddress = event.fromAddress!;
         }
         if (event.amount != null) {
-          amount = event.amount;
+          amount = double.tryParse(event.amount!);
           if (event.amount!.isEmpty) amount = null;
         }
         if (event.gas != null) {
-          _gas = event.gas;
-          if (event.gas!.isEmpty) _gas = null;
+          gasAmount = int.tryParse(event.gas!);
+          if (event.gas!.isEmpty) gasAmount = null;
         }
         if (event.gasPrice != null) {
-          gasPrice = event.gasPrice;
+          gasPrice = BigInt.tryParse(event.gasPrice!);
           if (event.gasPrice!.isEmpty) gasPrice = null;
         }
         if (event.toAddress != null) {
@@ -105,6 +103,24 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           fromAddress: fromAddress?.address,
           amount: amount,
           toAddress: toAddress,
+          tokens: tokens,
+        ));
+      } else if (event is AddTokenTransactionEvent) {
+        tokens.add(
+            TokenStore(id: event.id, amount: BigInt.tryParse(event.amount)));
+        emit(TransactionStatusState(
+          fromAddress: fromAddress?.address,
+          amount: amount,
+          toAddress: toAddress,
+          tokens: tokens,
+        ));
+      } else if (event is DeleteTokenTransactionEvent) {
+        tokens.removeWhere((element) => element.id == event.id);
+        emit(TransactionStatusState(
+          fromAddress: fromAddress?.address,
+          amount: amount,
+          toAddress: toAddress,
+          tokens: tokens,
         ));
       } else if (event is CheckTransactionEvent) {
         try {
@@ -113,11 +129,12 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             return;
           }
           var data = await apiRepository.createTransaction(
-            amount: amount!,
+            amount: amount!.parseToAlphValue,
             fromPublicKey: fromAddress!.publicKey!,
             toAddress: toAddress!,
-            gas: gas,
+            gasAmount: gasAmount,
             gasPrice: gasPrice,
+            tokens: tokens.isEmpty ? null : tokens,
           );
           if (data.hasException || data.data == null) {
             emit(TransactionError(
@@ -126,7 +143,10 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             return;
           }
           transaction = data.data;
-          emit(TransactionStatusState(transaction: data.data!));
+          emit(TransactionStatusState(
+            transaction: data.data!,
+            tokens: tokens,
+          ));
         } catch (e) {
           emit(TransactionError(
             message: e.toString(),
@@ -237,34 +257,28 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       address: _fromAddress.address,
       walletId: wallet.id,
       timeStamp: DateTime.now().millisecondsSinceEpoch,
-      txStatus: TXStatus.pending,
+      status: TXStatus.pending,
       txHash: value.txId!,
-      transactionAmount: int.tryParse("${transaction?.gasPrice}"),
-      transactionGas: transaction?.gasAmount,
+      gasPrice: transaction?.gasPrice,
+      gasAmount: transaction?.gasAmount,
       network: apiRepository.network,
     );
-    var fee = data.fee.parseToAlphValue;
+    var fee = data.feeValue;
     data = data.copyWith(
       refsIn: [
         TransactionRefStore(
           address: _fromAddress.address,
-          amount: amount?.parseToAlphValue.toString(),
-          transactionId: data.id,
-          type: "in",
+          amount: amount?.parseToAlphValue,
         ),
         TransactionRefStore(
           address: _fromAddress.address,
-          amount: fee.toString(),
-          transactionId: data.id,
-          type: "in",
+          amount: fee,
         )
       ],
       refsOut: [
         TransactionRefStore(
           address: _toAddress,
-          amount: amount?.parseToAlphValue.toString(),
-          transactionId: data.id,
-          type: "out",
+          amount: amount?.parseToAlphValue,
         ),
       ],
     );
@@ -272,8 +286,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   }
 }
 
-extension _Parser on String {
-  int get parseToAlphValue {
-    return ((double.tryParse('${this}') ?? 0.0) * 10e17).toInt();
+extension _Parser on double {
+  BigInt get parseToAlphValue {
+    return BigInt.from(this * 10e17);
   }
 }

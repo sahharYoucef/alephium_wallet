@@ -6,7 +6,9 @@ import 'package:easy_localization/easy_localization.dart';
 
 class TransactionSuccessDialog extends StatelessWidget {
   final TransactionStore transaction;
-  const TransactionSuccessDialog({Key? key, required this.transaction})
+  final String amount;
+  const TransactionSuccessDialog(
+      {Key? key, required this.transaction, required this.amount})
       : super(key: key);
 
   @override
@@ -59,7 +61,7 @@ class TransactionSuccessDialog extends StatelessWidget {
                     ),
                     Spacer(),
                     Text(
-                      "${transaction.txAmount}",
+                      "${amount}",
                       style:
                           Theme.of(context).textTheme.headlineSmall!.copyWith(
                                 fontWeight: FontWeight.w700,
@@ -146,7 +148,7 @@ class TransactionSuccessDialog extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Text(
-                      transaction.fee,
+                      transaction.gasAmount.toString(),
                       style:
                           Theme.of(context).textTheme.headlineSmall!.copyWith(
                                 fontWeight: FontWeight.w700,
@@ -163,7 +165,7 @@ class TransactionSuccessDialog extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Text(
-                      "${transaction.transactionGas}",
+                      "${transaction.gasPrice}",
                       style:
                           Theme.of(context).textTheme.headlineSmall!.copyWith(
                                 fontWeight: FontWeight.w700,

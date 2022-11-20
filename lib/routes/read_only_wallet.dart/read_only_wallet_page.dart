@@ -1,4 +1,5 @@
 import 'package:alephium_wallet/bloc/create_wallet/create_wallet_bloc.dart';
+import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +20,20 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
   late final GlobalKey<FormFieldState> _nameKey;
   late final GlobalKey<FormFieldState> _addressValueKey;
   late final GlobalKey<FormState> _formKey;
+  late final TextEditingController _controller;
   @override
   void initState() {
     _nameKey = GlobalKey<FormFieldState>();
     _addressValueKey = GlobalKey<FormFieldState>();
     _formKey = GlobalKey<FormState>();
+    _controller = TextEditingController();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -82,6 +91,7 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                       ),
                       TextFormField(
                         key: _addressValueKey,
+                        controller: _controller,
                         textInputAction: TextInputAction.next,
                         autocorrect: false,
                         // validator: ((value) {
@@ -128,6 +138,25 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
               label: Text(
                 'readOnlyWallet'.tr(),
                 style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              action: AppBarIconButton(
+                tooltip: "QRscanner".tr(),
+                icon: Icon(
+                  Icons.qr_code_scanner,
+                ),
+                onPressed: () async {
+                  var data = await showQRView(
+                    context,
+                    isTransfer: false,
+                  );
+                  if (data?["address"] != null &&
+                      data!["address"] is String &&
+                      data["address"].trim().isNotEmpty) {
+                    setState(() {
+                      _controller.text = data["address"];
+                    });
+                  }
+                },
               ),
             )
           ],

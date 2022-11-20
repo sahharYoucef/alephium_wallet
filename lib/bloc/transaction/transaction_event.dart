@@ -32,6 +32,28 @@ class TransactionValuesChangedEvent extends TransactionEvent {
       ];
 }
 
+class AddTokenTransactionEvent extends TransactionEvent {
+  final String id;
+  final String amount;
+  const AddTokenTransactionEvent(
+    this.id,
+    this.amount,
+  );
+
+  @override
+  List<Object?> get props => [this.id, this.amount];
+}
+
+class DeleteTokenTransactionEvent extends TransactionEvent {
+  final String id;
+  const DeleteTokenTransactionEvent(
+    this.id,
+  );
+
+  @override
+  List<Object?> get props => [this.id];
+}
+
 class CheckTransactionEvent extends TransactionEvent {
   final AddressStore? fromAddress;
   const CheckTransactionEvent(this.fromAddress);

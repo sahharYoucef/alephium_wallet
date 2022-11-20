@@ -63,7 +63,7 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
           await getIt
               .get<BaseDBHelper>()
               .insertTransactions(wallet.id, updateTransactions);
-        } on Exception catch (e) {
+        } catch (e, trace) {
           emit(WalletDetailsError(
             message: ApiError(exception: e).message,
           ));
@@ -100,7 +100,7 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
           await getIt
               .get<BaseDBHelper>()
               .insertTransactions(wallet.id, updateTransactions);
-        } on Exception catch (e) {
+        } catch (e, trace) {
           emit(WalletDetailsError(
             message: ApiError(exception: e).message,
           ));
@@ -118,7 +118,7 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
               ?[wallet.id] = _transactions;
           periodic = Timer.periodic(Duration(seconds: 10), (value) {
             var tx = _transactions.firstWhereOrNull(
-                (element) => element.txStatus == TXStatus.pending);
+                (element) => element.status == TXStatus.pending);
             if (tx == null) {
               periodic?.cancel();
               return;
@@ -231,7 +231,7 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
           var a = _transactions.firstWhereOrNull((element) {
             return element == tx;
           });
-          if (a == null || a.txStatus == TXStatus.pending)
+          if (a == null || a.status == TXStatus.pending)
             updateTransactions.add(tx);
         }
       }

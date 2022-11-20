@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:alephium_dart/alephium_dart.dart';
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
+import 'package:alephium_wallet/storage/models/token_store.dart';
 
 import '../../storage/models/transaction_store.dart';
 import '../dto_models/sweep_result_dto.dart';
@@ -22,14 +23,15 @@ abstract class BaseApiRepository {
   });
   FutureOr<Either<List<TransactionStore>>> getAddressTransactions(
       {required String address, required String walletId});
-  FutureOr<Either<TransactionBuildDto>> createTransaction(
-      {required String fromPublicKey,
-      required String toAddress,
-      required String amount,
-      num? gas,
-      int? lockTime,
-      String? gasPrice,
-      String? gasAmount});
+  FutureOr<Either<TransactionBuildDto>> createTransaction({
+    required String fromPublicKey,
+    required String toAddress,
+    required BigInt amount,
+    int? lockTime,
+    BigInt? gasPrice,
+    int? gasAmount,
+    List<TokenStore>? tokens,
+  });
   FutureOr<Either<TransactionResultDTO>> sendTransaction(
       {required String signature, required String unsignedTx});
   FutureOr<Either<SweepResultDTO>> sweepTransaction({

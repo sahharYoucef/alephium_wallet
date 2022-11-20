@@ -19,6 +19,7 @@ class FloatingOptionsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SpeedDial(
+        tooltip: "advancedOptions".tr(),
         heroTag: "button",
         icon: Icons.add,
         activeIcon: Icons.close,

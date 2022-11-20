@@ -15,7 +15,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.2.0
+version: 0.3.0
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -45,7 +45,7 @@ dependencies:
   alephium_dart:
     git:
       url: https://github.com/sahharYoucef/alephium_dart.git
-      ref: 127bd941e4e224eaf77f988720321ab7e7c1c2af
+      ref: 1.5.0
   sqflite: ^2.1.0+1
   intl: ^0.17.0
   google_fonts: ^3.0.1

@@ -41,7 +41,7 @@ class MainAddressTile extends StatelessWidget {
                 for (var address in wallet.addresses.take(3))
                   AddressText(
                     address: "${address.address}",
-                    style: Theme.of(context).textTheme.bodySmall!,
+                    style: Theme.of(context).textTheme.bodyMedium!,
                   ),
                 const SizedBox(
                   height: 4,

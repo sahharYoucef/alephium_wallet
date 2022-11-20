@@ -1,5 +1,7 @@
 import 'package:alephium_wallet/app.dart';
+import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/log/logger_service.dart';
+import 'package:alephium_wallet/routes/home/widgets/qr_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -88,4 +90,50 @@ extension Helper on BuildContext {
       ),
     ));
   }
+}
+
+Future<Map<String, dynamic>?> showQRView(
+  BuildContext context, {
+  WalletHomeBloc? walletHomeBloc,
+  bool isTransfer = true,
+}) async {
+  return showGeneralDialog<Map<String, dynamic>?>(
+    barrierDismissible: true,
+    barrierLabel: "receive",
+    context: context,
+    pageBuilder: (context, animation, secondaryAnimation) => Padding(
+      padding: EdgeInsets.only(
+          top: 16, bottom: 16 + context.viewInsetsBottom, left: 16, right: 16),
+      child: Center(
+        child: Material(
+          color: Theme.of(context).primaryColor,
+          borderRadius: BorderRadius.circular(
+            16,
+          ),
+          elevation: 6,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(
+              16,
+            ),
+            child: QRScannerView(
+              bloc: walletHomeBloc,
+              isTransfer: isTransfer,
+            ),
+          ),
+        ),
+      ),
+    ),
+    transitionDuration: const Duration(milliseconds: 300),
+    transitionBuilder: (context, animation, secondaryAnimation, child) {
+      return SlideTransition(
+        position: animation.drive(
+          Tween<Offset>(
+            begin: Offset(0, 1),
+            end: Offset.zero,
+          ),
+        ),
+        child: child,
+      );
+    },
+  );
 }

@@ -1,12 +1,12 @@
 enum Network {
   mainnet(
-    'https://mainnet-wallet.alephium.org',
-    'https://mainnet-backend.alephium.org',
+    'https://wallet-v15.mainnet.alephium.org',
+    'https://backend-v19.mainnet.alephium.org',
     'https://explorer.alephium.org/#',
   ),
   testnet(
-    'https://testnet-wallet.alephium.org',
-    'https://testnet-backend.alephium.org',
+    'https://wallet-v15.testnet.alephium.org',
+    'https://backend-v19.testnet.alephium.org',
     'https://testnet.alephium.org',
   ),
   localHost(

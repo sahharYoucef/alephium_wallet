@@ -7,6 +7,30 @@ import 'package:easy_localization/easy_localization.dart';
 mixin InputValidators {
   WalletStore get wallet;
   TransactionBloc get bloc;
+
+  String? tokenAmountValidator(String id, value) {
+    var amountNumber = double.tryParse(value!);
+    var balance = wallet.addresses
+            .firstWhereOrNull((element) => element == bloc.fromAddress)
+            ?.balance
+            ?.tokens
+            ?.firstWhereOrNull((element) => element.id == id)
+            ?.amount
+            ?.toDouble() ??
+        0;
+    balance = balance / 10e17;
+    if (amountNumber == null) {
+      return null;
+    }
+    if (amountNumber == 0) {
+      return "amountIsZero".tr(args: ["0"]);
+    }
+    if (amountNumber > balance) {
+      return "amountExceeded".tr(args: [balance.toString()]);
+    }
+    return null;
+  }
+
   String? addressToValidator(value) {
     var validator = RegExp(r'^[1-9A-HJ-NP-Za-km-z]+$');
     if (!validator.hasMatch(value!)) {
@@ -20,7 +44,8 @@ mixin InputValidators {
     var balance = wallet.addresses
             .firstWhereOrNull((element) => element == bloc.fromAddress)
             ?.balance
-            ?.balance ??
+            ?.balance
+            ?.toDouble() ??
         0;
     balance = balance / 10e17;
     if (amountNumber == null) {

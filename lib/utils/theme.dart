@@ -30,7 +30,7 @@ class WalletTheme {
       case ThemeMode.system:
         textColor = Color(0xff000000);
         primary = Color(0xffffffff);
-        secondary = Color(0xffeeeeee);
+        secondary = Color.fromARGB(255, 238, 238, 238);
         black = Color(0xff040404);
         background = Color(0xffe8dbeb);
         gradientOne = Color(0xfffe594e);

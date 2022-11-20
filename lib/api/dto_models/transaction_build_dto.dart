@@ -3,8 +3,8 @@ class TransactionBuildDto {
   num? fromGroup;
   num? toGroup;
   final String? txId;
-  final String? gasPrice;
-  final String? gasAmount;
+  final BigInt? gasPrice;
+  final int? gasAmount;
 
   TransactionBuildDto({
     this.unsignedTx,

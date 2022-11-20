@@ -1,6 +1,7 @@
 import 'package:alephium_wallet/api/dto_models/balance_dto.dart';
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
+import 'package:alephium_wallet/storage/models/token_store.dart';
 import 'package:alephium_wallet/utils/format.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -132,11 +133,34 @@ class WalletStore extends Equatable {
     return values;
   }
 
+  List<TokenStore> get tokensBalances {
+    List<TokenStore> tokens = [];
+    for (var address in _addresses) {
+      {
+        if (address.balance?.tokens != null)
+          for (var token in address.balance!.tokens!) {
+            if (!tokens.contains(token)) {
+              tokens.add(token);
+            } else {
+              late BigInt amount;
+              amount =
+                  tokens.firstWhere((element) => element == token).amount ??
+                      BigInt.zero;
+              amount += token.amount ?? BigInt.zero;
+              final index = tokens.indexWhere((element) => element == token);
+              tokens[index] = TokenStore(id: token.id, amount: amount);
+            }
+          }
+      }
+    }
+    return tokens;
+  }
+
   String get balance {
     var value = 0.0;
     for (var address in _addresses) {
       double? addressBalance;
-      addressBalance = address.balance?.balance;
+      addressBalance = address.balance?.balance?.toDouble();
       value += addressBalance ?? 0;
     }
     return Format.formatNumber(value / 10e17);
@@ -146,7 +170,7 @@ class WalletStore extends Equatable {
     var value = 0.0;
     for (var address in _addresses) {
       double? addressBalance;
-      addressBalance = address.balance?.lockedBalance;
+      addressBalance = address.balance?.lockedBalance?.toDouble();
       value += addressBalance ?? 0;
     }
     return Format.formatNumber(value / 10e17);

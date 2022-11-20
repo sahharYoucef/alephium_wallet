@@ -12,9 +12,10 @@ class TransactionLoading extends TransactionState {}
 class TransactionStatusState extends TransactionState {
   final TransactionBuildDto? transaction;
   final bool isFinished;
-  final String? amount;
+  final double? amount;
   final String? toAddress;
   final String? fromAddress;
+  final List<TokenStore>? tokens;
 
   const TransactionStatusState({
     this.fromAddress,
@@ -22,6 +23,7 @@ class TransactionStatusState extends TransactionState {
     this.isFinished = false,
     this.amount,
     this.toAddress,
+    this.tokens,
   });
 
   @override
@@ -32,6 +34,7 @@ class TransactionStatusState extends TransactionState {
         isFinished,
         toAddress,
         amount,
+        tokens,
       ];
 }
 

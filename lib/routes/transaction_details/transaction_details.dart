@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/routes/transaction_details/widgets/transaction_reference.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
@@ -40,7 +41,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final status = widget.transaction.txStatus == TXStatus.completed;
+    final status = widget.transaction.status == TXStatus.completed;
     final title = widget.transaction.blockHash != null
         ? "Hash"
         : "${'transaction'.tr()} id";
@@ -149,7 +150,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                               ),
                               Spacer(),
                               Text(
-                                "${widget.transaction.txAmount}",
+                                "${widget.transaction.amount}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineSmall!
@@ -185,112 +186,16 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                             "incomingAmounts".tr(),
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
-                          ...widget.transaction.refsIn.map(
-                            (ref) => Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "\u2022  ",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w900),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      AddressText(
-                                        address: "${ref.address}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              foreground: Paint()
-                                                ..shader = LinearGradient(
-                                                  begin: Alignment.topRight,
-                                                  end: Alignment.bottomLeft,
-                                                  colors: [
-                                                    WalletTheme
-                                                        .instance.gradientOne,
-                                                    WalletTheme
-                                                        .instance.gradientTwo,
-                                                  ],
-                                                ).createShader(Rect.fromLTWH(
-                                                    0.0, 0.0, 200.0, 70.0)),
-                                            ),
-                                      ),
-                                      Text(
-                                        "${ref.txAmount}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headlineSmall!
-                                            .copyWith(
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+                          TransactionReferences(
+                            refs: widget.transaction.refsIn,
                           ),
                           const Divider(),
                           Text(
                             "outgoingAmounts".tr(),
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
-                          ...widget.transaction.refsOut.map(
-                            (ref) => Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "\u2022  ",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w900),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      AddressText(
-                                        address: "${ref.address}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              foreground: Paint()
-                                                ..shader = LinearGradient(
-                                                  begin: Alignment.topRight,
-                                                  end: Alignment.bottomLeft,
-                                                  colors: [
-                                                    WalletTheme
-                                                        .instance.gradientOne,
-                                                    WalletTheme
-                                                        .instance.gradientTwo,
-                                                  ],
-                                                ).createShader(Rect.fromLTWH(
-                                                    0.0, 0.0, 200.0, 70.0)),
-                                            ),
-                                      ),
-                                      Text(
-                                        "${ref.txAmount}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headlineSmall!
-                                            .copyWith(
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+                          TransactionReferences(
+                            refs: widget.transaction.refsOut,
                           ),
                           const Divider(),
                           Column(
@@ -301,7 +206,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               Text(
-                                widget.transaction.fee,
+                                widget.transaction.gasAmount.toString(),
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineSmall!
@@ -320,7 +225,26 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               Text(
-                                "${widget.transaction.transactionGas}",
+                                "${widget.transaction.gasPrice}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall!
+                                    .copyWith(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                              ),
+                            ],
+                          ),
+                          const Divider(),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "fee".tr(),
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              Text(
+                                "${widget.transaction.fee}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineSmall!
@@ -344,7 +268,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                     height: 40,
                     width: 40,
                     child: AlephiumIcon(
-                      spinning: true,
+                      spinning: !status,
                     ),
                   ),
                 )

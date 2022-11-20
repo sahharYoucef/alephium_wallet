@@ -63,7 +63,6 @@ class _AddressTextState extends State<AddressText> {
     setState(() {
       tapPosition = _tapPosition;
     });
-    print(tapPosition);
   }
 
   void _showContextMenu(

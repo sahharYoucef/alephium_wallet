@@ -21,7 +21,7 @@ Framework: Flutter (>=3.3)
   
 **Release:**
 
-* Currently [`version v0.2.0`](https://github.com/sahharYoucef/alephium_wallet/releases/)
+* Currently [`version v0.3xw.0`](https://github.com/sahharYoucef/alephium_wallet/releases/)
 
 ## Getting Started
 

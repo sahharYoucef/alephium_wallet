@@ -40,17 +40,18 @@ class AddressStore extends Equatable {
   });
 
   factory AddressStore.fromDb(Map<String, dynamic> data) {
+    final _walletId = data["walletId"] as String;
     final _address = data["address"] as String;
-    final _index = data["address_index"] as int;
+    final _index = data["addressIndex"] as int;
+    final _group = data["addressGroup"] as int;
+    final _title = data["addressTitle"] as String?;
+    final _color = data["addressColor"] as String?;
     final _warning = data["warning"] as String?;
-    final _walletId = data["wallet_id"] as String;
     final _publicKey = data["publicKey"] as String?;
     final _privateKey = data["privateKey"] as String?;
-    final _group = data["group_index"] as int? ?? 0;
-    final _title = data["address_title"] as String?;
-    final _color = data["address_color"] as String?;
     return AddressStore(
-      balance: data["address_id"] != null ? BalanceStore.fromDb(data) : null,
+      balance:
+          data["balanceAddress"] != null ? BalanceStore.fromDb(data) : null,
       address: _address,
       index: _index,
       group: _group,
@@ -66,11 +67,11 @@ class AddressStore extends Equatable {
   Map<String, dynamic> toDb() {
     return {
       "address": this.address,
-      "address_color": this.color,
-      "address_title": this.title,
-      "address_index": this.index,
-      "group_index": this.group,
-      "wallet_id": this.walletId,
+      "walletId": this.walletId,
+      "addressColor": this.color,
+      "addressTitle": this.title,
+      "addressIndex": this.index,
+      "addressGroup": this.group,
       "warning": this.warning,
       "privateKey": this.privateKey,
       "publicKey": this.publicKey,
@@ -82,7 +83,7 @@ class AddressStore extends Equatable {
   }
 
   double get addressBalance {
-    double? addressBalance = balance?.balance;
+    double? addressBalance = balance?.balance?.toDouble();
     return (addressBalance ?? 0) / 10e17;
   }
 

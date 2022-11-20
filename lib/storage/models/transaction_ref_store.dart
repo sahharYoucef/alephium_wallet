@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/storage/models/token_store.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
@@ -11,52 +12,76 @@ class TransactionRefStore {
 
   final String? address;
   final String? unlockScript;
-  final String? amount;
-  final String? txHashRef;
-  final String? transactionId;
+  final BigInt? amount;
+  final String? hash;
   final String? type;
+  final int? hint;
+  final String? key;
+  final int? lockTime;
+  final String? spent;
+  final String? message;
+  final List<TokenStore>? tokens;
 
   TransactionRefStore({
+    this.hint,
+    this.key,
+    this.lockTime,
+    this.spent,
+    this.message,
     this.address,
     this.unlockScript,
     this.amount,
-    this.txHashRef,
-    this.transactionId,
+    this.hash,
     this.type,
+    this.tokens,
   });
 
   String get txAmount {
-    double value = 0.0;
-    value += (BigInt.tryParse("${amount}")?.toDouble() ?? 0);
+    double value = amount?.toDouble() ?? 0;
     var _amount = (value / 10e17).toStringAsFixed(3);
     return "$_amount ℵ";
   }
 
   factory TransactionRefStore.fromDb(Map<String, dynamic> data) {
-    final _address = data["ref_address"] as String;
+    final _address = data["address"] as String;
     final _unlockScript = data["unlockScript"];
-    final _amount = data["amount"]?.toString();
-    final _txHashRef = data["txHashRef"];
-    final _transactionId = data["transaction_id"];
+    final _amount = BigInt.tryParse(data["amount"]);
+    final _hash = data["hash"];
     final _type = data["type"];
+    final _spent = data["spent"];
+    final _lockTime = data["lockTime"];
+    final _hint = data["hint"];
+    final _message = data["message"];
+    final _key = data["key"];
+    final _tokens = TokenStore.getTokens(data["tokens"]);
     return TransactionRefStore(
       address: _address,
       unlockScript: _unlockScript,
       amount: _amount,
-      txHashRef: _txHashRef,
-      transactionId: _transactionId,
+      hash: _hash,
+      spent: _spent,
       type: _type,
+      key: _key,
+      message: _message,
+      hint: _hint,
+      lockTime: _lockTime,
+      tokens: _tokens,
     );
   }
 
   Map<String, dynamic> toDb() {
     return {
-      "ref_address": this.address,
+      "address": this.address,
       "unlockScript": this.unlockScript,
-      "amount": this.amount,
-      "txHashRef": this.txHashRef,
-      "transaction_id": this.transactionId,
+      "amount": this.amount?.toString(),
+      "hash": this.hash,
       "type": this.type,
+      "hint": this.hint,
+      "message": this.message,
+      "lockTime": this.lockTime,
+      "spent": this.spent,
+      "key": this.key,
+      "tokens": TokenStore.setTokens(tokens),
     };
   }
 
