@@ -21,7 +21,8 @@ abstract class BaseDBHelper {
 
   Future<void> deleteContact(String id);
 
-  Future<void> insertWallet(WalletStore wallet, AddressStore addressStore);
+  Future<void> insertWallet(
+      WalletStore wallet, List<AddressStore> addressStore);
 
   Future<List<WalletStore>> getWallets({required Network network});
 

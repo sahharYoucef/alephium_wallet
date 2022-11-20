@@ -29,17 +29,16 @@ class SQLiteDBHelper extends BaseDBHelper {
 
   _dropTables(Database _db) async {
     final batch = _db.batch();
-    // batch.execute('DROP TABLE IF EXISTS $_addressesTable');
-    // batch.execute('DROP TABLE IF EXISTS $_transactionTable');
-    // batch.execute('DROP TABLE IF EXISTS $_walletTable');
-    // batch.execute('DROP TABLE IF EXISTS $_balancesTable');
+    batch.execute('DROP TABLE IF EXISTS $_addressesTable');
+    batch.execute('DROP TABLE IF EXISTS $_transactionTable');
+    batch.execute('DROP TABLE IF EXISTS $_walletTable');
+    batch.execute('DROP TABLE IF EXISTS $_balancesTable');
     await batch.commit();
   }
 
-  Future<void> _onConfigure(Database _db) async {
-    await _dropTables(_db);
-    await _db.execute("PRAGMA foreign_keys = ON");
-    final batch = _db.batch();
+  _createTables(Database db) async {
+    await db.execute("PRAGMA foreign_keys = ON");
+    final batch = db.batch();
     batch.execute("""
       CREATE TABLE IF NOT EXISTS $_walletTable (
           id TEXT PRIMARY KEY NOT NULL,
@@ -94,6 +93,11 @@ class SQLiteDBHelper extends BaseDBHelper {
           FOREIGN KEY(balanceAddress) REFERENCES $_addressesTable(address) ON DELETE CASCADE
       )
       """);
+    await batch.commit();
+  }
+
+  Future<void> _onConfigure(Database _db) async {
+    await _createTables(_db);
     // batch.execute("""
     //   CREATE TABLE IF NOT EXISTS $_contactsTable (
     //       id TEXT PRIMARY KEY NOT NULL,
@@ -102,16 +106,61 @@ class SQLiteDBHelper extends BaseDBHelper {
     //       addresses TEXT
     //   )
     //   """);
-    await batch.commit();
   }
 
   Future<void> _onCreate(Database _db, int version) async {}
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    await db.execute("""
-          ALTER TABLE $_transactionTable
-          ADD txID VARCHAR(255)
-          """);
+    var data = await db.rawQuery("""
+        SELECT * FROM ${_walletTable} wallets
+        LEFT JOIN ${_addressesTable} addresses
+        ON wallets.id = addresses.wallet_id;
+      """);
+    final wallets =
+        List<Map<String, dynamic>>.from(data).combine().map((wallet) {
+      final _updatedData = {
+        "id": wallet['id'],
+        "title": wallet['title'],
+        "passphrase": wallet['passphrase'],
+        "blockchain": wallet['blockchain'],
+        "mnemonic": wallet['mnemonic'],
+        "seed": wallet['seed'],
+        "mainAddress": wallet['mainAddress'],
+        if (wallet["addresses"] != null)
+          "addresses": <Map<String, dynamic>>[
+            ...wallet["addresses"]
+                .map((address) => {
+                      "address": wallet['address'],
+                      "addressTitle": wallet['address_title'],
+                      "addressColor": wallet['address_color'],
+                      "publicKey": wallet['publicKey'],
+                      "privateKey": wallet['privateKey'],
+                      "addressIndex": wallet['address_index'],
+                      "addressGroup": wallet['group_index'],
+                      "warning": wallet['warning'],
+                      "walletId": wallet['wallet_id'],
+                    })
+                .toList()
+          ]
+      };
+      return WalletStore.fromDb(_updatedData);
+    }).toList();
+    await _dropTables(db);
+    await _createTables(db);
+    for (final wallet in wallets) {
+      for (final address in wallet.addresses) {
+        var value = await db.query(_addressesTable,
+            where: "address = ?", whereArgs: [address.address]);
+        if (value.isNotEmpty) {
+          throw Exception("address Already Exists");
+        }
+      }
+      var batch = db.batch();
+      batch.insert(_walletTable, wallet.toDb());
+      for (final address in wallet.addresses)
+        batch.insert(_addressesTable, address.toDb());
+      await batch.commit();
+    }
   }
 
   @override
@@ -121,8 +170,8 @@ class SQLiteDBHelper extends BaseDBHelper {
       "db.db",
       onConfigure: _onConfigure,
       onCreate: _onCreate,
-      // onUpgrade: _onUpgrade,
-      version: 1,
+      onUpgrade: _onUpgrade,
+      version: 3,
     );
     _database.complete(_db);
   }
@@ -148,16 +197,19 @@ class SQLiteDBHelper extends BaseDBHelper {
   }
 
   @override
-  insertWallet(WalletStore wallet, AddressStore addressStore) async {
+  insertWallet(WalletStore wallet, List<AddressStore> addresses) async {
     var _db = await _database.future;
-    var value = await _db.query(_addressesTable,
-        where: "address = ?", whereArgs: [addressStore.address]);
-    if (value.isNotEmpty) {
-      throw Exception("address Already Exists");
+    for (final address in addresses) {
+      var value = await _db.query(_addressesTable,
+          where: "address = ?", whereArgs: [address.address]);
+      if (value.isNotEmpty) {
+        throw Exception("address Already Exists");
+      }
     }
     var batch = _db.batch();
     batch.insert(_walletTable, wallet.toDb());
-    batch.insert(_addressesTable, addressStore.toDb());
+    for (final address in addresses)
+      batch.insert(_addressesTable, address.toDb());
     await batch.commit();
   }
 
@@ -273,10 +325,7 @@ class SQLiteDBHelper extends BaseDBHelper {
            ORDER BY timeStamp DESC
         ''',
     );
-    var transactions = data
-        .combine("id", "refs")
-        .map((e) => TransactionStore.fromDb(e))
-        .toList();
+    final transactions = data.map((e) => TransactionStore.fromDb(e)).toList();
     return transactions;
   }
 }

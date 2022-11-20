@@ -40,7 +40,7 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
         try {
           await getIt.get<BaseDBHelper>().insertWallet(
                 event.wallet,
-                event.wallet.addresses.first,
+                event.wallet.addresses,
               );
           final box = await Hive.openBox("settings");
           var firstRun = box.get("firstRun");
