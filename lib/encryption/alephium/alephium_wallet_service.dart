@@ -83,8 +83,9 @@ class AlephiumWalletService extends BaseWalletService {
   }) {
     var address = WalletService.deriveNewAddressData(seed, forGroup,
         index: index, skipAddressIndexes: skipAddressIndexes);
+    print(title);
     return AddressStore(
-      title: title,
+      title: title == null || title.trim().isEmpty ? null : title,
       color: color,
       group: address.group,
       privateKey: address.privateKey,
@@ -107,7 +108,7 @@ class AlephiumWalletService extends BaseWalletService {
         .map((group) => WalletService.deriveNewAddressData(wallet.seed!, group,
             skipAddressIndexes: skipAddressIndexes))
         .map((address) => AddressStore(
-              title: title,
+              title: title != null && title.trim().isEmpty ? null : title,
               color: color,
               group: address.group,
               privateKey: address.privateKey,

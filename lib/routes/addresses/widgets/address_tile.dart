@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/routes/addresses/widgets/address_qr_view.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -117,11 +118,49 @@ class AddressTile extends StatelessWidget {
                     IconButton(
                         tooltip: "copy".tr(),
                         onPressed: () async {
-                          var data = ClipboardData(text: address.address);
-                          await Clipboard.setData(data);
-                          context.showSnackBar("addressCopied".tr());
+                          showGeneralDialog(
+                            barrierDismissible: true,
+                            barrierLabel: "receive",
+                            context: context,
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    Padding(
+                              padding: EdgeInsets.only(
+                                  top: 16,
+                                  bottom: 16 + context.viewInsetsBottom,
+                                  left: 16,
+                                  right: 16),
+                              child: Center(
+                                child: Material(
+                                    color: WalletTheme.instance.secondary,
+                                    borderRadius: BorderRadius.circular(
+                                      16,
+                                    ),
+                                    elevation: 6,
+                                    child: AddressQRDialog(
+                                      addressStore: address,
+                                    )),
+                              ),
+                            ),
+                            transitionDuration:
+                                const Duration(milliseconds: 300),
+                            transitionBuilder: (context, animation,
+                                secondaryAnimation, child) {
+                              return SlideTransition(
+                                position: animation.drive(
+                                  Tween<Offset>(
+                                    begin: Offset(0, 1),
+                                    end: Offset.zero,
+                                  ),
+                                ),
+                                child: child,
+                              );
+                            },
+                          );
                         },
-                        icon: GradientIcon(icon: Icons.copy))
+                        icon: GradientIcon(
+                          icon: Icons.qr_code,
+                        ))
                   ],
                 )
               ],

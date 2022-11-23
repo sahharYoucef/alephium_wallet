@@ -121,7 +121,7 @@ class WalletTile extends StatelessWidget {
                                 right: 16),
                             child: Center(
                               child: Material(
-                                  color: WalletTheme.instance.secondary,
+                                  color: WalletTheme.instance.background,
                                   borderRadius: BorderRadius.circular(
                                     16,
                                   ),

@@ -1,6 +1,7 @@
 import 'package:alephium_wallet/routes/receive/widgets/amount_field.dart';
 import 'package:alephium_wallet/routes/send/widgets/address_from.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
+import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
@@ -24,13 +25,11 @@ class ReceivePage extends StatefulWidget {
 class _ReceivePageState extends State<ReceivePage> {
   late AddressStore _addressStore;
   double? amount;
-  late final GlobalKey _key;
 
   @override
   void initState() {
     _addressStore = widget.wallet.addresses
         .firstWhere((element) => element.address == widget.wallet.mainAddress);
-    _key = GlobalKey();
     super.initState();
   }
 
@@ -66,17 +65,19 @@ class _ReceivePageState extends State<ReceivePage> {
             height: 6,
           ),
           Center(
-            child: Builder(
-                key: _key,
-                builder: (context) {
-                  return QrImage(
-                    data: _addressStore.receiveAmount(amount),
-                    backgroundColor: WalletTheme.instance.primary,
-                    foregroundColor: WalletTheme.instance.textColor,
-                    version: QrVersions.auto,
-                    size: 200.0,
-                  );
-                }),
+            child: Container(
+              decoration: BoxDecoration(
+                color: WalletTheme.instance.primary,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: QrImage(
+                data: _addressStore.receiveAmount(amount),
+                backgroundColor: Colors.transparent,
+                foregroundColor: WalletTheme.instance.textColor,
+                version: QrVersions.auto,
+                size: 200.0,
+              ),
+            ),
           ),
           const SizedBox(
             height: 6,
@@ -86,7 +87,6 @@ class _ReceivePageState extends State<ReceivePage> {
               Expanded(
                 child: AddressText(
                   address: _addressStore.address,
-                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
               const SizedBox(
@@ -102,8 +102,8 @@ class _ReceivePageState extends State<ReceivePage> {
                       "addressCopied".tr(),
                     );
                   },
-                  icon: Icon(
-                    Icons.copy,
+                  icon: GradientIcon(
+                    icon: Icons.copy,
                   )),
             ],
           ),

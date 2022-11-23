@@ -13,22 +13,25 @@ class AddTokenButton extends StatelessWidget {
     return BlocBuilder<TransactionBloc, TransactionState>(
       bloc: bloc,
       builder: (context, state) {
-        return OutlinedButton(
-            child: Text(
-              "addToken".tr(),
-            ),
-            onPressed: bloc.fromAddress?.balance?.tokens != null &&
-                    bloc.fromAddress!.balance!.tokens!.isNotEmpty
-                ? () async {
-                    await showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) => AddTokenDialog(
-                              bloc: bloc,
-                              tokens: bloc.fromAddress!.balance!.tokens!,
-                            ));
-                  }
-                : null);
+        if (bloc.fromAddress?.balance?.tokens != null &&
+            bloc.fromAddress!.balance!.tokens!.isNotEmpty)
+          return Expanded(
+            flex: 1,
+            child: OutlinedButton(
+                child: Text(
+                  "addToken".tr(),
+                ),
+                onPressed: () async {
+                  await showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (context) => AddTokenDialog(
+                            bloc: bloc,
+                            tokens: bloc.fromAddress!.balance!.tokens!,
+                          ));
+                }),
+          );
+        return const SizedBox.shrink();
       },
     );
   }

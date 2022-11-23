@@ -158,6 +158,7 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
           seed: wallet.seed!,
           skipAddressIndexes: indexes,
           forGroup: event.group,
+          title: event.title,
         );
         wallet.addresses.add(newAddress);
         if (event.isMain) {

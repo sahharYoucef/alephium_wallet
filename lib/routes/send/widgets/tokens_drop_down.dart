@@ -1,5 +1,5 @@
 import 'package:alephium_wallet/storage/models/token_store.dart';
-import 'package:alephium_wallet/utils/currencies.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +22,26 @@ class _TokensDropDownState extends State<TokensDropDown> {
   @override
   Widget build(BuildContext context) {
     return ButtonTheme(
-      alignedDropdown: true,
       child: DropdownButtonFormField<String>(
         menuMaxHeight: context.height / 2,
         dropdownColor: WalletTheme.instance.primary,
-        alignment: AlignmentDirectional.bottomEnd,
+        alignment: AlignmentDirectional.centerStart,
         elevation: 3,
+        hint: Row(
+          children: [
+            Expanded(
+                child: Text(
+              "selectToken".tr(),
+              overflow: TextOverflow.ellipsis,
+            )),
+          ],
+        ),
+        decoration: InputDecoration(
+          label: Text("token"),
+        ),
         borderRadius: BorderRadius.circular(16),
         isExpanded: true,
+        isDense: false,
         onChanged: (value) {
           setState(() {
             _tokenId = value!;
@@ -42,12 +54,12 @@ class _TokensDropDownState extends State<TokensDropDown> {
               .map(
                 (value) => DropdownMenuItem<String>(
                   value: value.id,
-                  child: SizedBox(
-                    width: 100,
-                    child: Text(
-                      value.id.toString(),
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
+                  child: Text(
+                    value.id.toString(),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(overflow: TextOverflow.ellipsis),
                   ),
                 ),
               )

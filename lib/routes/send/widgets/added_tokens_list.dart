@@ -14,13 +14,17 @@ class AddedTokensList extends StatelessWidget {
         bloc: bloc,
         builder: (context, state) {
           return Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               if (bloc.tokens.isNotEmpty) const SizedBox(height: 8),
               ...bloc.tokens.map((token) => Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Expanded(
-                        child: Column(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "\u2022  ",
@@ -29,28 +33,11 @@ class AddedTokensList extends StatelessWidget {
                             ),
                             Expanded(
                               child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   AddressText(
                                     address: "${token.id}",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          foreground: Paint()
-                                            ..shader = LinearGradient(
-                                              begin: Alignment.topRight,
-                                              end: Alignment.bottomLeft,
-                                              colors: [
-                                                WalletTheme
-                                                    .instance.gradientOne,
-                                                WalletTheme
-                                                    .instance.gradientTwo,
-                                              ],
-                                            ).createShader(Rect.fromLTWH(
-                                                0.0, 0.0, 200.0, 70.0)),
-                                        ),
                                   ),
                                   Text(
                                     "${token.amount}",

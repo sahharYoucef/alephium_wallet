@@ -1,4 +1,5 @@
 import 'package:alephium_wallet/utils/helpers.dart';
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -20,11 +21,30 @@ class _AddressTextState extends State<AddressText> {
   late TextOverflow overflow;
   GlobalKey key = GlobalKey();
   Offset tapPosition = Offset.zero;
+  late TextStyle style;
 
   @override
   void initState() {
     overflow = TextOverflow.ellipsis;
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    style = widget.style ??
+        Theme.of(context).textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w600,
+              foreground: Paint()
+                ..shader = LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    WalletTheme.instance.gradientOne,
+                    WalletTheme.instance.gradientTwo,
+                  ],
+                ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+            );
+    super.didChangeDependencies();
   }
 
   @override
@@ -50,9 +70,7 @@ class _AddressTextState extends State<AddressText> {
       child: Text(
         '${widget.address}',
         key: key,
-        style: widget.style != null
-            ? widget.style!.copyWith(overflow: overflow)
-            : TextStyle(overflow: overflow),
+        style: style.copyWith(overflow: overflow),
       ),
     );
   }

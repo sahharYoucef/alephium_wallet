@@ -58,12 +58,11 @@ extension Helper on BuildContext {
       String content,
       {Level level = Level.info}) {
     return scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
-      margin: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      backgroundColor: level == Level.error ? Colors.red : Colors.blueAccent,
-      behavior: SnackBarBehavior.floating,
-      content: Row(
-        children: [
+        margin: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        backgroundColor: level == Level.error ? Colors.red : Colors.blueAccent,
+        behavior: SnackBarBehavior.floating,
+        content: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
           if (level == Level.info)
             Icon(
               Icons.info,
@@ -74,21 +73,30 @@ extension Helper on BuildContext {
               Icons.error,
               color: Colors.white,
             ),
-          const SizedBox(
+          SizedBox(
             width: 10,
           ),
-          Expanded(
-            child: Text(
-              content,
-              style: Theme.of(this)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Colors.white),
-            ),
+          Text(
+            content,
+            style: Theme.of(this)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: Colors.white),
           ),
-        ],
-      ),
-    ));
+          SizedBox(
+            width: 10,
+          ),
+          Spacer(),
+          InkWell(
+            onTap: () {
+              scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
+            },
+            child: Icon(
+              Icons.close,
+              color: Colors.white,
+            ),
+          )
+        ])));
   }
 }
 

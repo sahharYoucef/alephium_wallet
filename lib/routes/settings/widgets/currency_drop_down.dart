@@ -5,6 +5,7 @@ import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class CurrencyDropDown extends StatefulWidget {
   const CurrencyDropDown({super.key});
@@ -24,6 +25,12 @@ class _CurrencyDropDownState extends State<CurrencyDropDown> {
         dropdownColor: WalletTheme.instance.primary,
         alignment: AlignmentDirectional.bottomEnd,
         elevation: 3,
+        decoration: InputDecoration(
+          label: Text(
+            "currency".tr(),
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+        ),
         borderRadius: BorderRadius.circular(16),
         isExpanded: true,
         onChanged: (value) {
@@ -40,7 +47,6 @@ class _CurrencyDropDownState extends State<CurrencyDropDown> {
                 (value) => DropdownMenuItem<String>(
                   value: value,
                   child: SizedBox(
-                    width: 100,
                     child: Text(
                       value.toUpperCase(),
                       style: Theme.of(context).textTheme.bodyMedium,

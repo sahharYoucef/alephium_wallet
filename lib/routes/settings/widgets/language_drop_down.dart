@@ -43,6 +43,12 @@ class _LanguageDropDownState extends State<LanguageDropDown> {
           });
           AppStorage.instance.language = _language;
         },
+        decoration: InputDecoration(
+          label: Text(
+            "language".tr(),
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+        ),
         value: _language,
         items: [
           ..._languages

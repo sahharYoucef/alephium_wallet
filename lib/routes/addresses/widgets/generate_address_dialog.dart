@@ -21,7 +21,7 @@ class GenerateWalletDialog extends StatefulWidget {
 class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
   late int _group;
   late bool _switch;
-  late TextEditingController _controller;
+  late final TextEditingController _controller;
 
   @override
   void initState() {

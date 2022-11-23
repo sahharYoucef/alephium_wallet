@@ -32,8 +32,10 @@ class _AddTokenDialogState extends State<AddTokenDialog> with InputValidators {
         widget.tokens.firstWhereOrNull((element) => element.id == _id);
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
+        padding: EdgeInsets.only(
+          left: 16,
+          right: 16,
+          bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
         child: Material(
           color: Theme.of(context).primaryColor,
@@ -48,24 +50,34 @@ class _AddTokenDialogState extends State<AddTokenDialog> with InputValidators {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "${'addToken'.tr()} id",
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  "${'addToken'.tr()}",
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
+                const SizedBox(
+                  height: 6,
+                ),
+                const Divider(),
                 const SizedBox(
                   height: 6,
                 ),
                 TokensDropDown(
                   tokens: widget.tokens,
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    setState(() {
+                      _id = value;
+                    });
+                  },
                 ),
-                const Divider(),
+                const SizedBox(
+                  height: 6,
+                ),
                 TextFormField(
-                    enabled: _id != null,
+                    enabled: _id != null && token != null,
                     key: _amountKey,
                     inputFormatters: [AmountFormatter()],
                     style: Theme.of(context).textTheme.bodyMedium,
                     validator: (value) {
-                      return tokenAmountValidator(_id!, value);
+                      return tokenAmountValidator(token!, value);
                     },
                     onChanged: (value) {
                       _amount = value;
@@ -77,11 +89,11 @@ class _AddTokenDialogState extends State<AddTokenDialog> with InputValidators {
                     decoration: InputDecoration(
                       labelText: "amount".tr(),
                     )),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Text(
-                    _id == null && token != null
+                    _id == null && token == null
                         ? ""
                         : "${'availableBalance'.tr()} : ${token!.amount}",
                     style: Theme.of(context).textTheme.bodySmall,
@@ -90,27 +102,35 @@ class _AddTokenDialogState extends State<AddTokenDialog> with InputValidators {
                 const SizedBox(
                   height: 8,
                 ),
-                IntrinsicHeight(
+                SizedBox(
+                  height: 60,
                   child: Row(
                     children: [
-                      OutlinedButton(
-                          onPressed: _id != null && _amount != null
-                              ? () {
-                                  widget.bloc.add(
-                                      AddTokenTransactionEvent(_id!, _amount!));
-                                  Navigator.pop(context);
-                                }
-                              : null,
-                          child: Text("OK")),
-                      const SizedBox(
-                        height: 20,
+                      Expanded(
+                        child: OutlinedButton(
+                            onPressed: token != null
+                                ? () {
+                                    if (_amountKey.currentState?.validate() ??
+                                        false) {
+                                      widget.bloc.add(AddTokenTransactionEvent(
+                                          _id!, _amount!));
+                                      Navigator.pop(context);
+                                    }
+                                  }
+                                : null,
+                            child: Text("OK")),
                       ),
-                      OutlinedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          "close".tr(),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            "close".tr(),
+                          ),
                         ),
                       ),
                     ],

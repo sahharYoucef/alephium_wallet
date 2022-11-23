@@ -1,5 +1,6 @@
 import 'package:alephium_dart/alephium_dart.dart' as alephium;
 import 'package:alephium_wallet/bloc/transaction/transaction_bloc.dart';
+import 'package:alephium_wallet/storage/models/token_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -8,20 +9,12 @@ mixin InputValidators {
   WalletStore get wallet;
   TransactionBloc get bloc;
 
-  String? tokenAmountValidator(String id, value) {
+  String? tokenAmountValidator(TokenStore token, value) {
     var amountNumber = double.tryParse(value!);
-    var balance = wallet.addresses
-            .firstWhereOrNull((element) => element == bloc.fromAddress)
-            ?.balance
-            ?.tokens
-            ?.firstWhereOrNull((element) => element.id == id)
-            ?.amount
-            ?.toDouble() ??
-        0;
-    balance = balance / 10e17;
     if (amountNumber == null) {
-      return null;
+      return "Please enter a valid amount!";
     }
+    var balance = token.amount?.toDouble() ?? 0;
     if (amountNumber == 0) {
       return "amountIsZero".tr(args: ["0"]);
     }
@@ -49,7 +42,10 @@ mixin InputValidators {
         0;
     balance = balance / 10e17;
     if (amountNumber == null) {
-      return null;
+      return "invalidAmount".tr();
+    }
+    if (balance == 0) {
+      return "balanceIsZero".tr(args: [balance.toString()]);
     }
     if (amountNumber == 0) {
       return "amountIsZero".tr(args: ["0"]);

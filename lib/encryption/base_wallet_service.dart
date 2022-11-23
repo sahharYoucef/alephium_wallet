@@ -12,6 +12,7 @@ abstract class BaseWalletService {
   AddressStore deriveNewAddress({
     required String walletId,
     required String seed,
+    String? title,
     int forGroup,
     int index,
     List<int> skipAddressIndexes = const <int>[],

@@ -28,12 +28,33 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
     GlobalKey<ScaffoldMessengerState>();
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   final bool firstRun;
   App({Key? key, this.firstRun = true})
       : super(
           key: key,
         );
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  @override
+  void initState() {
+    super.initState();
+
+    var window = WidgetsBinding.instance.window;
+    window.onPlatformBrightnessChanged = () {
+      WidgetsBinding.instance.handlePlatformBrightnessChanged();
+      if (AppStorage.instance.themeMode == ThemeMode.system) {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          BlocProvider.of<SettingsBloc>(context)
+              .add(ChangeAppTheme(ThemeMode.system));
+        });
+      }
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +66,7 @@ class App extends StatelessWidget {
             WalletTheme.themeMode = AppStorage.instance.themeMode;
             WalletTheme.instance = WalletTheme();
             SystemChrome.setSystemUIOverlayStyle(
-                AppStorage.instance.themeMode == ThemeMode.dark
+                WalletTheme.themeMode == ThemeMode.dark
                     ? SystemUiOverlayStyle.light
                     : SystemUiOverlayStyle.dark.copyWith(
                         statusBarColor: Colors.transparent,
@@ -65,7 +86,7 @@ class App extends StatelessWidget {
             darkTheme: WalletTheme.instance.themeData,
             themeMode: WalletTheme.themeMode,
             debugShowCheckedModeBanner: false,
-            initialRoute: firstRun ? Routes.createWallet : Routes.home,
+            initialRoute: widget.firstRun ? Routes.createWallet : Routes.home,
             onGenerateRoute: (settings) {
               if (settings.name == Routes.walletMnemonic) {
                 Map<String, dynamic> arguments =

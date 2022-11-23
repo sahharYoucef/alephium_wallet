@@ -39,18 +39,6 @@ class TransactionSuccessDialog extends StatelessWidget {
                 ),
                 AddressText(
                   address: "${transaction.transactionID}",
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        foreground: Paint()
-                          ..shader = LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [
-                              WalletTheme.instance.gradientOne,
-                              WalletTheme.instance.gradientTwo,
-                            ],
-                          ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
-                      ),
                 ),
                 const Divider(),
                 Row(
@@ -107,22 +95,6 @@ class TransactionSuccessDialog extends StatelessWidget {
                           children: [
                             AddressText(
                               address: "${ref.address}",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    foreground: Paint()
-                                      ..shader = LinearGradient(
-                                        begin: Alignment.topRight,
-                                        end: Alignment.bottomLeft,
-                                        colors: [
-                                          WalletTheme.instance.gradientOne,
-                                          WalletTheme.instance.gradientTwo,
-                                        ],
-                                      ).createShader(
-                                          Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
-                                  ),
                             ),
                             Text(
                               "${ref.txAmount}",

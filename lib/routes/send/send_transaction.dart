@@ -4,9 +4,12 @@ import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/routes/send/widgets/add_token_button.dart';
 import 'package:alephium_wallet/routes/send/widgets/added_tokens_list.dart';
+import 'package:alephium_wallet/routes/send/widgets/amount%20_field.dart';
+import 'package:alephium_wallet/routes/send/widgets/available_balance_tile.dart';
+import 'package:alephium_wallet/routes/send/widgets/check_tx_result.dart';
+import 'package:alephium_wallet/routes/send/widgets/gas_advanced_options.dart';
 import 'package:alephium_wallet/routes/send/widgets/success_dialog.dart';
-import 'package:alephium_wallet/routes/send/widgets/tokens_dialog.dart';
-import 'package:alephium_wallet/routes/send/widgets/tokens_drop_down.dart';
+import 'package:alephium_wallet/routes/send/widgets/to_address_field.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
@@ -44,11 +47,7 @@ class SendTransactionPage extends StatefulWidget {
 class _SendTransactionPageState extends State<SendTransactionPage>
     with InputValidators {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  GlobalKey<FormFieldState> _gasAmountKey = GlobalKey<FormFieldState>();
-  GlobalKey<FormFieldState> _amountKey = GlobalKey<FormFieldState>();
-  GlobalKey<FormFieldState> _gasPriceKey = GlobalKey<FormFieldState>();
-  GlobalKey<FormFieldState> _toAddressKey = GlobalKey<FormFieldState>();
-  late final TextEditingController _amountController;
+
   late final TransactionBloc _bloc;
   @override
   void initState() {
@@ -64,7 +63,6 @@ class _SendTransactionPageState extends State<SendTransactionPage>
       if (widget.initialData?["address"] != null)
         _bloc.toAddress = widget.initialData?["address"];
     }
-    _amountController = TextEditingController(text: _bloc.amount?.toString());
     if (widget.addressStore != null) {
       _bloc.fromAddress = widget.addressStore;
     }
@@ -75,7 +73,6 @@ class _SendTransactionPageState extends State<SendTransactionPage>
   @override
   void dispose() {
     _bloc.close();
-    _amountController.dispose();
     super.dispose();
   }
 
@@ -168,91 +165,21 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                     },
                                   ),
                                   const SizedBox(height: 8),
-                                  TextFormField(
-                                      key: _toAddressKey,
-                                      textInputAction: TextInputAction.next,
-                                      initialValue:
-                                          widget.initialData?["address"],
-                                      autocorrect: false,
-                                      validator: addressToValidator,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                      onChanged: ((value) {
-                                        _bloc.add(TransactionValuesChangedEvent(
-                                            toAddress: value));
-                                      }),
-                                      decoration: textFieldDecoration(
-                                          "toAddress".tr())),
-                                  const SizedBox(height: 8),
-                                  TextFormField(
-                                      controller: _amountController,
-                                      key: _amountKey,
-                                      inputFormatters: [AmountFormatter()],
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                      validator: amountValidator,
-                                      onChanged: (value) {
-                                        _bloc.add(TransactionValuesChangedEvent(
-                                            amount: value));
-                                        _amountKey.currentState?.validate();
-                                      },
-                                      textInputAction: TextInputAction.next,
-                                      keyboardType: TextInputType.number,
-                                      autocorrect: false,
-                                      decoration: InputDecoration(
-                                          labelText: "amount".tr(),
-                                          suffixIcon: Container(
-                                            alignment: Alignment.center,
-                                            padding: EdgeInsets.only(right: 8),
-                                            width: 10,
-                                            child: InkWell(
-                                              onTap: () {
-                                                if (_bloc.fromAddress != null)
-                                                  _bloc.add(
-                                                      TransactionValuesChangedEvent(
-                                                          amount: _bloc
-                                                              .fromAddress
-                                                              ?.addressBalance
-                                                              .toString()));
-                                                if (_bloc.fromAddress
-                                                        ?.addressBalance !=
-                                                    null)
-                                                  _amountController.text = _bloc
-                                                      .fromAddress!
-                                                      .addressBalance
-                                                      .toString();
-                                                _amountKey.currentState
-                                                    ?.validate();
-                                              },
-                                              child: Text(
-                                                "max".tr(),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w800),
-                                              ),
-                                            ),
-                                          ))),
-                                  const SizedBox(height: 16),
-                                  BlocBuilder<TransactionBloc,
-                                      TransactionState>(
+                                  ToAddressField(
                                     bloc: _bloc,
-                                    builder: (context, state) {
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 4),
-                                        child: Text(
-                                          "${'availableBalance'.tr()} : ${_bloc.balance} ℵ",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall,
-                                        ),
-                                      );
-                                    },
+                                    validator: addressToValidator,
+                                    initialValue:
+                                        widget.initialData?["address"],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  AmountTextField(
+                                    bloc: _bloc,
+                                    validator: amountValidator,
+                                    initialValue: _bloc.amount?.toString(),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  AvailableBalanceTile(
+                                    bloc: _bloc,
                                   ),
                                   AddedTokensList(
                                     bloc: _bloc,
@@ -279,94 +206,18 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                                 CrossAxisAlignment.stretch,
                                             children: [
                                               if (_bloc.transaction != null)
-                                                Container(
-                                                  margin: EdgeInsets.all(16),
-                                                  padding: EdgeInsets.all(16),
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color:
-                                                            Colors.grey[200]!),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        "${'expectedFees'.tr()} : ${_bloc.expectedFees} ℵ",
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyMedium,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 4,
-                                                      ),
-                                                      Text(
-                                                        "${'amountToSend'.tr()} : ${_bloc.amount} ℵ",
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyMedium,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 4,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
+                                                CheckTransactionResult(
+                                                    bloc: bloc)
                                               else ...[
-                                                TextFormField(
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium,
-                                                  key: _gasAmountKey,
-                                                  inputFormatters: [
-                                                    AmountFormatter()
-                                                  ],
-                                                  validator: gasAmountValidator,
-                                                  onChanged: (value) {
-                                                    _bloc.add(
-                                                        TransactionValuesChangedEvent(
-                                                            gas: value));
-                                                    _gasAmountKey.currentState
-                                                        ?.validate();
-                                                  },
-                                                  textInputAction:
-                                                      TextInputAction.next,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  decoration:
-                                                      textFieldDecoration(
-                                                    "gasAmount".tr(),
-                                                  ),
+                                                Divider(
+                                                  height: 1,
                                                 ),
-                                                SizedBox(height: 8),
-                                                TextFormField(
-                                                  key: _gasPriceKey,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium,
-                                                  inputFormatters: [
-                                                    AmountFormatter()
-                                                  ],
-                                                  validator: gasPriceValidator,
-                                                  onChanged: (value) {
-                                                    _bloc.add(
-                                                        TransactionValuesChangedEvent(
-                                                            gasPrice: value));
-                                                    _gasPriceKey.currentState
-                                                        ?.validate();
-                                                  },
-                                                  textInputAction:
-                                                      TextInputAction.done,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  decoration:
-                                                      textFieldDecoration(
-                                                    "gasPrice".tr(),
-                                                  ),
+                                                GasAdvancedOption(
+                                                  bloc: _bloc,
+                                                  gasAmountValidator:
+                                                      gasAmountValidator,
+                                                  gasPriceValidator:
+                                                      gasPriceValidator,
                                                 ),
                                               ],
                                               const Spacer(),
@@ -376,15 +227,13 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                               IntrinsicHeight(
                                                 child: Row(
                                                   children: [
-                                                    Flexible(
-                                                        flex: 1,
-                                                        child: AddTokenButton(
-                                                          bloc: _bloc,
-                                                        )),
+                                                    AddTokenButton(
+                                                      bloc: _bloc,
+                                                    ),
                                                     SizedBox(
                                                       width: 8,
                                                     ),
-                                                    Flexible(
+                                                    Expanded(
                                                       flex: 1,
                                                       child: Hero(
                                                         tag: "button",

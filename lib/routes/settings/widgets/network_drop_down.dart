@@ -8,6 +8,7 @@ import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class NetworkDropDown extends StatefulWidget {
   const NetworkDropDown({super.key});
@@ -38,6 +39,12 @@ class _NetworkDropDownState extends State<NetworkDropDown> {
               .changeNetwork = _network;
           context.read<WalletHomeBloc>().add(WalletHomeLoadData());
         },
+        decoration: InputDecoration(
+          label: Text(
+            "network".tr(),
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+        ),
         value: _network,
         items: [
           ...Network.values
@@ -45,7 +52,6 @@ class _NetworkDropDownState extends State<NetworkDropDown> {
                 (value) => DropdownMenuItem<Network>(
                   value: value,
                   child: SizedBox(
-                    width: 100,
                     child: Text(
                       value.toString(),
                       style: Theme.of(context).textTheme.bodyMedium,

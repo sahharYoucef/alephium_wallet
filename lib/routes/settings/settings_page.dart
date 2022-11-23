@@ -40,7 +40,7 @@ class SettingsPage extends StatelessWidget {
                   height: 4,
                 ),
                 Text(
-                  "v0.3.0",
+                  "v0.4.0",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(
@@ -59,7 +59,7 @@ class SettingsPage extends StatelessWidget {
                   TextSpan(
                     text: "Apache 2 ${'license'.tr()}",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.blue,
+                        color: WalletTheme.instance.gradientTwo,
                         decoration: TextDecoration.underline),
                     recognizer: new TapGestureRecognizer()
                       ..onTap = () {
@@ -72,13 +72,28 @@ class SettingsPage extends StatelessWidget {
                     textAlign: TextAlign.center,
                     text: TextSpan(children: [
                       TextSpan(
-                        text: "socialLink".tr(),
+                        text: "socialLink".tr() + " ",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      TextSpan(
+                        text: "openSource".tr(),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: WalletTheme.instance.gradientTwo,
+                            decoration: TextDecoration.underline),
+                        recognizer: new TapGestureRecognizer()
+                          ..onTap = () {
+                            launch(
+                                'https://github.com/sahharYoucef/alephium_wallet');
+                          },
+                      ),
+                      TextSpan(
+                        text: " " + "findHelpOn".tr() + " ",
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       TextSpan(
                         text: "Telegram",
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.blue,
+                            color: WalletTheme.instance.gradientTwo,
                             decoration: TextDecoration.underline),
                         recognizer: new TapGestureRecognizer()
                           ..onTap = () {
@@ -103,7 +118,9 @@ class SettingsPage extends StatelessWidget {
               TextSpan(
                 text: "CoinGecko",
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.blue, decoration: TextDecoration.underline),
+                      color: WalletTheme.instance.gradientTwo,
+                      decoration: TextDecoration.underline,
+                    ),
                 recognizer: new TapGestureRecognizer()
                   ..onTap = () {
                     launch('https://www.coingecko.com/');
@@ -115,57 +132,39 @@ class SettingsPage extends StatelessWidget {
         ),
         const Divider(),
         const SizedBox(
-          height: 5,
+          height: 10,
         ),
         LocalAuthSwitch(),
         const SizedBox(
-          height: 5,
+          height: 10,
         ),
         const Divider(),
         const SizedBox(
-          height: 5,
+          height: 10,
         ),
         ThemeSwitch(),
         const SizedBox(
-          height: 5,
+          height: 10,
         ),
         const Divider(),
         const SizedBox(
-          height: 5,
-        ),
-        Text(
-          "currency".tr(),
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(
-          height: 5,
+          height: 10,
         ),
         CurrencyDropDown(),
         const SizedBox(
-          height: 5,
+          height: 10,
         ),
         const Divider(),
         const SizedBox(
-          height: 5,
-        ),
-        Text(
-          "language".tr(),
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(
-          height: 5,
+          height: 10,
         ),
         LanguageDropDown(),
+        const SizedBox(
+          height: 10,
+        ),
         const Divider(),
         const SizedBox(
-          height: 5,
-        ),
-        Text(
-          "network".tr(),
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(
-          height: 5,
+          height: 10,
         ),
         NetworkDropDown(),
       ],

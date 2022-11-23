@@ -1,6 +1,7 @@
 import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/routes/constants.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
+import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class MainAddressTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "${'mainAddress'.tr()} :",
+              "${'addresses'.tr()} :",
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             Divider(),
@@ -39,9 +40,24 @@ class MainAddressTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 for (var address in wallet.addresses.take(3))
-                  AddressText(
-                    address: "${address.address}",
-                    style: Theme.of(context).textTheme.bodyMedium!,
+                  Row(
+                    children: [
+                      GradientIcon(
+                        icon: wallet.mainAddress == address.address
+                            ? Icons.star
+                            : Icons.circle,
+                        size: 12,
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Expanded(
+                        child: AddressText(
+                          address: "${address.address}",
+                          style: Theme.of(context).textTheme.bodyMedium!,
+                        ),
+                      ),
+                    ],
                   ),
                 const SizedBox(
                   height: 4,
