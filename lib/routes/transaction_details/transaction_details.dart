@@ -5,7 +5,6 @@ import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
-import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
@@ -141,7 +140,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                     .copyWith(
                                       fontWeight: FontWeight.w700,
                                     ),
-                              ),
+                              ).obscure("ℵ"),
                             ],
                           ),
                           const Divider(),
@@ -216,7 +215,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                     .copyWith(
                                       fontWeight: FontWeight.w700,
                                     ),
-                              ),
+                              ).obscure(),
                             ],
                           ),
                           const Divider(),
@@ -228,14 +227,14 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               Text(
-                                "${widget.transaction.fee}",
+                                "${widget.transaction.fee} ℵ",
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineSmall!
                                     .copyWith(
                                       fontWeight: FontWeight.w700,
                                     ),
-                              ),
+                              ).obscure("ℵ"),
                             ],
                           ),
                         ],

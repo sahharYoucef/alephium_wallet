@@ -19,4 +19,5 @@ abstract class Routes {
   static const String walletSettings = '/wallet-settings';
   static const String walletUtxo = '/wallet-utxo';
   static const String transactionDetails = '/transaction-details';
+  static const String addressesBook = '/addresses-book';
 }

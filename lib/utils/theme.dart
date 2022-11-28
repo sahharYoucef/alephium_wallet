@@ -13,6 +13,7 @@ class WalletTheme {
   late final Color gradientOne;
   late final Color gradientTwo;
   final fontFamily = GoogleFonts.montserrat().fontFamily;
+  final double maxWidth = 450;
 
   static ThemeMode themeMode = ThemeMode.dark;
 
@@ -57,11 +58,14 @@ class WalletTheme {
             width: 2,
             color: primary,
           ),
-          elevation: 5,
+          elevation: 2,
+          maximumSize: Size.fromWidth(
+            450,
+          ),
           foregroundColor: textColor,
           disabledForegroundColor: textColor.withOpacity(.2),
           backgroundColor: secondary,
-          minimumSize: Size.fromHeight(50),
+          minimumSize: Size(450, 50),
           textStyle: TextStyle(
             fontFamily: fontFamily,
             color: textColor,
@@ -87,6 +91,8 @@ class WalletTheme {
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
+        errorStyle: TextStyle(fontSize: 0, height: 0.01),
+        errorMaxLines: 1,
         contentPadding: EdgeInsets.symmetric(horizontal: 16),
         hintStyle: TextStyle(
           fontWeight: FontWeight.w400,
@@ -102,18 +108,17 @@ class WalletTheme {
         ),
         filled: true,
         fillColor: secondary,
-        enabledBorder: GradientOutlineInputBorder(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [
-              Color(0xff1902d5),
-              Color(0xfffe594e),
-            ],
-          ),
+        errorBorder: OutlineInputBorder(
           borderSide: BorderSide(
             width: 2,
-            color: primary,
+            color: Colors.red,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 2,
+            color: Colors.red,
           ),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -124,15 +129,14 @@ class WalletTheme {
           ),
           borderRadius: BorderRadius.circular(8),
         ),
-        border: GradientOutlineInputBorder(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [
-              Color(0xff1902d5),
-              Color(0xfffe594e),
-            ],
+        border: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 2,
+            color: primary,
           ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             width: 2,
             color: primary,

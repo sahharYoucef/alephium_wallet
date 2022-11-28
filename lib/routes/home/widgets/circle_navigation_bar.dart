@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart'
@@ -6,7 +7,7 @@ import 'package:easy_localization/easy_localization.dart'
 class CircleNavigationBar extends StatelessWidget {
   final double navbarHeight;
   final Color navBarColor;
-  final List<CustomIcon> navBarIcons;
+  final List<Widget> navBarIcons;
   final Color navBarUnselectedIconsColor;
   final Color navBarSelectedIconsColor;
   final Color circleIconsColor;
@@ -33,22 +34,24 @@ class CircleNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) => Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: margin),
-              child: SizedBox(
-                height: navbarHeight,
-                width: constraints.maxWidth,
-                child: Material(
-                    elevation: 2,
-                    shadowColor: WalletTheme.instance.gradientOne,
-                    color: navBarColor,
-                    borderRadius: borderRadius,
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: WalletTheme.instance.maxWidth,
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: margin),
+        child: SizedBox(
+          height: navbarHeight,
+          width: double.infinity,
+          child: Material(
+              elevation: 2,
+              shadowColor: WalletTheme.instance.gradientOne,
+              color: navBarColor,
+              borderRadius: borderRadius,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
                     child: TabBar(
                       controller: tabController,
                       indicatorColor: Colors.transparent,
@@ -65,31 +68,19 @@ class CircleNavigationBar extends StatelessWidget {
                         },
                       ),
                       tabs: <Widget>[
-                        ...List.generate(navBarIcons.length, (index) {
-                          return SizedBox(
-                            height: 80,
-                            child: Tooltip(
-                              message: navBarIcons[index].tooltip,
-                              child: Icon(
-                                navBarIcons[index].icon,
-                              ),
-                            ),
-                          );
-                        })
+                        ...List.generate(3, (index) {
+                          return navBarIcons[index];
+                        }),
                       ],
-                    )),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: navBarHeight - 50,
-            child: AddButton(
-              tooltip: "newWallet".tr(),
-              onTap: onTap,
-              color: circleIconsColor,
-            ),
-          ),
-        ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: navBarIcons[3],
+                  ),
+                ],
+              )),
+        ),
       ),
     );
   }

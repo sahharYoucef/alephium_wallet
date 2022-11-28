@@ -1,18 +1,27 @@
-import 'package:alephium_wallet/bloc/transaction/transaction_bloc.dart';
+import 'dart:ui';
+
+import 'package:alephium_wallet/bloc/contacts/contacts_bloc.dart';
+import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
+import 'package:alephium_wallet/routes/wallet_details/widgets/shake_widget.dart';
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
+import 'package:alephium_wallet/storage/models/contact_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ToAddressField extends StatefulWidget {
   final String? Function(String?)? validator;
-  final TransactionBloc bloc;
+  final void Function(String) onChanged;
   final String? initialValue;
+  final String? label;
+  final bool enableSuggestion;
   const ToAddressField({
     super.key,
     this.validator,
     this.initialValue,
-    required this.bloc,
+    this.label,
+    required this.onChanged,
+    this.enableSuggestion = false,
   });
 
   @override
@@ -20,51 +29,122 @@ class ToAddressField extends StatefulWidget {
 }
 
 class _ToAddressFieldState extends State<ToAddressField> {
-  GlobalKey<FormFieldState> _toAddressKey = GlobalKey<FormFieldState>();
-  late final TextEditingController _controller;
-  @override
-  void initState() {
-    _controller = TextEditingController(text: widget.initialValue);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  GlobalKey<ShakeTextFormFieldState> _toAddressKey =
+      GlobalKey<ShakeTextFormFieldState>();
+  GlobalKey<ShakeErrorState> _shakeKey = GlobalKey<ShakeErrorState>();
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      key: _toAddressKey,
-      controller: _controller,
-      textInputAction: TextInputAction.next,
-      autocorrect: false,
-      validator: widget.validator,
-      style: Theme.of(context).textTheme.bodyMedium,
-      onChanged: ((value) {
-        widget.bloc.add(TransactionValuesChangedEvent(toAddress: value));
-      }),
-      decoration: InputDecoration(
-        labelText: "toAddress".tr(),
-        suffixIcon: IconButton(
-          onPressed: () async {
-            var data = await showQRView(
-              context,
-              isTransfer: false,
-            );
-            if (data?["address"] != null &&
-                data!["address"] is String &&
-                data["address"].trim().isNotEmpty) {
-              final value = data["address"];
-              widget.bloc.add(TransactionValuesChangedEvent(toAddress: value));
-              setState(() {
-                _controller.text = value;
-              });
-            }
+    return ShakeError(
+      key: _shakeKey,
+      child: LayoutBuilder(
+        builder: (context, constraints) => Autocomplete<ContactStore>(
+          onSelected: (option) {
+            widget.onChanged(option.address);
+            _toAddressKey.currentState?.validate();
           },
-          icon: GradientIcon(icon: Icons.qr_code),
+          displayStringForOption: (option) => option.address,
+          initialValue: widget.initialValue != null
+              ? TextEditingValue(
+                  text: widget.initialValue!,
+                  selection: TextSelection.collapsed(
+                    offset: widget.initialValue!.length,
+                  ))
+              : null,
+          optionsBuilder: (value) {
+            if (value.text.trim().isEmpty || !widget.enableSuggestion)
+              return [];
+            final suggestion = context.read<ContactsBloc>().contacts.where(
+              (element) {
+                final fullName =
+                    "${element.firstName} ${element.lastName ?? ''}";
+                final isFirstName = element.firstName
+                    .toLowerCase()
+                    .contains(value.text.toLowerCase());
+                final isLastName = element.lastName
+                        ?.toLowerCase()
+                        .contains(value.text.toLowerCase()) ??
+                    false;
+                final isFullName =
+                    fullName.toLowerCase().contains(value.text.toLowerCase());
+                return isFirstName || isLastName || isFullName;
+              },
+            );
+            if (suggestion.isEmpty) {
+              _toAddressKey.currentState?.validate();
+            }
+            return suggestion;
+          },
+          optionsViewBuilder: (context, onSelected, options) {
+            return Align(
+              alignment: Alignment.topLeft,
+              child: Material(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                child: Container(
+                  height: 52.0 * options.length,
+                  width: constraints.biggest.width,
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: options.length,
+                    shrinkWrap: false,
+                    itemBuilder: (BuildContext context, int index) {
+                      final option = options.elementAt(index);
+                      return InkWell(
+                        onTap: () => onSelected(option),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            "${option.firstName} ${option.lastName ?? ''}",
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            );
+          },
+          fieldViewBuilder:
+              (context, textEditingController, focusNode, onFieldSubmitted) {
+            return ShakeTextFormField(
+              key: _toAddressKey,
+              focusNode: focusNode,
+              onSaved: (newValue) {
+                if (_toAddressKey.currentState!.isValid)
+                  _shakeKey.currentState?.shake();
+              },
+              controller: textEditingController,
+              textInputAction: TextInputAction.next,
+              autocorrect: false,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: widget.validator,
+              style: Theme.of(context).textTheme.bodyMedium,
+              onChanged: widget.onChanged,
+              decoration: InputDecoration(
+                labelText: widget.label,
+                suffixIcon: IconButton(
+                  onPressed: () async {
+                    var data = await showQRView(
+                      context,
+                      isTransfer: false,
+                    );
+                    if (data?["address"] != null &&
+                        data!["address"] is String &&
+                        data["address"].trim().isNotEmpty) {
+                      final value = data["address"];
+                      widget.onChanged(value);
+                      setState(() {
+                        textEditingController.text = value;
+                      });
+                      _toAddressKey.currentState?.validate();
+                    }
+                  },
+                  icon: GradientIcon(icon: Icons.qr_code),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

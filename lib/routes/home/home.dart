@@ -1,5 +1,7 @@
+import 'package:alephium_wallet/bloc/contacts/contacts_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
-import 'package:alephium_wallet/routes/home/widgets/qr_view.dart';
+import 'package:alephium_wallet/routes/contacts/contacts_page.dart';
+import 'package:alephium_wallet/routes/home/widgets/add_button.dart';
 import 'package:alephium_wallet/routes/settings/settings_page.dart';
 import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
@@ -28,10 +30,11 @@ class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late final WalletHomeBloc _walletHomeBloc;
   late final TabController _tabController;
+  var isDialOpen = ValueNotifier<bool>(false);
   @override
   void initState() {
     FlutterNativeSplash.remove();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _walletHomeBloc = BlocProvider.of<WalletHomeBloc>(context)
       ..add(WalletHomeLoadData());
     super.initState();
@@ -45,7 +48,11 @@ class _HomePageState extends State<HomePage>
 
   DateTime? currentBackPressTime;
   Future<bool> onWillPop() async {
-    if (_tabController.index == 1) {
+    if (isDialOpen.value) {
+      isDialOpen.value = false;
+      return false;
+    }
+    if (_tabController.index != 0) {
       _tabController.animateTo(0);
       return false;
     }
@@ -63,14 +70,26 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: onWillPop,
-      child: BlocListener<WalletHomeBloc, WalletHomeState>(
-        bloc: _walletHomeBloc,
-        listener: (context, state) {
-          if (state is WalletHomeError) {
-            if (state.message != null)
-              context.showSnackBar(state.message!, level: Level.error);
-          }
-        },
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<WalletHomeBloc, WalletHomeState>(
+            bloc: _walletHomeBloc,
+            listener: (context, state) {
+              if (state is WalletHomeError) {
+                if (state.message != null)
+                  context.showSnackBar(state.message!, level: Level.error);
+              }
+            },
+          ),
+          BlocListener<ContactsBloc, ContactsState>(
+            bloc: context.read<ContactsBloc>(),
+            listener: (context, state) {
+              if (state is ContactsErrorState) {
+                context.showSnackBar(state.message, level: Level.error);
+              }
+            },
+          )
+        ],
         child: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
@@ -119,8 +138,10 @@ class _HomePageState extends State<HomePage>
                                       ),
                                       itemCount: state.wallets.length,
                                       itemBuilder: (context, index) {
-                                        return WalletTile(
-                                            wallet: state.wallets[index]);
+                                        return Center(
+                                          child: WalletTile(
+                                              wallet: state.wallets[index]),
+                                        );
                                       },
                                     ),
                                   );
@@ -129,6 +150,7 @@ class _HomePageState extends State<HomePage>
                                 }
                               },
                             ),
+                            ContactsPage(),
                             SettingsPage()
                           ]),
                     ),
@@ -209,24 +231,32 @@ class _HomePageState extends State<HomePage>
                     navBarSelectedIconsColor:
                         Theme.of(context).textTheme.headlineMedium!.color!,
                     navBarColor: Theme.of(context).primaryColor,
-                    onTap: () {
-                      Navigator.pushNamed(context, Routes.createWallet);
-                    },
+                    onTap: () {},
                     navbarHeight: 60,
                     circleIconsColor: WalletTheme.instance.secondary,
                     navBarIcons: [
-                      CustomIcon(
+                      IconButton(
                           tooltip: "walletHome".tr(),
-                          icon: Icons.home,
+                          icon: Icon(Icons.home),
                           onPressed: () {
                             _tabController.animateTo(0);
                           }),
-                      CustomIcon(
-                          tooltip: "walletSetting".tr(),
-                          icon: Icons.settings,
+                      IconButton(
+                          tooltip: "addressesBook".tr(),
+                          icon: Icon(Icons.contacts),
                           onPressed: () {
                             _tabController.animateTo(1);
                           }),
+                      IconButton(
+                          tooltip: "walletSetting".tr(),
+                          icon: Icon(Icons.settings),
+                          onPressed: () {
+                            _tabController.animateTo(2);
+                          }),
+                      Center(
+                          child: FloatingAddButton(
+                        isDialOpen: isDialOpen,
+                      ))
                     ],
                     margin: 16.0,
                     borderRadius: BorderRadius.circular(16),

@@ -7,7 +7,6 @@ import 'package:alephium_wallet/utils/gradient_input_border.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class AddressTile extends StatelessWidget {
   final AddressStore address;
@@ -50,9 +49,12 @@ class AddressTile extends StatelessWidget {
                 Row(
                   children: [
                     GradientIcon(icon: isMain ? Icons.star : Icons.circle),
+                    const SizedBox(
+                      width: 10,
+                    ),
                     Expanded(
                       child: Text(
-                        address.title ?? "",
+                        address.title?.capitalize ?? "",
                         style: Theme.of(context).textTheme.bodyMedium,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -74,24 +76,20 @@ class AddressTile extends StatelessWidget {
                   ],
                 ),
                 const Divider(),
-                RichText(
-                    text: TextSpan(children: [
-                  TextSpan(
-                      text: "${'balance'.tr()} : ",
+                Row(children: [
+                  Text("${'balance'.tr()} : ",
                       style: Theme.of(context).textTheme.headlineSmall),
-                  TextSpan(
-                      text: "${address.formattedBalance} ℵ",
-                      style: Theme.of(context).textTheme.headlineSmall),
+                  Text("${address.formattedBalance} ℵ",
+                          style: Theme.of(context).textTheme.headlineSmall)
+                      .obscure("ℵ"),
                   if (address.balanceConverted != null &&
                       address.balance?.balance != "0.0000") ...[
-                    TextSpan(
-                        text: " = ",
-                        style: Theme.of(context).textTheme.bodyMedium),
-                    TextSpan(
-                        text: "${address.balanceConverted}  ",
-                        style: Theme.of(context).textTheme.bodyMedium),
+                    Text(" = ", style: Theme.of(context).textTheme.bodyMedium),
+                    Text("${address.balanceConverted}  ",
+                            style: Theme.of(context).textTheme.bodyMedium)
+                        .obscure(),
                   ]
-                ])),
+                ]),
                 Row(
                   children: [
                     Expanded(

@@ -1,4 +1,5 @@
 import 'package:alephium_wallet/bloc/create_wallet/create_wallet_bloc.dart';
+import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
 import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
@@ -66,7 +67,7 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                       const SizedBox(
                         height: 20,
                       ),
-                      TextFormField(
+                      ShakeTextFormField(
                         key: _nameKey,
                         textInputAction: TextInputAction.next,
                         autocorrect: false,
@@ -89,7 +90,7 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                       const SizedBox(
                         height: 10,
                       ),
-                      TextFormField(
+                      ShakeTextFormField(
                         key: _addressValueKey,
                         controller: _controller,
                         textInputAction: TextInputAction.next,
@@ -116,14 +117,10 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                         child: OutlinedButton(
                             onPressed: () {
                               FocusScope.of(context).unfocus();
-                              if (_addressValueKey.currentState?.value !=
-                                      null &&
-                                  _addressValueKey.currentState!.value
-                                      .trim()
-                                      .isNotEmpty)
+                              if (_controller.text.trim().isNotEmpty)
                                 widget.bloc.add(
                                   AddReadOnlyWallet(
-                                    value: _addressValueKey.currentState!.value,
+                                    value: _controller.text,
                                   ),
                                 );
                             },

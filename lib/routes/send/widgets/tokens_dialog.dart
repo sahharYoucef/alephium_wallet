@@ -1,4 +1,5 @@
 import 'package:alephium_wallet/bloc/transaction/transaction_bloc.dart';
+import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
 import 'package:alephium_wallet/routes/send/widgets/tokens_drop_down.dart';
 import 'package:alephium_wallet/storage/models/token_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
@@ -71,7 +72,7 @@ class _AddTokenDialogState extends State<AddTokenDialog> with InputValidators {
                 const SizedBox(
                   height: 6,
                 ),
-                TextFormField(
+                ShakeTextFormField(
                     enabled: _id != null && token != null,
                     key: _amountKey,
                     inputFormatters: [AmountFormatter()],

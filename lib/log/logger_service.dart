@@ -11,6 +11,7 @@ class LoggerService {
 
   void log(dynamic message, {Level level = Level.info}) {
     if (message == null && !kDebugMode) return;
+    if (message == null && !kProfileMode) return;
     switch (level) {
       case Level.info:
         _logger.i(message);

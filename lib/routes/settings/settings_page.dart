@@ -1,9 +1,10 @@
 import 'package:alephium_wallet/routes/settings/widgets/local_auth_switch.dart';
 import 'package:alephium_wallet/routes/settings/widgets/network_drop_down.dart';
+import 'package:alephium_wallet/routes/settings/widgets/visibility_switch.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/routes/settings/widgets/currency_drop_down.dart';
 import 'package:alephium_wallet/routes/settings/widgets/language_drop_down.dart';
-import 'package:alephium_wallet/routes/settings/widgets/theme_switch.dart';
+import 'package:alephium_wallet/routes/settings/widgets/theme_drop_down.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/gestures.dart';
@@ -40,7 +41,7 @@ class SettingsPage extends StatelessWidget {
                   height: 4,
                 ),
                 Text(
-                  "v0.4.0",
+                  "v0.4.8",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(
@@ -127,46 +128,65 @@ class SettingsPage extends StatelessWidget {
                   },
               ),
             ])),
-        const SizedBox(
-          height: 20,
-        ),
-        const Divider(),
-        const SizedBox(
-          height: 10,
-        ),
-        LocalAuthSwitch(),
-        const SizedBox(
-          height: 10,
-        ),
-        const Divider(),
-        const SizedBox(
-          height: 10,
-        ),
-        ThemeSwitch(),
-        const SizedBox(
-          height: 10,
-        ),
-        const Divider(),
-        const SizedBox(
-          height: 10,
-        ),
-        CurrencyDropDown(),
-        const SizedBox(
-          height: 10,
-        ),
-        const Divider(),
-        const SizedBox(
-          height: 10,
-        ),
-        LanguageDropDown(),
-        const SizedBox(
-          height: 10,
-        ),
-        const Divider(),
-        const SizedBox(
-          height: 10,
-        ),
-        NetworkDropDown(),
+        Center(
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: WalletTheme.instance.maxWidth,
+            ),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                const Divider(),
+                const SizedBox(
+                  height: 10,
+                ),
+                LocalAuthSwitch(),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Divider(),
+                const SizedBox(
+                  height: 10,
+                ),
+                VisibilitySwitch(),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Divider(),
+                const SizedBox(
+                  height: 10,
+                ),
+                ThemeSwitch(),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Divider(),
+                const SizedBox(
+                  height: 10,
+                ),
+                CurrencyDropDown(),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Divider(),
+                const SizedBox(
+                  height: 10,
+                ),
+                LanguageDropDown(),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Divider(),
+                const SizedBox(
+                  height: 10,
+                ),
+                NetworkDropDown(),
+              ],
+            ),
+          ),
+        )
       ],
     );
   }

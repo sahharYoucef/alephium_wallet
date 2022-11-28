@@ -1,4 +1,5 @@
 import 'package:alephium_wallet/bloc/transaction/transaction_bloc.dart';
+import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/material.dart';
@@ -33,16 +34,19 @@ class _AmountTextFieldState extends State<AmountTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    return ShakeTextFormField(
       controller: _amountController,
       key: _amountKey,
       inputFormatters: [AmountFormatter()],
       style: Theme.of(context).textTheme.bodyMedium,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: widget.validator,
       onChanged: (value) {
         widget.bloc.add(TransactionValuesChangedEvent(amount: value));
         _amountKey.currentState?.validate();
       },
+      errorStyle:
+          Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
       autocorrect: false,

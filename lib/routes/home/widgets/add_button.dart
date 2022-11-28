@@ -1,59 +1,56 @@
-import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
-import 'package:alephium_wallet/routes/addresses/widgets/advanced_option_dialog.dart';
-import 'package:alephium_wallet/routes/addresses/widgets/generate_address_dialog.dart';
+import 'package:alephium_wallet/bloc/contacts/contacts_bloc.dart';
+import 'package:alephium_wallet/routes/constants.dart';
+import 'package:alephium_wallet/routes/contacts/widgets/add_contact_dialog.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class FloatingOptionsButton extends StatelessWidget {
+class FloatingAddButton extends StatelessWidget {
   final ValueNotifier<bool> isDialOpen;
-  final WalletDetailsBloc bloc;
-
-  FloatingOptionsButton({
-    Key? key,
+  FloatingAddButton({
     required this.isDialOpen,
-    required this.bloc,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SpeedDial(
-        tooltip: "advancedOptions".tr(),
+        buttonSize: Size(45, 45),
+        childrenButtonSize: Size(45, 50),
         heroTag: "button",
+        openCloseDial: isDialOpen,
         icon: Icons.add,
-        childrenButtonSize: Size(58, 66),
-        buttonSize: Size(50, 50),
-        childPadding: EdgeInsets.only(top: 8, bottom: 8, left: 8),
-        childMargin: EdgeInsets.symmetric(vertical: 8),
+        childPadding: EdgeInsets.symmetric(vertical: 2.5),
         activeIcon: Icons.close,
         overlayColor: WalletTheme.instance.background,
-        openCloseDial: isDialOpen,
-        spaceBetweenChildren: 3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        animatedIcon: AnimatedIcons.menu_close,
+        backgroundColor: WalletTheme.instance.background,
+        activeBackgroundColor: WalletTheme.instance.primary,
+        spacing: 3,
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         animationCurve: Curves.ease,
         isOpenOnStart: false,
         animationDuration: const Duration(milliseconds: 100),
         children: [
           SpeedDialChild(
             labelBackgroundColor: WalletTheme.instance.primary,
-            child: const Icon(Icons.generating_tokens),
-            backgroundColor: WalletTheme.instance.secondary,
+            child: const Icon(Icons.person_add),
+            backgroundColor: WalletTheme.instance.primary,
             foregroundColor: WalletTheme.instance.textColor,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
             elevation: 0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0)),
-            label: 'generateAddress'.tr(),
+            label: 'addContact'.tr(),
             onTap: () {
               showGeneralDialog(
                 barrierDismissible: true,
-                barrierLabel: "receive",
+                barrierLabel: "AddContactDialog",
                 context: context,
                 pageBuilder: (context, animation, secondaryAnimation) =>
-                    GenerateWalletDialog(
-                  type: GenerationType.single,
-                  bloc: bloc,
+                    AddContactDialog(
+                  bloc: context.read<ContactsBloc>(),
                 ),
                 transitionDuration: const Duration(milliseconds: 300),
                 transitionBuilder:
@@ -73,20 +70,15 @@ class FloatingOptionsButton extends StatelessWidget {
           ),
           SpeedDialChild(
             labelBackgroundColor: WalletTheme.instance.primary,
-            child: const Icon(Icons.engineering_outlined),
-            backgroundColor: WalletTheme.instance.secondary,
+            child: const Icon(Icons.wallet_outlined),
+            backgroundColor: WalletTheme.instance.primary,
             foregroundColor: WalletTheme.instance.textColor,
             elevation: 0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0)),
-            label: "advancedOptions".tr(),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+            label: "newWallet".tr(),
             onTap: () {
-              showModalBottomSheet(
-                  backgroundColor: Colors.transparent,
-                  context: context,
-                  builder: (_) => AdvancedOptionsDialog(
-                        bloc: bloc,
-                      ));
+              Navigator.pushNamed(context, Routes.createWallet);
             },
           ),
         ]);

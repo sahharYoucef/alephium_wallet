@@ -19,7 +19,9 @@ abstract class BaseDBHelper {
 
   Future<void> insertContact(ContactStore contactStore);
 
-  Future<void> deleteContact(String id);
+  Future<void> updateContact(int id, ContactStore contactStore);
+
+  Future<void> deleteContact(int id);
 
   Future<void> insertWallet(
       WalletStore wallet, List<AddressStore> addressStore);

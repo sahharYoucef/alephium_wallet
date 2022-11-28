@@ -4,13 +4,15 @@ import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/routes/send/widgets/add_token_button.dart';
 import 'package:alephium_wallet/routes/send/widgets/added_tokens_list.dart';
-import 'package:alephium_wallet/routes/send/widgets/amount%20_field.dart';
+import 'package:alephium_wallet/routes/send/widgets/amount_field.dart';
 import 'package:alephium_wallet/routes/send/widgets/available_balance_tile.dart';
 import 'package:alephium_wallet/routes/send/widgets/check_tx_result.dart';
 import 'package:alephium_wallet/routes/send/widgets/gas_advanced_options.dart';
+import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
 import 'package:alephium_wallet/routes/send/widgets/success_dialog.dart';
 import 'package:alephium_wallet/routes/send/widgets/to_address_field.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
+import 'package:alephium_wallet/routes/wallet_details/widgets/shake_widget.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/send/widgets/address_from.dart';
@@ -46,7 +48,8 @@ class SendTransactionPage extends StatefulWidget {
 
 class _SendTransactionPageState extends State<SendTransactionPage>
     with InputValidators {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  GlobalKey<ShakeFormState> _formKey = GlobalKey<ShakeFormState>();
+  GlobalKey<ShakeErrorState> _ShakeWidgetKey = GlobalKey<ShakeErrorState>();
 
   late final TransactionBloc _bloc;
   @override
@@ -114,7 +117,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                 Navigator.pop(context);
               }
             },
-            child: Form(
+            child: ShakeForm(
               key: _formKey,
               child: Column(
                 children: [
@@ -129,6 +132,8 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                       children: [
                         Positioned.fill(
                           child: CustomScrollView(
+                            keyboardDismissBehavior:
+                                ScrollViewKeyboardDismissBehavior.onDrag,
                             slivers: [
                               SliverPadding(
                                 padding: EdgeInsets.symmetric(
@@ -166,7 +171,13 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                   ),
                                   const SizedBox(height: 8),
                                   ToAddressField(
-                                    bloc: _bloc,
+                                    key: _ShakeWidgetKey,
+                                    enableSuggestion: true,
+                                    label: "toAddress".tr(),
+                                    onChanged: (value) {
+                                      _bloc.add(TransactionValuesChangedEvent(
+                                          toAddress: value));
+                                    },
                                     validator: addressToValidator,
                                     initialValue:
                                         widget.initialData?["address"],
@@ -253,10 +264,12 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                                               ? () {
                                                                   var isValid = _formKey
                                                                           .currentState
-                                                                          ?.validate() ??
+                                                                          ?.validate(
+                                                                              shake: true) ??
                                                                       false;
-                                                                  if (!isValid)
+                                                                  if (!isValid) {
                                                                     return;
+                                                                  }
                                                                   if (state
                                                                           .transaction ==
                                                                       null) {

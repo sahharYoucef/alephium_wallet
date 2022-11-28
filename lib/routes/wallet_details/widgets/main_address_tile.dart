@@ -18,72 +18,77 @@ class MainAddressTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PhysicalModel(
-      borderRadius: BorderRadius.circular(16.0),
-      color: Colors.white,
-      elevation: 1,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "${'addresses'.tr()} :",
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            Divider(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                for (var address in wallet.addresses.take(3))
-                  Row(
-                    children: [
-                      GradientIcon(
-                        icon: wallet.mainAddress == address.address
-                            ? Icons.star
-                            : Icons.circle,
-                        size: 12,
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Expanded(
-                        child: AddressText(
-                          address: "${address.address}",
+    return Center(
+      child: PhysicalModel(
+        borderRadius: BorderRadius.circular(16.0),
+        color: Colors.white,
+        elevation: 1,
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: WalletTheme.instance.maxWidth,
+          ),
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "${'addresses'.tr()} :",
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              Divider(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  for (var address in wallet.addresses.take(3))
+                    Row(
+                      children: [
+                        GradientIcon(
+                          icon: wallet.mainAddress == address.address
+                              ? Icons.star
+                              : Icons.circle,
+                          size: 12,
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Expanded(
+                          child: AddressText(
+                            address: "${address.address}",
+                            style: Theme.of(context).textTheme.bodyMedium!,
+                          ),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  Material(
+                    color: WalletTheme.instance.secondary,
+                    borderRadius: BorderRadius.circular(8),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, Routes.addresses,
+                            arguments: {"wallet-details": walletDetailsBloc});
+                      },
+                      borderRadius: BorderRadius.circular(8),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 16),
+                        child: Text(
+                          'showMoreAddresses'.tr(),
                           style: Theme.of(context).textTheme.bodyMedium!,
                         ),
                       ),
-                    ],
-                  ),
-                const SizedBox(
-                  height: 4,
-                ),
-                Material(
-                  color: WalletTheme.instance.secondary,
-                  borderRadius: BorderRadius.circular(8),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, Routes.addresses,
-                          arguments: {"wallet-details": walletDetailsBloc});
-                    },
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 4, horizontal: 16),
-                      child: Text(
-                        'showMoreAddresses'.tr(),
-                        style: Theme.of(context).textTheme.bodyMedium!,
-                      ),
                     ),
-                  ),
-                )
-              ],
-            ),
-          ],
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

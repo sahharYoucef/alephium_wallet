@@ -58,6 +58,20 @@ class AppStorage {
     settings.put("language", value);
   }
 
+  bool get visibility {
+    var settings = Hive.box("settings");
+    var _visibility = settings.get("visibility");
+    if (_visibility == null) {
+      visibility = _visibility = true;
+    }
+    return _visibility;
+  }
+
+  set visibility(bool? value) {
+    var settings = Hive.box("settings");
+    settings.put("visibility", value);
+  }
+
   bool get firstRun {
     var settings = Hive.box("settings");
     var _firstRun = settings.get("firstRun");

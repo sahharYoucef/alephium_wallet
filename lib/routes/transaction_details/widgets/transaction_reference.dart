@@ -1,7 +1,7 @@
 import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/storage/models/transaction_ref_store.dart';
-import 'package:alephium_wallet/utils/theme.dart';
+import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/material.dart';
 
 class TransactionReferences extends StatelessWidget {
@@ -50,7 +50,7 @@ class TransactionReferences extends StatelessWidget {
                                   .copyWith(
                                     fontWeight: FontWeight.w700,
                                   ),
-                            ),
+                            ).obscure("ℵ"),
                           ]))
                     ],
                   ),
@@ -106,7 +106,7 @@ class TransactionReferences extends StatelessWidget {
                           Theme.of(context).textTheme.headlineSmall!.copyWith(
                                 fontWeight: FontWeight.w700,
                               ),
-                    ),
+                    ).obscure("ℵ"),
                   ]))
             ]);
           },

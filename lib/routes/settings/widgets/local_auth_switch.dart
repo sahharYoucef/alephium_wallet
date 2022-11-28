@@ -27,7 +27,8 @@ class LocalAuthSwitch extends StatelessWidget {
             return Switch(
                 value: AppStorage.instance.localAuth,
                 onChanged: (value) {
-                  BlocProvider.of<SettingsBloc>(context)
+                  context
+                      .read<SettingsBloc>()
                       .add(LocalAuthToSend(!AppStorage.instance.localAuth));
                 });
           },

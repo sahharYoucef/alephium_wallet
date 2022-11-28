@@ -1,15 +1,38 @@
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
-class WalletSettingDataDialog extends StatelessWidget {
+class WalletSettingDataDialog extends StatefulWidget {
   final String data;
   final String title;
+  final bool isSecure;
   const WalletSettingDataDialog({
     Key? key,
     required this.data,
     required this.title,
+    this.isSecure = false,
   }) : super(key: key);
+
+  @override
+  State<WalletSettingDataDialog> createState() =>
+      _WalletSettingDataDialogState();
+}
+
+class _WalletSettingDataDialogState extends State<WalletSettingDataDialog> {
+  @override
+  void initState() {
+    if (widget.isSecure)
+      FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    if (widget.isSecure)
+      FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +52,7 @@ class WalletSettingDataDialog extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    title,
+                    widget.title,
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(
@@ -40,7 +63,7 @@ class WalletSettingDataDialog extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    data,
+                    widget.data,
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium!

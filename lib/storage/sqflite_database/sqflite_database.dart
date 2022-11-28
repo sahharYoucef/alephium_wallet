@@ -33,6 +33,7 @@ class SQLiteDBHelper extends BaseDBHelper {
     batch.execute('DROP TABLE IF EXISTS $_transactionTable');
     batch.execute('DROP TABLE IF EXISTS $_walletTable');
     batch.execute('DROP TABLE IF EXISTS $_balancesTable');
+    batch.execute('DROP TABLE IF EXISTS $_contactsTable');
     await batch.commit();
   }
 
@@ -93,19 +94,19 @@ class SQLiteDBHelper extends BaseDBHelper {
           FOREIGN KEY(balanceAddress) REFERENCES $_addressesTable(address) ON DELETE CASCADE
       )
       """);
+    batch.execute("""
+      CREATE TABLE IF NOT EXISTS $_contactsTable (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          firstName TEXT NOT NULL,
+          lastName TEXT,
+          address TEXT NOT NULL
+      )
+      """);
     await batch.commit();
   }
 
   Future<void> _onConfigure(Database _db) async {
     await _createTables(_db);
-    // batch.execute("""
-    //   CREATE TABLE IF NOT EXISTS $_contactsTable (
-    //       id TEXT PRIMARY KEY NOT NULL,
-    //       firstName TEXT,
-    //       lastName TEXT,
-    //       addresses TEXT
-    //   )
-    //   """);
   }
 
   Future<void> _onCreate(Database _db, int version) async {}
@@ -179,7 +180,7 @@ class SQLiteDBHelper extends BaseDBHelper {
   @override
   Future<List<ContactStore>> getContacts() async {
     var _db = await _database.future;
-    var data = await _db.query(_contactsTable);
+    var data = await _db.query(_contactsTable, orderBy: "firstName");
     return data.map((contact) => ContactStore.fromDb(contact)).toList();
   }
 
@@ -191,7 +192,18 @@ class SQLiteDBHelper extends BaseDBHelper {
   }
 
   @override
-  deleteContact(String id) async {
+  updateContact(int id, ContactStore contactStore) async {
+    var _db = await _database.future;
+    await _db.update(
+      _contactsTable,
+      contactStore.toDb(),
+      where: "id = ?",
+      whereArgs: [id],
+    );
+  }
+
+  @override
+  deleteContact(int id) async {
     var _db = await _database.future;
     await _db.delete(_contactsTable, where: "id = ?", whereArgs: [id]);
   }

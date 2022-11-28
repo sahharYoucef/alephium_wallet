@@ -1,47 +1,44 @@
 import 'package:equatable/equatable.dart';
 
 class ContactStore extends Equatable {
-  final String id;
+  final int? id;
   final String firstName;
-  final String lastName;
-  final List<String> addresses;
+  final String? lastName;
+  final String address;
 
   ContactStore({
-    required this.id,
+    this.id,
     required this.firstName,
-    required this.lastName,
-    required this.addresses,
+    required this.address,
+    this.lastName,
   });
 
   factory ContactStore.fromDb(Map<String, dynamic> data) {
-    final _id = data["id"] as String;
-    final _firstName = data["address_balance"];
-    final _lastName = data["balance_hint"];
-    final _addresses = <String>[];
-    final addressesValue = data["addresses"] as String?;
-    if (addressesValue != null) {
-      addressesValue.replaceFirst("[", "");
-      addressesValue.replaceFirst("]", "");
-      final data = addressesValue.split(",");
-      _addresses.addAll(data);
-    }
+    final _id = data["id"] as int;
+    final _firstName = data["firstName"] as String;
+    final _lastName = data["lastName"] as String?;
+    final _address = data["address"] as String;
     return ContactStore(
       id: _id,
       firstName: _firstName,
       lastName: _lastName,
-      addresses: _addresses,
+      address: _address,
     );
   }
 
   Map<String, dynamic> toDb() {
     return {
-      "id": this.id,
       "firstName": this.firstName,
       "lastName": this.lastName,
-      "addresses": this.addresses.toString(),
+      "address": this.address,
     };
   }
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [
+        id,
+        firstName,
+        lastName,
+        address,
+      ];
 }

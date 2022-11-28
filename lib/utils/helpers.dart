@@ -2,9 +2,13 @@ import 'package:alephium_wallet/app.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/log/logger_service.dart';
 import 'package:alephium_wallet/routes/home/widgets/qr_view.dart';
+import 'package:alephium_wallet/routes/wallet_details/widgets/shake_widget.dart';
+import 'package:alephium_wallet/utils/format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 export 'package:alephium_wallet/log/logger_service.dart';
 
 Color darken(Color c, [int percent = 10]) {
@@ -37,6 +41,40 @@ class AmountFormatter extends TextInputFormatter {
   }
 }
 
+extension StringHelpers on String {
+  String get capitalize {
+    if (this.isEmpty) return this;
+    final value = this.replaceRange(0, 1, this[0].toUpperCase());
+    return value;
+  }
+}
+
+extension widgetHelpers on Widget {
+  Widget shake(GlobalKey<ShakeErrorState> key) {
+    return ShakeError(
+      child: this,
+      key: key,
+    );
+  }
+}
+
+extension isObscure on Text {
+  Widget obscure([String? currency]) {
+    if (currency == null) currency = Format.symbol;
+    return ValueListenableBuilder<Box<dynamic>>(
+        valueListenable: Hive.box("settings").listenable(keys: ["visibility"]),
+        builder: (context, value, child) {
+          var isObscure = value.get("visibility", defaultValue: true) as bool;
+          return Text(
+            isObscure
+                ? this.data!
+                : '${"###"} ${currency != null ? currency : ""}',
+            style: this.style,
+          );
+        });
+  }
+}
+
 extension Helper on BuildContext {
   double get width {
     return MediaQuery.of(this).size.width;
@@ -64,29 +102,32 @@ extension Helper on BuildContext {
         behavior: SnackBarBehavior.floating,
         content: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
           if (level == Level.info)
-            Icon(
+            const Icon(
               Icons.info,
               color: Colors.white,
             )
           else if (level == Level.error)
-            Icon(
+            const Icon(
               Icons.error,
               color: Colors.white,
             ),
-          SizedBox(
-            width: 10,
+          if (level == Level.error || level == Level.info)
+            const SizedBox(
+              width: 8,
+            ),
+          Expanded(
+            child: AutoSizeText(
+              content,
+              maxFontSize: 14,
+              style: Theme.of(this)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: Colors.white),
+            ),
           ),
-          Text(
-            content,
-            style: Theme.of(this)
-                .textTheme
-                .bodyMedium!
-                .copyWith(color: Colors.white),
+          const SizedBox(
+            width: 8,
           ),
-          SizedBox(
-            width: 10,
-          ),
-          Spacer(),
           InkWell(
             onTap: () {
               scaffoldMessengerKey.currentState?.hideCurrentSnackBar();

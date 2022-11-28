@@ -1,8 +1,10 @@
 import 'package:alephium_wallet/bloc/create_wallet/create_wallet_bloc.dart';
 import 'package:alephium_wallet/bloc/settings/settings_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
+import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/routes/addresses/addresses_route.dart';
 import 'package:alephium_wallet/routes/constants.dart';
+import 'package:alephium_wallet/routes/contacts/contacts_page.dart';
 import 'package:alephium_wallet/routes/read_only_wallet.dart/read_only_wallet_page.dart';
 import 'package:alephium_wallet/routes/restore_wallet/restore_wallet.dart';
 import 'package:alephium_wallet/routes/send/consolidate_utxos.dart';
@@ -24,14 +26,17 @@ import 'routes/new_wallet/new_wallet_route.dart';
 import 'routes/mnemonic_verify/mnemonic_verify_page.dart';
 import 'routes/wallet_mnemonic_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:timeago/timeago.dart' as timeAgo;
 
 GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
     GlobalKey<ScaffoldMessengerState>();
 
 class App extends StatefulWidget {
   final bool firstRun;
-  App({Key? key, this.firstRun = true})
-      : super(
+  App({
+    Key? key,
+    this.firstRun = true,
+  }) : super(
           key: key,
         );
 
@@ -43,7 +48,9 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-
+    timeAgo.setLocaleMessages("fr", timeAgo.FrMessages());
+    timeAgo.setLocaleMessages("es", timeAgo.EsMessages());
+    timeAgo.setLocaleMessages("it", timeAgo.ItMessages());
     var window = WidgetsBinding.instance.window;
     window.onPlatformBrightnessChanged = () {
       WidgetsBinding.instance.handlePlatformBrightnessChanged();
@@ -80,6 +87,9 @@ class _AppState extends State<App> {
               EasyLocalization.of(context)!.delegate,
             ],
             supportedLocales: context.supportedLocales,
+            navigatorObservers: [
+              routeObserver,
+            ],
             locale: context.locale,
             scaffoldMessengerKey: scaffoldMessengerKey,
             theme: WalletTheme.instance.themeData,
@@ -203,6 +213,10 @@ class _AppState extends State<App> {
                   builder: (context) => TransactionDetails(
                     transaction: transaction,
                   ),
+                );
+              } else if (settings.name == Routes.addressesBook) {
+                return MaterialPageRoute(
+                  builder: (context) => ContactsPage(),
                 );
               }
 

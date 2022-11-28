@@ -1,9 +1,11 @@
 import 'package:alephium_wallet/bloc/create_wallet/create_wallet_bloc.dart';
+import 'package:alephium_wallet/main.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 import 'constants.dart';
 
@@ -20,7 +22,40 @@ class WalletMnemonicPage extends StatefulWidget {
   State<WalletMnemonicPage> createState() => _WalletMnemonicPageState();
 }
 
-class _WalletMnemonicPageState extends State<WalletMnemonicPage> {
+class _WalletMnemonicPageState extends State<WalletMnemonicPage>
+    with RouteAware {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      routeObserver.subscribe(this, ModalRoute.of(context)!);
+    });
+    super.initState();
+  }
+
+  @override
+  void didPush() {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    super.didPush();
+  }
+
+  @override
+  void didPushNext() {
+    FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+    super.didPushNext();
+  }
+
+  @override
+  void didPop() {
+    FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+    super.didPop();
+  }
+
+  @override
+  void didPopNext() {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    super.didPopNext();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

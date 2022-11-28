@@ -3,6 +3,7 @@ import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:alephium_wallet/storage/models/token_store.dart';
+import 'package:alephium_wallet/utils/format.dart';
 import 'package:bloc/bloc.dart';
 import 'package:alephium_wallet/api/dto_models/transaction_build_dto.dart';
 import 'package:alephium_wallet/api/dto_models/transaction_result_dto.dart';
@@ -37,6 +38,10 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     return (tokens.isNotEmpty || amount != null) &&
         toAddress != null &&
         fromAddress != null;
+  }
+
+  String get formattedAmount {
+    return "${Format.formatNumber(amount)} ℵ";
   }
 
   String? get balance {

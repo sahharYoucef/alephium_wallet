@@ -12,8 +12,9 @@ class WalletSettingInitial extends WalletSettingState {}
 class WalletSettingDisplayDataState extends WalletSettingState {
   final String title;
   final String data;
+  final bool isSecure;
 
-  WalletSettingDisplayDataState(this.data, this.title);
+  WalletSettingDisplayDataState(this.data, this.title, [this.isSecure = false]);
 
   @override
   List<Object> get props => [data, title, DateTime.now()];

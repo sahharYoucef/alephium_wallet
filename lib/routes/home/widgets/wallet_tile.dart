@@ -5,7 +5,6 @@ import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-
 import '../../constants.dart';
 
 class WalletTile extends StatelessWidget {
@@ -17,17 +16,17 @@ class WalletTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: Material(
-        color: Theme.of(context).primaryColor,
-        elevation: 1,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-        child: InkWell(
-          customBorder:
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: WalletTheme.instance.maxWidth,
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        child: Material(
+          color: Theme.of(context).primaryColor,
+          elevation: 1,
+          shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-          onTap: () {},
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -35,39 +34,48 @@ class WalletTile extends StatelessWidget {
               children: [
                 Row(
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            wallet.title.isEmpty
+                                ? "alephiumWallet".tr()
+                                : wallet.title,
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Text("${wallet.balance} ℵ",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineMedium)
+                                    .obscure("ℵ"),
+                                if (wallet.balanceConverted != null &&
+                                    wallet.balanceConverted != "0.000") ...[
+                                  Text(
+                                    " = ",
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                  Text("${wallet.balanceConverted}",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium)
+                                      .obscure(),
+                                ]
+                              ])
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
                     GradientIcon(
                       icon: Icons.account_balance_wallet_outlined,
                       size: 40,
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          wallet.title.isEmpty
-                              ? "alephiumWallet".tr()
-                              : wallet.title,
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                        RichText(
-                            text: TextSpan(children: [
-                          TextSpan(
-                              text: "${wallet.balance} ℵ",
-                              style: Theme.of(context).textTheme.headlineSmall),
-                          if (wallet.balanceConverted != null &&
-                              wallet.balanceConverted != "0.000") ...[
-                            TextSpan(
-                              text: " = ",
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            TextSpan(
-                                text: "${wallet.balanceConverted}",
-                                style: Theme.of(context).textTheme.bodyMedium),
-                          ]
-                        ]))
-                      ],
                     ),
                   ],
                 ),

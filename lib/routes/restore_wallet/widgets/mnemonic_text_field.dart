@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
 import 'package:alephium_wallet/utils/gradient_stadium_border.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +103,7 @@ class MnemonicTextFieldState extends State<MnemonicTextField> {
         const SizedBox(
           height: 10,
         ),
-        TextFormField(
+        ShakeTextFormField(
           enabled: isActive,
           autofocus: true,
           inputFormatters: [MnemonicInputFormatter()],

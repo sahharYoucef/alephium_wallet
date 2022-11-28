@@ -3,6 +3,7 @@ import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_setting/wallet_setting_bloc.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/routes/constants.dart';
+import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
 import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
@@ -60,6 +61,7 @@ class _WalletSettingState extends State<WalletSetting> {
               context: context,
               builder: (_) {
                 return WalletSettingDataDialog(
+                  isSecure: state.isSecure,
                   title: state.title,
                   data: state.data,
                 );
@@ -89,40 +91,44 @@ class _WalletSettingState extends State<WalletSetting> {
                     const SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-                      focusNode: _focusNode,
-                      key: _nameKey,
-                      initialValue: widget.detailsBloc.wallet.title,
-                      textInputAction: TextInputAction.next,
-                      autocorrect: false,
-                      validator: ((value) {
-                        var validator = RegExp(r'^[1-9A-HJ-NP-Za-km-z]+$');
-                        if (!validator.hasMatch(value!)) {
-                          return 'Invalid Address';
-                        }
-                        return null;
-                      }),
-                      onChanged: (value) {},
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      decoration: InputDecoration(
-                        labelText: 'walletName'.tr(),
+                    Center(
+                      child: ShakeTextFormField(
+                        focusNode: _focusNode,
+                        key: _nameKey,
+                        initialValue: widget.detailsBloc.wallet.title,
+                        textInputAction: TextInputAction.next,
+                        autocorrect: false,
+                        validator: ((value) {
+                          var validator = RegExp(r'^[1-9A-HJ-NP-Za-km-z]+$');
+                          if (!validator.hasMatch(value!)) {
+                            return 'Invalid Address';
+                          }
+                          return null;
+                        }),
+                        onChanged: (value) {},
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        decoration: InputDecoration(
+                          labelText: 'walletName'.tr(),
+                        ),
                       ),
                     ),
                     const SizedBox(
                       height: 10,
                     ),
-                    Hero(
-                      tag: "button",
-                      child: OutlinedButton(
-                        onPressed: () {
-                          _focusNode.unfocus();
-                          if (_nameKey.currentState?.value != null &&
-                              _nameKey.currentState!.value.trim().isNotEmpty)
-                            widget.detailsBloc.add(
-                                UpdateWalletName(_nameKey.currentState?.value));
-                        },
-                        child: Text(
-                          "apply".tr(),
+                    Center(
+                      child: Hero(
+                        tag: "button",
+                        child: OutlinedButton(
+                          onPressed: () {
+                            _focusNode.unfocus();
+                            if (_nameKey.currentState?.value != null &&
+                                _nameKey.currentState!.value.trim().isNotEmpty)
+                              widget.detailsBloc.add(UpdateWalletName(
+                                  _nameKey.currentState?.value));
+                          },
+                          child: Text(
+                            "apply".tr(),
+                          ),
                         ),
                       ),
                     ),

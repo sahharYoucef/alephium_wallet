@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/utils/format.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
@@ -14,7 +15,7 @@ class ReceiveAmountField extends StatefulWidget {
 }
 
 class _ReceiveAmountFieldState extends State<ReceiveAmountField> {
-  bool amountType = true;
+  bool amountType = false;
   double? amount;
   late final TextEditingController controller;
 
@@ -88,7 +89,7 @@ class _ReceiveAmountFieldState extends State<ReceiveAmountField> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextFormField(
+        ShakeTextFormField(
           controller: controller,
           inputFormatters: [AmountFormatter()],
           textInputAction: TextInputAction.next,

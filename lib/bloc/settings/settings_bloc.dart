@@ -21,9 +21,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         try {
           final bool canAuthenticate =
               await authenticationService.canAuthenticate;
-          if (!event.value) {
-            AppStorage.instance.localAuth = event.value;
-          } else if (canAuthenticate) {
+          if (canAuthenticate) {
             final didAuthenticate = await authenticationService.authenticate(
               "activateLocalAuthentication".tr(),
             );

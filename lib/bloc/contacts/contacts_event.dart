@@ -18,8 +18,21 @@ class AddNewContactEvent extends ContactsEvent {
   List<Object> get props => [this.contact];
 }
 
+class UpdateContactEvent extends ContactsEvent {
+  final ContactStore contact;
+  final int id;
+
+  UpdateContactEvent({required this.contact, required this.id});
+
+  @override
+  List<Object> get props => [
+        this.contact,
+        this.id,
+      ];
+}
+
 class DeleteContactEvent extends ContactsEvent {
-  final String id;
+  final int id;
 
   DeleteContactEvent({required this.id});
 

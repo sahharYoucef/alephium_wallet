@@ -6,8 +6,8 @@ import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 mixin InputValidators {
-  WalletStore get wallet;
-  TransactionBloc get bloc;
+  WalletStore? get wallet;
+  TransactionBloc? get bloc;
 
   String? tokenAmountValidator(TokenStore token, value) {
     var amountNumber = double.tryParse(value!);
@@ -24,7 +24,7 @@ mixin InputValidators {
     return null;
   }
 
-  String? addressToValidator(value) {
+  String? addressToValidator(String? value) {
     var validator = RegExp(r'^[1-9A-HJ-NP-Za-km-z]+$');
     if (!validator.hasMatch(value!)) {
       return 'invalidAddress'.tr();
@@ -32,10 +32,19 @@ mixin InputValidators {
     return null;
   }
 
-  String? amountValidator(value) {
+  String? nameValidator(String? value) {
+    var validator =
+        RegExp(r"^[\w'\-,.][^_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$");
+    if (!validator.hasMatch(value!)) {
+      return 'invalidName'.tr();
+    }
+    return null;
+  }
+
+  String? amountValidator(String? value) {
     var amountNumber = double.tryParse(value!);
-    var balance = wallet.addresses
-            .firstWhereOrNull((element) => element == bloc.fromAddress)
+    var balance = wallet?.addresses
+            .firstWhereOrNull((element) => element == bloc?.fromAddress)
             ?.balance
             ?.balance
             ?.toDouble() ??

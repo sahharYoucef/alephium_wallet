@@ -24,6 +24,10 @@ abstract class Format {
     return formattedValue;
   }
 
+  static String get symbol {
+    return getCurrencySymbol(AppStorage.instance.currency.toUpperCase());
+  }
+
   static String? convertToCurrency(double value) {
     if (AppStorage.instance.price == null) return null;
     final symbol =
