@@ -106,7 +106,7 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
                         addresses: fromAddresses,
                         onChanged: (value) {
                           setState(() {
-                            _fromAddressStore = value;
+                            if (value != null) _fromAddressStore = value;
                           });
                         },
                       ),
@@ -117,7 +117,7 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
                         label: "toAddress".tr(),
                         addresses: widget.wallet.addresses.toList(),
                         onChanged: (value) {
-                          _toAddressStore = value;
+                          if (value != null) _toAddressStore = value;
                         },
                       ),
                       const SizedBox(

@@ -14,8 +14,10 @@ class GasAdvancedOption extends StatelessWidget {
     required this.gasAmountValidator,
     required this.gasPriceValidator,
   });
-  final GlobalKey<FormFieldState> _gasAmountKey = GlobalKey<FormFieldState>();
-  final GlobalKey<FormFieldState> _gasPriceKey = GlobalKey<FormFieldState>();
+  final GlobalKey<ShakeTextFormFieldState> _gasAmountKey =
+      GlobalKey<ShakeTextFormFieldState>();
+  final GlobalKey<ShakeTextFormFieldState> _gasPriceKey =
+      GlobalKey<ShakeTextFormFieldState>();
   @override
   Widget build(BuildContext context) {
     return Theme(

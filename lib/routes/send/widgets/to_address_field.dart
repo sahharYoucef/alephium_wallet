@@ -1,11 +1,10 @@
-import 'dart:ui';
-
 import 'package:alephium_wallet/bloc/contacts/contacts_bloc.dart';
 import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/shake_widget.dart';
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/storage/models/contact_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
+import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,11 +14,15 @@ class ToAddressField extends StatefulWidget {
   final String? initialValue;
   final String? label;
   final bool enableSuggestion;
+  final bool readOnly;
+  final bool obscureText;
   const ToAddressField({
     super.key,
     this.validator,
     this.initialValue,
     this.label,
+    this.readOnly = false,
+    this.obscureText = false,
     required this.onChanged,
     this.enableSuggestion = false,
   });
@@ -81,6 +84,7 @@ class _ToAddressFieldState extends State<ToAddressField> {
               child: Material(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
+                color: WalletTheme.instance.dropDownBackground,
                 child: Container(
                   height: 52.0 * options.length,
                   width: constraints.biggest.width,
@@ -121,6 +125,8 @@ class _ToAddressFieldState extends State<ToAddressField> {
               validator: widget.validator,
               style: Theme.of(context).textTheme.bodyMedium,
               onChanged: widget.onChanged,
+              readOnly: widget.readOnly,
+              obscureText: widget.obscureText,
               decoration: InputDecoration(
                 labelText: widget.label,
                 suffixIcon: IconButton(

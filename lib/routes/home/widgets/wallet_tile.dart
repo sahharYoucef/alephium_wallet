@@ -40,9 +40,9 @@ class WalletTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            wallet.title.isEmpty
+                            wallet.title == null
                                 ? "alephiumWallet".tr()
-                                : wallet.title,
+                                : wallet.title!,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           Row(
@@ -74,7 +74,11 @@ class WalletTile extends StatelessWidget {
                     ),
                     const Spacer(),
                     GradientIcon(
-                      icon: Icons.account_balance_wallet_outlined,
+                      icon: wallet.type == WalletType.normal
+                          ? Icons.account_balance_wallet_outlined
+                          : wallet.type == WalletType.multisig
+                              ? Icons.multiple_stop_outlined
+                              : Icons.lock,
                       size: 40,
                     ),
                   ],
@@ -97,7 +101,7 @@ class WalletTile extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    if (!wallet.readOnly) ...[
+                    if (wallet.type != WalletType.readOnly) ...[
                       Expanded(
                           child: OutlinedButton(
                         child: Text("send".tr()),

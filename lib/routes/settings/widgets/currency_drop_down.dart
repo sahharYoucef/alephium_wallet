@@ -22,7 +22,7 @@ class _CurrencyDropDownState extends State<CurrencyDropDown> {
       alignedDropdown: true,
       child: DropdownButtonFormField<String>(
         menuMaxHeight: context.height / 2,
-        dropdownColor: WalletTheme.instance.primary,
+        dropdownColor: WalletTheme.instance.dropDownBackground,
         alignment: AlignmentDirectional.bottomEnd,
         elevation: 3,
         decoration: InputDecoration(

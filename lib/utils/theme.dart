@@ -1,5 +1,3 @@
-import 'package:alephium_wallet/utils/gradient_input_border.dart';
-import 'package:alephium_wallet/utils/gradient_stadium_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,6 +10,12 @@ class WalletTheme {
   late final Color background;
   late final Color gradientOne;
   late final Color gradientTwo;
+  late final Color buttonsBackground;
+  late final Color disabledButtonsBackground;
+  late final Color buttonsForeground;
+  late final Color errorColor;
+  late final Color dropDownBackground;
+
   final fontFamily = GoogleFonts.montserrat().fontFamily;
   final double maxWidth = 450;
 
@@ -34,14 +38,24 @@ class WalletTheme {
       background = Color(0xff171717);
       gradientOne = Color(0xff1902d5);
       gradientTwo = Color(0xfffe594e);
+      buttonsBackground = Colors.grey[900]!;
+      dropDownBackground = Colors.grey[900]!;
+      disabledButtonsBackground = Colors.grey[700]!;
+      buttonsForeground = Color(0xffffffff);
+      errorColor = Color(0xffFF284F);
     } else if (themeMode == ThemeMode.light) {
       textColor = Color(0xff000000);
       primary = Color(0xffffffff);
       secondary = Color.fromARGB(255, 238, 238, 238);
       black = Color(0xff040404);
-      background = Color(0xffe8dbeb);
+      background = Color(0xffB7B7B7);
       gradientOne = Color(0xfffe594e);
       gradientTwo = Color(0xff1902d5);
+      dropDownBackground = Color(0xffffffff);
+      buttonsBackground = Color(0xff1B1B1B);
+      disabledButtonsBackground = Colors.grey[700]!;
+      buttonsForeground = Color(0xffffffff);
+      errorColor = Color(0xffFF284F);
     }
   }
 
@@ -53,24 +67,27 @@ class WalletTheme {
       scaffoldBackgroundColor: background,
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          shape: GradientStadiumBorder(),
-          side: BorderSide(
-            width: 2,
-            color: primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+              width: 2,
+              color: primary,
+            ),
           ),
-          elevation: 2,
+          elevation: 1,
           maximumSize: Size.fromWidth(
             450,
           ),
-          foregroundColor: textColor,
-          disabledForegroundColor: textColor.withOpacity(.2),
-          backgroundColor: secondary,
+          foregroundColor: buttonsForeground,
+          disabledBackgroundColor: disabledButtonsBackground,
+          disabledForegroundColor: buttonsForeground,
+          backgroundColor: buttonsBackground,
           minimumSize: Size(450, 50),
           textStyle: TextStyle(
             fontFamily: fontFamily,
             color: textColor,
             fontSize: 16,
-            fontWeight: FontWeight.w100,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -80,8 +97,8 @@ class WalletTheme {
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         elevation: 1,
-        backgroundColor: secondary,
-        foregroundColor: textColor,
+        backgroundColor: buttonsBackground,
+        foregroundColor: buttonsForeground,
         extendedTextStyle: TextStyle(
           fontWeight: FontWeight.w400,
           color: textColor,
@@ -111,14 +128,14 @@ class WalletTheme {
         errorBorder: OutlineInputBorder(
           borderSide: BorderSide(
             width: 2,
-            color: Colors.red,
+            color: WalletTheme.instance.errorColor,
           ),
           borderRadius: BorderRadius.circular(8),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderSide: BorderSide(
             width: 2,
-            color: Colors.red,
+            color: WalletTheme.instance.errorColor,
           ),
           borderRadius: BorderRadius.circular(8),
         ),

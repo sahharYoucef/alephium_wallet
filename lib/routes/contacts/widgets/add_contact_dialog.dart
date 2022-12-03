@@ -76,10 +76,10 @@ class _AddContactDialogState extends State<AddContactDialog>
                       initialValue: firstName,
                       onChanged: (value) {
                         firstName = value;
-                        setState(() {});
                       },
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       autofocus: true,
+                      style: Theme.of(context).textTheme.bodyMedium,
                       decoration: InputDecoration(
                         label: Text(
                           "firstName".tr(),
@@ -96,6 +96,7 @@ class _AddContactDialogState extends State<AddContactDialog>
                         lastName = value;
                       },
                       autovalidateMode: AutovalidateMode.onUserInteraction,
+                      style: Theme.of(context).textTheme.bodyMedium,
                       decoration: InputDecoration(
                         label: Text(
                           "lastName".tr(),
@@ -111,7 +112,6 @@ class _AddContactDialogState extends State<AddContactDialog>
                       label: "address".tr(),
                       onChanged: (value) {
                         address = value;
-                        setState(() {});
                       },
                     ),
                     const SizedBox(
@@ -120,29 +120,27 @@ class _AddContactDialogState extends State<AddContactDialog>
                     Hero(
                       tag: "button",
                       child: OutlinedButton(
-                        onPressed: firstName != null && address != null
-                            ? () {
-                                final isValid = _formKey.currentState
-                                    ?.validate(shake: true);
-                                if (isValid ?? false) {
-                                  if (widget.contact != null) {
-                                    widget.bloc.add(UpdateContactEvent(
-                                        id: widget.contact!.id!,
-                                        contact: ContactStore(
-                                            firstName: firstName!,
-                                            address: address!,
-                                            lastName: lastName!)));
-                                  } else {
-                                    widget.bloc.add(AddNewContactEvent(
-                                        contact: ContactStore(
-                                            firstName: firstName!,
-                                            address: address!,
-                                            lastName: lastName!)));
-                                  }
-                                  Navigator.pop(context);
-                                }
-                              }
-                            : null,
+                        onPressed: () {
+                          final isValid =
+                              _formKey.currentState?.validate(shake: true);
+                          if (isValid ?? false) {
+                            if (widget.contact != null) {
+                              widget.bloc.add(UpdateContactEvent(
+                                  id: widget.contact!.id!,
+                                  contact: ContactStore(
+                                      firstName: firstName!,
+                                      address: address!,
+                                      lastName: lastName!)));
+                            } else {
+                              widget.bloc.add(AddNewContactEvent(
+                                  contact: ContactStore(
+                                      firstName: firstName!,
+                                      address: address!,
+                                      lastName: lastName!)));
+                            }
+                            Navigator.pop(context);
+                          }
+                        },
                         child: Text(
                           widget.contact != null
                               ? "updateContact".tr()

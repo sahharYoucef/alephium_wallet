@@ -11,6 +11,7 @@ import 'package:alephium_wallet/routes/send/widgets/gas_advanced_options.dart';
 import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
 import 'package:alephium_wallet/routes/send/widgets/success_dialog.dart';
 import 'package:alephium_wallet/routes/send/widgets/to_address_field.dart';
+import 'package:alephium_wallet/routes/send/widgets/wait_for_signatures.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/shake_widget.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
@@ -103,8 +104,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
             listener: (context, state) async {
               if (state is TransactionError) {
                 context.showSnackBar(state.message, level: Level.error);
-              }
-              if (state is TransactionSendingCompleted) {
+              } else if (state is TransactionSendingCompleted) {
                 if (widget.detailsBloc != null)
                   widget.detailsBloc?.add(AddPendingTxs(state.transactions));
                 await showDialog(
@@ -115,22 +115,38 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                           transaction: state.transactions.first,
                         ));
                 Navigator.pop(context);
+              } else if (state is WaitForOtherSignatureState) {
+                await showModalBottomSheet(
+                    isScrollControlled: true,
+                    isDismissible: false,
+                    constraints: BoxConstraints(
+                        maxHeight: context.height - context.topPadding - 80),
+                    backgroundColor: Colors.transparent,
+                    context: context,
+                    enableDrag: false,
+                    builder: (context) => WaitForOtherSignatures(
+                          addresses: state.addresses,
+                          txId: state.txId,
+                          wallet: widget.wallet,
+                          bloc: _bloc,
+                        ));
+                // widget.detailsBloc?.add(AddPendingTxs(state.transactions));
               }
             },
-            child: ShakeForm(
-              key: _formKey,
-              child: Column(
-                children: [
-                  WalletAppBar(
-                    label: Text(
-                      'sendTransaction'.tr(),
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                  ),
-                  Expanded(
-                    child: Stack(
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: ShakeForm(
+                    key: _formKey,
+                    child: Column(
                       children: [
-                        Positioned.fill(
+                        WalletAppBar(
+                          label: Text(
+                            'sendTransaction'.tr(),
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ),
+                        Expanded(
                           child: CustomScrollView(
                             keyboardDismissBehavior:
                                 ScrollViewKeyboardDismissBehavior.onDrag,
@@ -203,141 +219,145 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 16),
-                                  child: BlocBuilder<TransactionBloc,
-                                          TransactionState>(
-                                      bloc: _bloc,
-                                      buildWhen: (previous, current) {
-                                        return current
-                                            is TransactionStatusState;
-                                      },
-                                      builder: ((context, state) {
-                                        if (state is TransactionStatusState) {
-                                          return Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
-                                            children: [
-                                              if (_bloc.transaction != null)
-                                                CheckTransactionResult(
-                                                    bloc: bloc)
-                                              else ...[
-                                                Divider(
-                                                  height: 1,
-                                                ),
-                                                GasAdvancedOption(
-                                                  bloc: _bloc,
-                                                  gasAmountValidator:
-                                                      gasAmountValidator,
-                                                  gasPriceValidator:
-                                                      gasPriceValidator,
-                                                ),
-                                              ],
-                                              const Spacer(),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              IntrinsicHeight(
-                                                child: Row(
-                                                  children: [
-                                                    AddTokenButton(
+                                  child:
+                                      BlocBuilder<TransactionBloc,
+                                              TransactionState>(
+                                          bloc: _bloc,
+                                          buildWhen: (previous, current) {
+                                            return current
+                                                is TransactionStatusState;
+                                          },
+                                          builder: ((context, state) {
+                                            if (state
+                                                is TransactionStatusState) {
+                                              return Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.stretch,
+                                                children: [
+                                                  if (_bloc.transaction != null)
+                                                    CheckTransactionResult(
+                                                        bloc: bloc)
+                                                  else ...[
+                                                    Divider(
+                                                      height: 1,
+                                                    ),
+                                                    GasAdvancedOption(
                                                       bloc: _bloc,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 8,
-                                                    ),
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: Hero(
-                                                        tag: "button",
-                                                        child: OutlinedButton(
-                                                          child: Text(
-                                                            state.transaction !=
-                                                                    null
-                                                                ? 'send'
-                                                                    .tr()
-                                                                    .toUpperCase()
-                                                                : 'check'
-                                                                    .tr()
-                                                                    .toUpperCase(),
-                                                          ),
-                                                          onPressed: _bloc
-                                                                  .activateButton
-                                                              ? () {
-                                                                  var isValid = _formKey
-                                                                          .currentState
-                                                                          ?.validate(
-                                                                              shake: true) ??
-                                                                      false;
-                                                                  if (!isValid) {
-                                                                    return;
-                                                                  }
-                                                                  if (state
-                                                                          .transaction ==
-                                                                      null) {
-                                                                    _bloc.add(
-                                                                      CheckTransactionEvent(
-                                                                        _bloc
-                                                                            .fromAddress,
-                                                                      ),
-                                                                    );
-                                                                  } else {
-                                                                    _bloc.add(
-                                                                        SignAndSendTransaction(
-                                                                      privateKey: _bloc
-                                                                          .fromAddress!
-                                                                          .privateKey!,
-                                                                      transactionID: _bloc
-                                                                          .transaction!
-                                                                          .txId!,
-                                                                      unsignedTx: _bloc
-                                                                          .transaction!
-                                                                          .unsignedTx!,
-                                                                    ));
-                                                                  }
-                                                                }
-                                                              : null,
-                                                        ),
-                                                      ),
+                                                      gasAmountValidator:
+                                                          gasAmountValidator,
+                                                      gasPriceValidator:
+                                                          gasPriceValidator,
                                                     ),
                                                   ],
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                height: 16,
-                                              ),
-                                            ],
-                                          );
-                                        }
-                                        return const SizedBox();
-                                      })),
+                                                  const Spacer(),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  IntrinsicHeight(
+                                                    child: Row(
+                                                      children: [
+                                                        AddTokenButton(
+                                                          bloc: _bloc,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 8,
+                                                        ),
+                                                        Expanded(
+                                                          flex: 1,
+                                                          child: Hero(
+                                                            tag: "button",
+                                                            child:
+                                                                OutlinedButton(
+                                                              child: Text(
+                                                                state.transaction !=
+                                                                        null
+                                                                    ? 'send'
+                                                                        .tr()
+                                                                        .toUpperCase()
+                                                                    : 'check'
+                                                                        .tr()
+                                                                        .toUpperCase(),
+                                                              ),
+                                                              onPressed: _bloc
+                                                                      .activateButton
+                                                                  ? () {
+                                                                      var isValid = _formKey
+                                                                              .currentState
+                                                                              ?.validate(shake: true) ??
+                                                                          false;
+                                                                      if (!isValid) {
+                                                                        return;
+                                                                      }
+                                                                      if (state
+                                                                              .transaction ==
+                                                                          null) {
+                                                                        _bloc
+                                                                            .add(
+                                                                          CheckTransactionEvent(
+                                                                            _bloc.fromAddress,
+                                                                          ),
+                                                                        );
+                                                                      } else {
+                                                                        if (wallet.type ==
+                                                                            WalletType.normal)
+                                                                          _bloc.add(
+                                                                              SignAndSendTransaction(
+                                                                            privateKey:
+                                                                                _bloc.fromAddress!.privateKey!,
+                                                                            transactionID:
+                                                                                _bloc.transaction!.txId!,
+                                                                            unsignedTx:
+                                                                                _bloc.transaction!.unsignedTx!,
+                                                                          ));
+                                                                        else
+                                                                          _bloc.add(
+                                                                              CheckSignMultisigTransaction(_bloc.fromAddress));
+                                                                      }
+                                                                    }
+                                                                  : null,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 16,
+                                                  ),
+                                                ],
+                                              );
+                                            }
+                                            return const SizedBox();
+                                          })),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        Positioned.fill(
-                          child: BlocBuilder<TransactionBloc, TransactionState>(
-                              bloc: _bloc,
-                              builder: (context, state) {
-                                return Visibility(
-                                  visible: state is TransactionLoading,
-                                  child: Container(
-                                    height: double.infinity,
-                                    width: double.infinity,
-                                    color: Colors.black.withOpacity(0.3),
-                                    child: Center(
-                                      child: AlephiumIcon(
-                                        spinning: true,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                        ),
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+                Positioned.fill(
+                  child: BlocBuilder<TransactionBloc, TransactionState>(
+                      bloc: _bloc,
+                      builder: (context, state) {
+                        return Visibility(
+                          visible: state is TransactionLoading,
+                          child: Container(
+                            height: double.infinity,
+                            width: double.infinity,
+                            color: Colors.black.withOpacity(0.3),
+                            child: Center(
+                              child: AlephiumIcon(
+                                spinning: true,
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                ),
+              ],
             )),
       ),
     );

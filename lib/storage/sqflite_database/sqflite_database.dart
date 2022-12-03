@@ -4,7 +4,6 @@ import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:alephium_wallet/storage/models/contact_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
-import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/address_store.dart';
@@ -38,6 +37,7 @@ class SQLiteDBHelper extends BaseDBHelper {
   }
 
   _createTables(Database db) async {
+    // await _dropTables(db);
     await db.execute("PRAGMA foreign_keys = ON");
     final batch = db.batch();
     batch.execute("""
@@ -45,9 +45,11 @@ class SQLiteDBHelper extends BaseDBHelper {
           id TEXT PRIMARY KEY NOT NULL,
           title VARCHAR(20),
           passphrase VARCHAR(20),
-          blockchain TEXT NOT NULL,
           mnemonic TEXT,
+          type TEXT NOT NULL,
           seed TEXT,
+          signatures BLOB,
+          required INTEGER,
           mainAddress TEXT NOT NULL
       )""");
     batch.execute("""
@@ -127,6 +129,7 @@ class SQLiteDBHelper extends BaseDBHelper {
         "mnemonic": wallet['mnemonic'],
         "seed": wallet['seed'],
         "mainAddress": wallet['mainAddress'],
+        "type": WalletType.normal.name,
         if (wallet["addresses"] != null)
           "addresses": <Map<String, dynamic>>[
             ...wallet["addresses"]
@@ -171,8 +174,8 @@ class SQLiteDBHelper extends BaseDBHelper {
       "db.db",
       onConfigure: _onConfigure,
       onCreate: _onCreate,
-      onUpgrade: _onUpgrade,
-      version: 3,
+      // onUpgrade: _onUpgrade,
+      version: 4,
     );
     _database.complete(_db);
   }

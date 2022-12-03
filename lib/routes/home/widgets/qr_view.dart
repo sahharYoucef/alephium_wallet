@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:alephium_wallet/api/utils/constants.dart';
-import 'package:alephium_wallet/utils/theme.dart';
+import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
@@ -84,19 +84,6 @@ class _QRScannerViewState extends State<QRScannerView> {
                     ),
                     AddressText(
                       address: transactionData!["address"],
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            foreground: Paint()
-                              ..shader = LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomLeft,
-                                colors: [
-                                  WalletTheme.instance.gradientOne,
-                                  WalletTheme.instance.gradientTwo,
-                                ],
-                              ).createShader(
-                                  Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
-                          ),
                     ),
                     if (transactionData!["amount"] != null) ...[
                       Divider(),
@@ -121,6 +108,7 @@ class _QRScannerViewState extends State<QRScannerView> {
                     ],
                     Divider(),
                     ...widget.bloc!.wallets
+                        .where((element) => element.type != WalletType.readOnly)
                         .map((wallet) => Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
@@ -133,9 +121,11 @@ class _QRScannerViewState extends State<QRScannerView> {
                                     },
                                     child: Row(
                                       children: [
-                                        Text(wallet.title.isEmpty
-                                            ? "Alephium"
-                                            : wallet.title),
+                                        Text(
+                                          wallet.title == null
+                                              ? "Alephium"
+                                              : wallet.title!,
+                                        ),
                                         Spacer(),
                                         Text("${wallet.balance} ℵ")
                                       ],
@@ -185,7 +175,7 @@ class _QRScannerViewState extends State<QRScannerView> {
             return;
           }
           isClosed = true;
-        } catch (e, trace) {
+        } catch (e, _) {
           var closedReason = context.showSnackBar(kErrorMessageGenericError,
               level: Level.error);
           isClosed = (await closedReason?.closed != null);

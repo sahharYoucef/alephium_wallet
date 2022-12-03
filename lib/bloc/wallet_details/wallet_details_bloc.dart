@@ -63,7 +63,7 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
           await getIt
               .get<BaseDBHelper>()
               .insertTransactions(wallet.id, updateTransactions);
-        } catch (e, trace) {
+        } catch (e) {
           emit(WalletDetailsError(
             message: ApiError(exception: e).message,
           ));
@@ -100,7 +100,7 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
           await getIt
               .get<BaseDBHelper>()
               .insertTransactions(wallet.id, updateTransactions);
-        } catch (e, trace) {
+        } catch (e) {
           emit(WalletDetailsError(
             message: ApiError(exception: e).message,
           ));

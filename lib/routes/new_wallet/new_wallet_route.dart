@@ -1,7 +1,8 @@
-import 'package:alephium_wallet/api/dto_models/balance_dto.dart';
 import 'package:alephium_wallet/bloc/create_wallet/create_wallet_bloc.dart';
+import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/routes/constants.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
+import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/new_wallet/widgets/new_wallet_checkbox.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
@@ -24,7 +25,7 @@ class _NewWalletPageState extends State<NewWalletPage> {
   @override
   void initState() {
     FlutterNativeSplash.remove();
-    _createWalletBloc = CreateWalletBloc(Blockchain.Alephium);
+    _createWalletBloc = CreateWalletBloc();
     super.initState();
   }
 
@@ -123,6 +124,29 @@ class _NewWalletPageState extends State<NewWalletPage> {
                             },
                             icon: Icons.lock_rounded,
                           ),
+                          NewWalletCheckbox(
+                            title: "multisigWallet".tr(),
+                            description:
+                                "create a multisig wallet with multiple signatures"
+                                    .tr(),
+                            enabled: context
+                                .read<WalletHomeBloc>()
+                                .wallets
+                                .where((element) =>
+                                    element.type == WalletType.normal)
+                                .isNotEmpty,
+                            value: "multisig",
+                            selected: selected,
+                            onTap: (value) {
+                              setState(() {
+                                if (selected == value)
+                                  selected = null;
+                                else
+                                  selected = value;
+                              });
+                            },
+                            icon: Icons.multiple_stop,
+                          ),
                         ],
                       )),
                     ),
@@ -152,6 +176,14 @@ class _NewWalletPageState extends State<NewWalletPage> {
                                   Navigator.pushNamed(
                                     context,
                                     Routes.readOnlyWallet,
+                                    arguments: {
+                                      "bloc": _createWalletBloc,
+                                    },
+                                  );
+                                else if (selected == "multisig")
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.multisigWallet,
                                     arguments: {
                                       "bloc": _createWalletBloc,
                                     },

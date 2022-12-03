@@ -1,8 +1,6 @@
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:easy_localization/easy_localization.dart'
-    show StringTranslateExtension;
 
 class CircleNavigationBar extends StatelessWidget {
   final double navbarHeight;
@@ -41,44 +39,45 @@ class CircleNavigationBar extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: margin),
         child: SizedBox(
-          height: navbarHeight,
+          height: navbarHeight + context.bottomPadding,
           width: double.infinity,
           child: Material(
               elevation: 2,
               shadowColor: WalletTheme.instance.gradientOne,
               color: navBarColor,
               borderRadius: borderRadius,
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: TabBar(
-                      controller: tabController,
-                      indicatorColor: Colors.transparent,
-                      unselectedLabelColor: navBarUnselectedIconsColor,
-                      labelColor: navBarSelectedIconsColor,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      splashBorderRadius: borderRadius,
-                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.pressed))
-                            return WalletTheme.instance.background
-                                .withOpacity(.9);
-                          return null;
-                        },
+              child: Padding(
+                padding: EdgeInsets.only(bottom: context.bottomPadding),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: TabBar(
+                        controller: tabController,
+                        indicatorColor: Colors.transparent,
+                        unselectedLabelColor: navBarUnselectedIconsColor,
+                        labelColor: navBarSelectedIconsColor,
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        splashBorderRadius: borderRadius,
+                        overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.pressed))
+                              return WalletTheme.instance.background
+                                  .withOpacity(.9);
+                            return null;
+                          },
+                        ),
+                        tabs: <Widget>[
+                          ...List.generate(3, (index) {
+                            return navBarIcons[index];
+                          }),
+                        ],
                       ),
-                      tabs: <Widget>[
-                        ...List.generate(3, (index) {
-                          return navBarIcons[index];
-                        }),
-                      ],
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: navBarIcons[3],
-                  ),
-                ],
+                  ],
+                ),
               )),
         ),
       ),

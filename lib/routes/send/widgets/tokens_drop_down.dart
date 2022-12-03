@@ -24,7 +24,7 @@ class _TokensDropDownState extends State<TokensDropDown> {
     return ButtonTheme(
       child: DropdownButtonFormField<String>(
         menuMaxHeight: context.height / 2,
-        dropdownColor: WalletTheme.instance.primary,
+        dropdownColor: WalletTheme.instance.dropDownBackground,
         alignment: AlignmentDirectional.centerStart,
         elevation: 3,
         hint: Row(

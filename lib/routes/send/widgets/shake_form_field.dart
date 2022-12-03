@@ -17,8 +17,7 @@ class ShakeForm extends StatefulWidget {
     this.onWillPop,
     this.onChanged,
     AutovalidateMode? autovalidateMode,
-  })  : assert(child != null),
-        autovalidateMode = autovalidateMode ?? AutovalidateMode.disabled;
+  }) : autovalidateMode = autovalidateMode ?? AutovalidateMode.disabled;
 
   /// Returns the closest [ShakeFormState] which encloses the given context.
   ///
@@ -72,15 +71,16 @@ class ShakeForm extends StatefulWidget {
 class ShakeFormState extends State<ShakeForm> {
   int _generation = 0;
   bool _hasInteractedByUser = false;
-  final Set<_FormFieldState<dynamic>> _fields = <_FormFieldState<dynamic>>{};
+  final Set<ShakeFormFieldState<dynamic>> _fields =
+      <ShakeFormFieldState<dynamic>>{};
 
   // Called when a form field has changed. This will cause all form fields
   // to rebuild, useful if form fields have interdependencies.
   void _fieldDidChange() {
     widget.onChanged?.call();
 
-    _hasInteractedByUser = _fields.any(
-        (_FormFieldState<dynamic> field) => field._hasInteractedByUser.value);
+    _hasInteractedByUser = _fields.any((ShakeFormFieldState<dynamic> field) =>
+        field._hasInteractedByUser.value);
     _forceRebuild();
   }
 
@@ -90,11 +90,11 @@ class ShakeFormState extends State<ShakeForm> {
     });
   }
 
-  void _register(_FormFieldState<dynamic> field) {
+  void _register(ShakeFormFieldState<dynamic> field) {
     _fields.add(field);
   }
 
-  void _unregister(_FormFieldState<dynamic> field) {
+  void _unregister(ShakeFormFieldState<dynamic> field) {
     _fields.remove(field);
   }
 
@@ -123,29 +123,29 @@ class ShakeFormState extends State<ShakeForm> {
     );
   }
 
-  /// Saves every [_FormField] that is a descendant of this [ShakeForm].
+  /// Saves every [ShakeFormField] that is a descendant of this [ShakeForm].
   void save() {
-    for (final _FormFieldState<dynamic> field in _fields) {
+    for (final ShakeFormFieldState<dynamic> field in _fields) {
       field.save();
     }
   }
 
-  /// Resets every [_FormField] that is a descendant of this [ShakeForm] back to its
-  /// [_FormField.initialValue].
+  /// Resets every [ShakeFormField] that is a descendant of this [ShakeForm] back to its
+  /// [ShakeFormField.initialValue].
   ///
   /// The [ShakeForm.onChanged] callback will be called.
   ///
   /// If the form's [ShakeForm.autovalidateMode] property is [AutovalidateMode.always],
   /// the fields will all be revalidated after being reset.
   void reset() {
-    for (final _FormFieldState<dynamic> field in _fields) {
+    for (final ShakeFormFieldState<dynamic> field in _fields) {
       field.reset();
     }
     _hasInteractedByUser = false;
     _fieldDidChange();
   }
 
-  /// Validates every [_FormField] that is a descendant of this [ShakeForm], and
+  /// Validates every [ShakeFormField] that is a descendant of this [ShakeForm], and
   /// returns true if there are no errors.
   ///
   /// The form will rebuild to report the results.
@@ -157,7 +157,7 @@ class ShakeFormState extends State<ShakeForm> {
 
   bool _validate({bool shake = false}) {
     bool hasError = false;
-    for (final _FormFieldState<dynamic> field in _fields) {
+    for (final ShakeFormFieldState<dynamic> field in _fields) {
       hasError = !field.validate(shake: shake) || hasError;
     }
     return !hasError;
@@ -190,18 +190,17 @@ class _FormScope extends InheritedWidget {
 /// Returns an error string to display if the input is invalid, or null
 /// otherwise.
 ///
-/// Used by [_FormField.validator].
-typedef FormFieldValidator<T> = String? Function(T? value);
+/// Used by [ShakeFormField.validator].
 
 /// Signature for being notified when a form field changes value.
 ///
-/// Used by [_FormField.onSaved].
+/// Used by [ShakeFormField.onSaved].
 typedef FormFieldSetter<T> = void Function(T? newValue);
 
 /// Signature for building the widget representing the form field.
 ///
-/// Used by [_FormField.builder].
-typedef FormFieldBuilder<T> = Widget Function(_FormFieldState<T> field);
+/// Used by [ShakeFormField.builder].
+typedef FormFieldBuilder<T> = Widget Function(ShakeFormFieldState<T> field);
 
 /// A single form field.
 ///
@@ -210,9 +209,9 @@ typedef FormFieldBuilder<T> = Widget Function(_FormFieldState<T> field);
 ///
 /// When used inside a [ShakeForm], you can use methods on [ShakeFormState] to query or
 /// manipulate the form data as a whole. For example, calling [ShakeFormState.save]
-/// will invoke each [_FormField]'s [onSaved] callback in turn.
+/// will invoke each [ShakeFormField]'s [onSaved] callback in turn.
 ///
-/// Use a [GlobalKey] with [_FormField] if you want to retrieve its current
+/// Use a [GlobalKey] with [ShakeFormField] if you want to retrieve its current
 /// state, for example if you want one form field to depend on another.
 ///
 /// A [ShakeForm] ancestor is not required. The [ShakeForm] simply makes it easier to
@@ -224,11 +223,11 @@ typedef FormFieldBuilder<T> = Widget Function(_FormFieldState<T> field);
 ///
 ///  * [ShakeForm], which is the widget that aggregates the form fields.
 ///  * [TextField], which is a commonly used form field for entering text.
-class _FormField<T> extends StatefulWidget {
+class ShakeFormField<T> extends StatefulWidget {
   /// Creates a single form field.
   ///
   /// The [builder] argument must not be null.
-  const _FormField({
+  const ShakeFormField({
     super.key,
     required this.builder,
     this.onSaved,
@@ -238,8 +237,7 @@ class _FormField<T> extends StatefulWidget {
     this.errorStyle,
     AutovalidateMode? autovalidateMode,
     this.restorationId,
-  })  : assert(builder != null),
-        autovalidateMode = autovalidateMode ?? AutovalidateMode.disabled;
+  }) : autovalidateMode = autovalidateMode ?? AutovalidateMode.disabled;
 
   /// An optional method to call with the final value when the form is saved via
   /// [ShakeFormState.save].
@@ -250,7 +248,7 @@ class _FormField<T> extends StatefulWidget {
   /// An optional method that validates an input. Returns an error string to
   /// display if the input is invalid, or null otherwise.
   ///
-  /// The returned value is exposed by the [_FormFieldState.errorText] property.
+  /// The returned value is exposed by the [ShakeFormFieldState.errorText] property.
   /// The [TextFormField] uses this to override the [InputDecoration.errorText]
   /// value.
   ///
@@ -305,20 +303,22 @@ class _FormField<T> extends StatefulWidget {
   final String? restorationId;
 
   @override
-  _FormFieldState<T> createState() => _FormFieldState<T>();
+  ShakeFormFieldState<T> createState() => ShakeFormFieldState<T>();
 }
 
-/// The current state of a [_FormField]. Passed to the [FormFieldBuilder] method
+/// The current state of a [ShakeFormField]. Passed to the [FormFieldBuilder] method
 /// for use in constructing the form field's widget.
-class _FormFieldState<T> extends State<_FormField<T>> with RestorationMixin {
+class ShakeFormFieldState<T> extends State<ShakeFormField<T>>
+    with RestorationMixin {
   late T? _value = widget.initialValue;
   final RestorableStringN _errorText = RestorableStringN(null);
   final RestorableBool _hasInteractedByUser = RestorableBool(false);
+  final GlobalKey<ShakeErrorState> _shakeKey = GlobalKey<ShakeErrorState>();
 
   /// The current value of the form field.
   T? get value => _value;
 
-  /// The current validation error returned by the [_FormField.validator]
+  /// The current validation error returned by the [ShakeFormField.validator]
   /// callback, or null if no errors have been triggered. This only updates when
   /// [validate] is called.
   String? get errorText => _errorText.value;
@@ -336,7 +336,7 @@ class _FormFieldState<T> extends State<_FormField<T>> with RestorationMixin {
   ///  * [validate], which may update [errorText] and [hasError].
   bool get isValid => widget.validator?.call(_value) == null;
 
-  /// Calls the [_FormField]'s onSaved method with the current value.
+  /// Calls the [ShakeFormField]'s onSaved method with the current value.
   void save() {
     widget.onSaved?.call(value);
   }
@@ -351,7 +351,7 @@ class _FormFieldState<T> extends State<_FormField<T>> with RestorationMixin {
     ShakeForm.of(context)?._fieldDidChange();
   }
 
-  /// Calls [_FormField.validator] to set the [errorText]. Returns true if there
+  /// Calls [ShakeFormField.validator] to set the [errorText]. Returns true if there
   /// were no errors.
   ///
   /// See also:
@@ -362,6 +362,9 @@ class _FormFieldState<T> extends State<_FormField<T>> with RestorationMixin {
     setState(() {
       _validate();
     });
+    if (hasError && shake) {
+      _shakeKey.currentState?.shake();
+    }
     return !hasError;
   }
 
@@ -385,13 +388,6 @@ class _FormFieldState<T> extends State<_FormField<T>> with RestorationMixin {
     ShakeForm.of(context)?._fieldDidChange();
   }
 
-  /// Sets the value associated with this form field.
-  ///
-  /// This method should only be called by subclasses that need to update
-  /// the form field value due to state changes identified during the widget
-  /// build phase, when calling `setState` is prohibited. In all other cases,
-  /// the value should be set by a call to [didChange], which ensures that
-  /// `setState` is called.
   @protected
   // ignore: use_setters_to_change_properties, (API predates enforcing the lint)
   void setValue(T? value) {
@@ -433,42 +429,45 @@ class _FormFieldState<T> extends State<_FormField<T>> with RestorationMixin {
     return AnimatedSize(
       alignment: Alignment.topCenter,
       duration: Duration(milliseconds: 200),
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: WalletTheme.instance.maxWidth,
-        ),
-        decoration: BoxDecoration(
-          color: hasError ? Colors.red : Colors.green,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            widget.builder(this),
-            if (hasError)
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
-                  vertical: 2,
+      child: ShakeError(
+        key: _shakeKey,
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: WalletTheme.instance.maxWidth,
+          ),
+          decoration: BoxDecoration(
+            color: hasError ? WalletTheme.instance.errorColor : Colors.green,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              widget.builder(this),
+              if (hasError)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                    vertical: 2,
+                  ),
+                  child: Text(
+                    errorText!,
+                    style: widget.errorStyle ??
+                        Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .copyWith(color: Colors.white),
+                  ),
                 ),
-                child: Text(
-                  errorText!,
-                  style: widget.errorStyle ??
-                      Theme.of(context)
-                          .textTheme
-                          .bodySmall!
-                          .copyWith(color: Colors.white),
-                ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class ShakeTextFormField extends _FormField<String> {
-  /// Creates a [_FormField] that contains a [TextField].
+class ShakeTextFormField extends ShakeFormField<String> {
+  /// Creates a [ShakeFormField] that contains a [TextField].
   ///
   /// When a [controller] is specified, [initialValue] must be null (the
   /// default). If [controller] is null, then a [TextEditingController]
@@ -534,21 +533,13 @@ class ShakeTextFormField extends _FormField<String> {
     bool enableIMEPersonalizedLearning = true,
     MouseCursor? mouseCursor,
   })  : assert(initialValue == null || controller == null),
-        assert(textAlign != null),
-        assert(autofocus != null),
-        assert(readOnly != null),
-        assert(obscuringCharacter != null && obscuringCharacter.length == 1),
-        assert(obscureText != null),
-        assert(autocorrect != null),
-        assert(enableSuggestions != null),
-        assert(scrollPadding != null),
+        assert(obscuringCharacter.length == 1),
         assert(maxLines == null || maxLines > 0),
         assert(minLines == null || minLines > 0),
         assert(
           (maxLines == null) || (minLines == null) || (maxLines >= minLines),
           "minLines can't be greater than maxLines",
         ),
-        assert(expands != null),
         assert(
           !expands || (maxLines == null && minLines == null),
           'minLines and maxLines must be null when expands is true.',
@@ -558,13 +549,12 @@ class ShakeTextFormField extends _FormField<String> {
         assert(maxLength == null ||
             maxLength == TextField.noMaxLength ||
             maxLength > 0),
-        assert(enableIMEPersonalizedLearning != null),
         super(
           initialValue:
               controller != null ? controller.text : (initialValue ?? ''),
           enabled: enabled ?? decoration?.enabled ?? true,
           autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
-          builder: (_FormFieldState<String> field) {
+          builder: (ShakeFormFieldState<String> field) {
             final ShakeTextFormFieldState state =
                 field as ShakeTextFormFieldState;
             final InputDecoration effectiveDecoration = (decoration ??
@@ -648,12 +638,11 @@ class ShakeTextFormField extends _FormField<String> {
   final GlobalKey<ShakeErrorState>? shakeKey;
 
   @override
-  _FormFieldState<String> createState() => ShakeTextFormFieldState();
+  ShakeFormFieldState<String> createState() => ShakeTextFormFieldState();
 }
 
-class ShakeTextFormFieldState extends _FormFieldState<String> {
+class ShakeTextFormFieldState extends ShakeFormFieldState<String> {
   RestorableTextEditingController? _controller;
-  late final GlobalKey<ShakeErrorState>? _shakeKey;
   final RestorableBool hasInteractedByUser = RestorableBool(false);
 
   TextEditingController get _effectiveController =>
@@ -670,24 +659,11 @@ class ShakeTextFormFieldState extends _FormFieldState<String> {
     } else {
       _textFormField.controller!.addListener(_handleControllerChanged);
     }
-    _shakeKey = _textFormField.shakeKey ?? GlobalKey<ShakeErrorState>();
   }
 
   @override
   bool validate({bool shake = false}) {
-    bool _isValid = super.validate();
-    if (!_isValid && shake) {
-      _shakeKey?.currentState?.shake();
-    }
-    return super.validate();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ShakeError(
-      key: _shakeKey,
-      child: super.build(context),
-    );
+    return super.validate(shake: shake);
   }
 
   @override

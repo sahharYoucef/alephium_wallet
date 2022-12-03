@@ -25,7 +25,7 @@ class _NetworkDropDownState extends State<NetworkDropDown> {
       alignedDropdown: true,
       child: DropdownButtonFormField<Network>(
         menuMaxHeight: context.height / 2,
-        dropdownColor: WalletTheme.instance.primary,
+        dropdownColor: WalletTheme.instance.dropDownBackground,
         alignment: AlignmentDirectional.bottomEnd,
         elevation: 3,
         borderRadius: BorderRadius.circular(16),

@@ -3,6 +3,7 @@ import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
 import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -18,15 +19,15 @@ class ReadOnlyWalletPage extends StatefulWidget {
 }
 
 class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
-  late final GlobalKey<FormFieldState> _nameKey;
-  late final GlobalKey<FormFieldState> _addressValueKey;
-  late final GlobalKey<FormState> _formKey;
+  late final GlobalKey<ShakeTextFormFieldState> _nameKey;
+  late final GlobalKey<ShakeTextFormFieldState> _addressValueKey;
+  late final GlobalKey<ShakeFormState> _formKey;
   late final TextEditingController _controller;
   @override
   void initState() {
-    _nameKey = GlobalKey<FormFieldState>();
-    _addressValueKey = GlobalKey<FormFieldState>();
-    _formKey = GlobalKey<FormState>();
+    _nameKey = GlobalKey<ShakeTextFormFieldState>();
+    _addressValueKey = GlobalKey<ShakeTextFormFieldState>();
+    _formKey = GlobalKey<ShakeFormState>();
     _controller = TextEditingController();
     super.initState();
   }
@@ -48,7 +49,7 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
         body: Stack(
           children: [
             Positioned.fill(
-              child: Form(
+              child: ShakeForm(
                 key: _formKey,
                 child: Padding(
                   padding: EdgeInsets.only(
@@ -71,16 +72,6 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                         key: _nameKey,
                         textInputAction: TextInputAction.next,
                         autocorrect: false,
-                        validator: (value) {
-                          if (value?.isEmpty ?? true) {
-                            return null;
-                          }
-                          var validator = RegExp(r'^[1-9A-HJ-NP-Za-km-z]+$');
-                          if (!validator.hasMatch(value!)) {
-                            return 'Invalid Address';
-                          }
-                          return null;
-                        },
                         onChanged: (value) {},
                         style: Theme.of(context).textTheme.bodyMedium,
                         decoration: InputDecoration(
@@ -95,14 +86,16 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                         controller: _controller,
                         textInputAction: TextInputAction.next,
                         autocorrect: false,
-                        // validator: ((value) {
-                        //   var validator = RegExp(r'^[1-9A-HJ-NP-Za-km-z]+$');
-                        //   if (!validator.hasMatch(value!)) {
-                        //     return 'Invalid Address';
-                        //   }
-                        //   return null;
-                        // }),
-                        onChanged: (value) {},
+                        validator: (value) {
+                          if (value?.isEmpty ?? true) {
+                            return null;
+                          }
+                          var validator = RegExp(r'^[1-9A-HJ-NP-Za-km-z]+$');
+                          if (!validator.hasMatch(value!)) {
+                            return 'Invalid Address';
+                          }
+                          return null;
+                        },
                         style: Theme.of(context).textTheme.bodyMedium,
                         decoration: InputDecoration(
                           labelText: 'Address or Public Key',
@@ -120,8 +113,8 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                               if (_controller.text.trim().isNotEmpty)
                                 widget.bloc.add(
                                   AddReadOnlyWallet(
-                                    value: _controller.text,
-                                  ),
+                                      value: _controller.text,
+                                      title: _nameKey.currentState?.value),
                                 );
                             },
                             child: Text("confirm".tr())),
@@ -139,7 +132,7 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
               action: AppBarIconButton(
                 tooltip: "QRscanner".tr(),
                 icon: Icon(
-                  Icons.qr_code_scanner,
+                  CupertinoIcons.qrcode_viewfinder,
                 ),
                 onPressed: () async {
                   var data = await showQRView(

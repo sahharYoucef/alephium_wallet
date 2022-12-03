@@ -20,4 +20,7 @@ abstract class Routes {
   static const String walletUtxo = '/wallet-utxo';
   static const String transactionDetails = '/transaction-details';
   static const String addressesBook = '/addresses-book';
+  static const String multisigWallet = '/multisig-wallet';
+  static const String multisigAddresses = '/multisig-addresses';
+  static const String signMultisigTx = '/sign-multisig-tx';
 }

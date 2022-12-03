@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:alephium_wallet/bloc/create_wallet/create_wallet_bloc.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -34,25 +36,29 @@ class _WalletMnemonicPageState extends State<WalletMnemonicPage>
 
   @override
   void didPush() {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    if (Platform.isAndroid)
+      FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     super.didPush();
   }
 
   @override
   void didPushNext() {
-    FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+    if (Platform.isAndroid)
+      FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
     super.didPushNext();
   }
 
   @override
   void didPop() {
-    FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+    if (Platform.isAndroid)
+      FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
     super.didPop();
   }
 
   @override
   void didPopNext() {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    if (Platform.isAndroid)
+      FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     super.didPopNext();
   }
 

@@ -1,16 +1,17 @@
 import 'package:alephium_wallet/bloc/contacts/contacts_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/routes/contacts/contacts_page.dart';
-import 'package:alephium_wallet/routes/home/widgets/add_button.dart';
+import 'package:alephium_wallet/routes/contacts/widgets/add_contact_dialog.dart';
+import 'package:alephium_wallet/routes/home/widgets/wallets_list_view.dart';
 import 'package:alephium_wallet/routes/settings/settings_page.dart';
 import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/home/widgets/circle_navigation_bar.dart';
-import 'package:alephium_wallet/routes/home/widgets/wallet_tile.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/utils/theme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -30,11 +31,16 @@ class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late final WalletHomeBloc _walletHomeBloc;
   late final TabController _tabController;
+  late final ValueNotifier<int> _listenable;
   var isDialOpen = ValueNotifier<bool>(false);
   @override
   void initState() {
     FlutterNativeSplash.remove();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 3, vsync: this)
+      ..addListener(() {
+        _listenable.value = _tabController.index;
+      });
+    _listenable = ValueNotifier(_tabController.index);
     _walletHomeBloc = BlocProvider.of<WalletHomeBloc>(context)
       ..add(WalletHomeLoadData());
     super.initState();
@@ -43,6 +49,7 @@ class _HomePageState extends State<HomePage>
   @override
   void dispose() {
     _tabController.dispose();
+    _listenable.dispose();
     super.dispose();
   }
 
@@ -109,46 +116,113 @@ class _HomePageState extends State<HomePage>
                           physics: NeverScrollableScrollPhysics(),
                           controller: _tabController,
                           children: [
-                            BlocBuilder<WalletHomeBloc, WalletHomeState>(
-                              bloc: _walletHomeBloc,
-                              buildWhen: (previous, current) {
-                                return current is! WalletHomeError;
-                              },
-                              builder: (context, state) {
-                                if (state is WalletHomeLoading) {
-                                  return Center(
-                                    child: AlephiumIcon(
-                                      spinning: true,
-                                    ),
-                                  );
-                                } else if (state is WalletHomeCompleted) {
-                                  return RefreshIndicator(
-                                    backgroundColor:
-                                        WalletTheme.instance.primary,
-                                    color: WalletTheme.instance.gradientTwo,
-                                    onRefresh: () async {
-                                      if (state.withLoadingIndicator) return;
-                                      _walletHomeBloc
-                                          .add(WalletHomeRefreshData());
-                                    },
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.only(
-                                        top: 16,
-                                        bottom: 70,
-                                      ),
-                                      itemCount: state.wallets.length,
-                                      itemBuilder: (context, index) {
-                                        return Center(
-                                          child: WalletTile(
-                                              wallet: state.wallets[index]),
-                                        );
-                                      },
-                                    ),
-                                  );
-                                } else {
-                                  return SizedBox();
+                            RefreshIndicator(
+                              backgroundColor: WalletTheme.instance.primary,
+                              color: WalletTheme.instance.gradientTwo,
+                              onRefresh: () async {
+                                if (_walletHomeBloc.state
+                                    is WalletHomeCompleted) {
+                                  final state = _walletHomeBloc.state
+                                      as WalletHomeCompleted;
+                                  if (state.withLoadingIndicator) return;
                                 }
+                                if (_walletHomeBloc.state
+                                    is WalletHomeLoading) {
+                                  return;
+                                }
+                                _walletHomeBloc.add(WalletHomeRefreshData());
                               },
+                              child: CustomScrollView(
+                                slivers: [
+                                  SliverToBoxAdapter(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Material(
+                                        color: WalletTheme.instance.primary,
+                                        elevation: 1,
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              AppBarIconButton(
+                                                tooltip: "QRscanner".tr(),
+                                                label: "QR scan",
+                                                icon: Icon(
+                                                  CupertinoIcons
+                                                      .qrcode_viewfinder,
+                                                ),
+                                                onPressed: () async {
+                                                  var data = await showQRView(
+                                                    context,
+                                                    walletHomeBloc:
+                                                        _walletHomeBloc,
+                                                  );
+                                                  if (data != null) {
+                                                    Navigator.pushNamed(
+                                                        context, Routes.send,
+                                                        arguments: {
+                                                          "wallet":
+                                                              data["wallet"],
+                                                          "address":
+                                                              data["wallet"]
+                                                                  .addresses
+                                                                  .first,
+                                                          "initial-data": data,
+                                                        });
+                                                  }
+                                                },
+                                              ),
+                                              AppBarIconButton(
+                                                tooltip: "signature".tr(),
+                                                label: "Signature",
+                                                icon: Icon(
+                                                  CupertinoIcons.signature,
+                                                ),
+                                                onPressed: () async {
+                                                  Navigator.pushNamed(
+                                                    context,
+                                                    Routes.signMultisigTx,
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  BlocBuilder<WalletHomeBloc, WalletHomeState>(
+                                    bloc: _walletHomeBloc,
+                                    buildWhen: (previous, current) {
+                                      return current is! WalletHomeError;
+                                    },
+                                    builder: (context, state) {
+                                      if (state is WalletHomeLoading) {
+                                        return SliverFillRemaining(
+                                          hasScrollBody: false,
+                                          child: Center(
+                                            child: AlephiumIcon(
+                                              spinning: true,
+                                            ),
+                                          ),
+                                        );
+                                      } else if (state is WalletHomeCompleted) {
+                                        return WalletListView(
+                                          wallets: state.wallets,
+                                        );
+                                      } else {
+                                        return SliverToBoxAdapter();
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                             ContactsPage(),
                             SettingsPage()
@@ -156,74 +230,89 @@ class _HomePageState extends State<HomePage>
                     ),
                   ],
                 )),
-                BlocBuilder<WalletHomeBloc, WalletHomeState>(
-                  builder: (context, state) {
-                    return WalletAppBar(
-                      color: WalletTheme.instance.primary,
-                      elevation: 1,
-                      action: _walletHomeBloc.wallets.isNotEmpty
-                          ? AppBarIconButton(
-                              tooltip: "QRscanner".tr(),
-                              icon: Icon(
-                                Icons.qr_code_scanner,
+                WalletAppBar(
+                    action: ValueListenableBuilder(
+                      valueListenable: _listenable,
+                      builder: (context, value, child) {
+                        if (value == 1)
+                          return AppBarIconButton(
+                            icon: Icon(CupertinoIcons.add),
+                            onPressed: () {
+                              showGeneralDialog(
+                                barrierDismissible: true,
+                                barrierLabel: "AddContactDialog",
+                                context: context,
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        AddContactDialog(
+                                  bloc: context.read<ContactsBloc>(),
+                                ),
+                                transitionDuration:
+                                    const Duration(milliseconds: 200),
+                                transitionBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  return SlideTransition(
+                                    position: animation.drive(
+                                      Tween<Offset>(
+                                        begin: Offset(0, 1),
+                                        end: Offset.zero,
+                                      ),
+                                    ),
+                                    child: child,
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        else
+                          return AppBarIconButton(
+                            tooltip: "newWallet".tr(),
+                            icon: Icon(CupertinoIcons.add),
+                            onPressed: () async {
+                              Navigator.pushNamed(context, Routes.createWallet);
+                            },
+                          );
+                      },
+                    ),
+                    leading: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: BlocBuilder<WalletHomeBloc, WalletHomeState>(
+                        builder: (context, state) {
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              AlephiumIcon(
+                                spinning: state is WalletHomeCompleted &&
+                                    state.withLoadingIndicator,
                               ),
-                              onPressed: () async {
-                                var data = await showQRView(
-                                  context,
-                                  walletHomeBloc: _walletHomeBloc,
-                                );
-                                if (data != null) {
-                                  Navigator.pushNamed(context, Routes.send,
-                                      arguments: {
-                                        "wallet": data["wallet"],
-                                        "address":
-                                            data["wallet"].addresses.first,
-                                        "initial-data": data,
-                                      });
-                                }
-                              },
-                            )
-                          : null,
-                      leading: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            AlephiumIcon(
-                              spinning: state is WalletHomeCompleted &&
-                                  state.withLoadingIndicator,
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${AppStorage.instance.formattedPrice ?? ''}",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineMedium,
-                                  ),
-                                  AutoSizeText(
-                                    'alephiumWallet'.tr(),
-                                    maxLines: 1,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineMedium,
-                                  ),
-                                ],
+                              const SizedBox(
+                                width: 20,
                               ),
-                            )
-                          ],
-                        ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "${AppStorage.instance.formattedPrice ?? ''}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium,
+                                    ),
+                                    AutoSizeText(
+                                      'alephiumWallet'.tr(),
+                                      maxLines: 1,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          );
+                        },
                       ),
-                      withLoadingIndicator: state is WalletHomeCompleted &&
-                          state.withLoadingIndicator,
-                    );
-                  },
-                ),
+                    )),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: CircleNavigationBar(
@@ -253,10 +342,6 @@ class _HomePageState extends State<HomePage>
                           onPressed: () {
                             _tabController.animateTo(2);
                           }),
-                      Center(
-                          child: FloatingAddButton(
-                        isDialOpen: isDialOpen,
-                      ))
                     ],
                     margin: 16.0,
                     borderRadius: BorderRadius.circular(16),

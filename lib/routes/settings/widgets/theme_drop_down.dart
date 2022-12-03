@@ -21,7 +21,7 @@ class _ThemeSwitchState extends State<ThemeSwitch> {
       alignedDropdown: true,
       child: DropdownButtonFormField<ThemeMode>(
         menuMaxHeight: context.height / 2,
-        dropdownColor: WalletTheme.instance.primary,
+        dropdownColor: WalletTheme.instance.dropDownBackground,
         alignment: AlignmentDirectional.bottomEnd,
         elevation: 3,
         borderRadius: BorderRadius.circular(16),

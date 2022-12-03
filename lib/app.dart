@@ -5,6 +5,9 @@ import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/routes/addresses/addresses_route.dart';
 import 'package:alephium_wallet/routes/constants.dart';
 import 'package:alephium_wallet/routes/contacts/contacts_page.dart';
+import 'package:alephium_wallet/routes/multisig_wallet/multisig_wallet.dart';
+import 'package:alephium_wallet/routes/multisig_wallet/widgets/multisig_addresses.dart';
+import 'package:alephium_wallet/routes/multisig_wallet/widgets/sign_multisig_tx.dart';
 import 'package:alephium_wallet/routes/read_only_wallet.dart/read_only_wallet_page.dart';
 import 'package:alephium_wallet/routes/restore_wallet/restore_wallet.dart';
 import 'package:alephium_wallet/routes/send/consolidate_utxos.dart';
@@ -137,6 +140,30 @@ class _AppState extends State<App> {
                     bloc: bloc,
                   ),
                 );
+              } else if (settings.name == Routes.multisigWallet) {
+                Map<String, dynamic> arguments =
+                    settings.arguments as Map<String, dynamic>;
+                final bloc = arguments["bloc"] as CreateWalletBloc;
+                return MaterialPageRoute(
+                  builder: (context) => MultisigWalletPage(
+                    bloc: bloc,
+                  ),
+                );
+              } else if (settings.name == Routes.multisigAddresses) {
+                Map<String, dynamic> arguments =
+                    settings.arguments as Map<String, dynamic>;
+                final bloc = arguments["bloc"] as CreateWalletBloc;
+                final walletsNum = arguments["walletsNum"] as int;
+                final requiredNum = arguments["requiredNum"] as int;
+                final title = arguments["title"] as String?;
+                return MaterialPageRoute(
+                  builder: (context) => MultisigAddressesPage(
+                    bloc: bloc,
+                    walletsNum: walletsNum,
+                    requiredNum: requiredNum,
+                    title: title,
+                  ),
+                );
               } else if (settings.name == Routes.restoreWallet) {
                 Map<String, dynamic> arguments =
                     settings.arguments as Map<String, dynamic>;
@@ -176,10 +203,12 @@ class _AppState extends State<App> {
                 Map<String, dynamic> arguments =
                     settings.arguments as Map<String, dynamic>;
                 final detailsBloc =
-                    arguments["wallet-details"] as WalletDetailsBloc;
-                return MaterialPageRoute(
+                    arguments["wallet-details"] as WalletDetailsBloc?;
+                final wallet = arguments["wallet"] as WalletStore?;
+                return MaterialPageRoute<String>(
                   builder: (context) => AddressesPage(
                     bloc: detailsBloc,
+                    wallet: wallet,
                   ),
                 );
               } else if (settings.name == Routes.walletSettings) {
@@ -218,8 +247,11 @@ class _AppState extends State<App> {
                 return MaterialPageRoute(
                   builder: (context) => ContactsPage(),
                 );
+              } else if (settings.name == Routes.signMultisigTx) {
+                return MaterialPageRoute(
+                  builder: (context) => SignMultisigTxView(),
+                );
               }
-
               return null;
             },
           );

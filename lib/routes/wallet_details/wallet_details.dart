@@ -86,7 +86,7 @@ class _WalletDetailsState extends State<WalletDetails> {
                     slivers: [
                       const SliverToBoxAdapter(
                         child: SizedBox(
-                          height: 40,
+                          height: 10,
                         ),
                       ),
                       SliverToBoxAdapter(
@@ -204,7 +204,7 @@ class _WalletDetailsState extends State<WalletDetails> {
           ),
         ],
       ),
-      floatingActionButton: (!widget.wallet.readOnly)
+      floatingActionButton: (widget.wallet.type != WalletType.readOnly)
           ? FloatingActionButton.extended(
               heroTag: "button",
               label: Text(

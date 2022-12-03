@@ -57,7 +57,7 @@ class _ReceivePageState extends State<ReceivePage> {
             label: "address".tr(),
             initialAddress: _addressStore,
             onChanged: (value) {
-              _addressStore = value;
+              if (value != null) _addressStore = value;
               setState(() {});
             },
           ),

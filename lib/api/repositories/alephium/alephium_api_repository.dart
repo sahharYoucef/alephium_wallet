@@ -10,10 +10,6 @@ import 'dart:async';
 import 'package:dio/dio.dart' hide Headers;
 
 import 'package:alephium_dart/alephium_dart.dart';
-
-import 'package:alephium_wallet/api/dto_models/sweep_result_dto.dart';
-import 'package:alephium_wallet/api/dto_models/transaction_build_dto.dart';
-import 'package:alephium_wallet/api/dto_models/transaction_result_dto.dart';
 import 'package:alephium_wallet/api/utils/either.dart';
 import 'package:alephium_wallet/api/utils/error_handler.dart';
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
@@ -27,6 +23,7 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
   late ExplorerClient _explorerClient;
   late CoingeckoClient _coingeckoClient;
   late InfosClient _infosClient;
+  late MultisigClient _multisigClient;
   late Dio _dio;
 
   Network network;
@@ -44,6 +41,7 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
     _explorerClient = ExplorerClient(_dio, baseUrl: network.explorerApiHost);
     _coingeckoClient = CoingeckoClient(_dio);
     _infosClient = InfosClient(_dio);
+    _multisigClient = MultisigClient(_dio, baseUrl: network.nodeHost);
   }
 
   set changeNetwork(Network network) {
@@ -54,6 +52,83 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
     _explorerClient =
         ExplorerClient(_dio, baseUrl: this.network.explorerApiHost);
     _coingeckoClient = CoingeckoClient(_dio);
+    _multisigClient = MultisigClient(_dio, baseUrl: network.nodeHost);
+  }
+
+  @override
+  FutureOr<Either<BuildMultisigAddressResult>> multisigAddress(
+      {required List<String> signatures, required int mrequired}) async {
+    try {
+      final data = await _multisigClient.postMultisigAddress(
+          data: BuildMultisigAddress(
+        keys: signatures,
+        mrequired: mrequired,
+      ));
+      return Either<BuildMultisigAddressResult>(data: data);
+    } on Exception catch (e, trace) {
+      return Either<BuildMultisigAddressResult>(
+          error: ApiError(exception: e, trace: trace));
+    }
+  }
+
+  @override
+  FutureOr<Either<BuildTransactionResult>> buildMultisigTx({
+    required List<String> fromPublicKey,
+    required String toAddress,
+    required String fromAddress,
+    required BigInt amount,
+    int? lockTime,
+    BigInt? gasPrice,
+    int? gasAmount,
+    List<TokenStore>? tokens,
+  }) async {
+    try {
+      final data = await _multisigClient.postMultisigBuild(
+          data: BuildMultisig(
+        fromAddress: fromAddress,
+        fromPublicKeys: fromPublicKey,
+        destinations: [
+          TransactionDestination(
+            address: toAddress,
+            attoAlphAmount: amount,
+            lockTime: lockTime,
+            tokens: tokens
+                ?.map<Token>((token) => Token(
+                      id: token.id,
+                      amount: token.amount,
+                    ))
+                .toList(),
+          ),
+        ],
+        gasPrice: gasPrice,
+        gasAmount: gasAmount,
+      ));
+      return Either<BuildTransactionResult>(
+        data: data,
+      );
+    } on Exception catch (e, trace) {
+      return Either<BuildTransactionResult>(
+          error: ApiError(exception: e, trace: trace));
+    }
+  }
+
+  @override
+  FutureOr<Either<TxResult>> submitMultisigTx({
+    required List<String> signatures,
+    required String unsignedTx,
+  }) async {
+    try {
+      final data = await _multisigClient.postMultisigSubmit(
+          data: SubmitMultisig(
+        signatures: signatures,
+        unsignedTx: unsignedTx,
+      ));
+      return Either<TxResult>(
+        data: data,
+      );
+    } on Exception catch (e, trace) {
+      return Either<TxResult>(error: ApiError(exception: e, trace: trace));
+    }
   }
 
   @override
@@ -111,7 +186,7 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
   }
 
   @override
-  Future<Either<TransactionBuildDto>> createTransaction({
+  Future<Either<BuildTransactionResult>> createTransaction({
     required String fromPublicKey,
     required String toAddress,
     required BigInt amount,
@@ -140,41 +215,27 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
         gasPrice: gasPrice,
         gasAmount: gasAmount,
       ));
-      return Either<TransactionBuildDto>(
-          data: TransactionBuildDto(
-        unsignedTx: data.unsignedTx,
-        fromGroup: data.fromGroup,
-        toGroup: data.toGroup,
-        txId: data.txId,
-        gasAmount: data.gasAmount,
-        gasPrice: data.gasPrice,
-      ));
+      return Either<BuildTransactionResult>(data: data);
     } on Exception catch (e, trace) {
-      return Either<TransactionBuildDto>(
+      return Either<BuildTransactionResult>(
           error: ApiError(exception: e, trace: trace));
     }
   }
 
   @override
-  Future<Either<TransactionResultDTO>> sendTransaction(
+  Future<Either<TxResult>> sendTransaction(
       {required String signature, required String unsignedTx}) async {
     try {
       var data = await _transactionClient.postTransactionsSubmit(
           SubmitTransaction(signature: signature, unsignedTx: unsignedTx));
-      return Either<TransactionResultDTO>(
-          data: TransactionResultDTO(
-        txId: data.txId,
-        fromGroup: data.fromGroup,
-        toGroup: data.toGroup,
-      ));
+      return Either<TxResult>(data: data);
     } on Exception catch (e, trace) {
-      return Either<TransactionResultDTO>(
-          error: ApiError(exception: e, trace: trace));
+      return Either<TxResult>(error: ApiError(exception: e, trace: trace));
     }
   }
 
   @override
-  Future<Either<SweepResultDTO>> sweepTransaction({
+  Future<Either<BuildSweepAddressTransactionsResult>> sweepTransaction({
     required String address,
     required String publicKey,
     required String toAddress,
@@ -185,21 +246,9 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
         toAddress: toAddress,
         fromPublicKey: publicKey,
       ));
-      return Either<SweepResultDTO>(
-          data: SweepResultDTO(
-        unsignedTxs: data.unsignedTxs
-            ?.map((e) => TransactionBuildDto.fromSweep(
-                  unsignedTx: e.unsignedTx,
-                  txId: e.txId,
-                  gasAmount: e.gasAmount,
-                  gasPrice: e.gasPrice,
-                ))
-            .toList(),
-        fromGroup: data.fromGroup,
-        toGroup: data.toGroup,
-      ));
+      return Either<BuildSweepAddressTransactionsResult>(data: data);
     } on Exception catch (e, trace) {
-      return Either<SweepResultDTO>(
+      return Either<BuildSweepAddressTransactionsResult>(
           error: ApiError(exception: e, trace: trace));
     }
   }

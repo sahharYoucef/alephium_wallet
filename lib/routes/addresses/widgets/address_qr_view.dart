@@ -8,12 +8,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class AddressQRDialog extends StatelessWidget {
+class AddressQRDialog extends StatefulWidget {
   final AddressStore addressStore;
   AddressQRDialog({
     Key? key,
     required this.addressStore,
   }) : super(key: key);
+
+  @override
+  State<AddressQRDialog> createState() => _AddressQRDialogState();
+}
+
+class _AddressQRDialogState extends State<AddressQRDialog>
+    with SingleTickerProviderStateMixin {
+  late final TabController _controller;
+  late String _value;
+  @override
+  void initState() {
+    _controller = TabController(length: 2, vsync: this);
+    _value = widget.addressStore.address;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +44,35 @@ class AddressQRDialog extends StatelessWidget {
         padding: EdgeInsets.zero,
         shrinkWrap: true,
         children: [
+          TabBar(
+            splashBorderRadius: BorderRadius.circular(8),
+            indicator: BoxDecoration(
+                color: WalletTheme.instance.buttonsBackground,
+                border: Border.all(
+                  color: WalletTheme.instance.primary,
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(8)),
+            onTap: (value) {
+              if (value == 0) {
+                _value = widget.addressStore.address;
+              } else {
+                _value = widget.addressStore.publicKey!;
+              }
+              setState(() {});
+            },
+            labelColor: WalletTheme.instance.buttonsForeground,
+            unselectedLabelColor: WalletTheme.instance.textColor,
+            controller: _controller,
+            tabs: [
+              Tab(
+                child: Text('Address'),
+              ),
+              Tab(
+                child: Text('Public Key'),
+              )
+            ],
+          ),
           const SizedBox(
             height: 6,
           ),
@@ -33,7 +83,7 @@ class AddressQRDialog extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: QrImage(
-                data: addressStore.address,
+                data: _value,
                 backgroundColor: Colors.transparent,
                 foregroundColor: WalletTheme.instance.textColor,
                 version: QrVersions.auto,
@@ -44,41 +94,31 @@ class AddressQRDialog extends StatelessWidget {
           const SizedBox(
             height: 6,
           ),
-          Row(
-            children: [
-              Expanded(
-                child: AddressText(
-                  address: addressStore.address,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        foreground: Paint()
-                          ..shader = LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [
-                              WalletTheme.instance.gradientOne,
-                              WalletTheme.instance.gradientTwo,
-                            ],
-                          ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
-                      ),
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                Expanded(
+                  child: AddressText(
+                    address: _value,
+                  ),
                 ),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              IconButton(
-                  tooltip: "copy".tr(),
-                  onPressed: () async {
-                    var data = ClipboardData(text: addressStore.address);
-                    await Clipboard.setData(data);
-                    context.showSnackBar(
-                      "addressCopied".tr(),
-                    );
-                  },
-                  icon: GradientIcon(
-                    icon: Icons.copy,
-                  )),
-            ],
+                const SizedBox(
+                  width: 8,
+                ),
+                IconButton(
+                    tooltip: "copy".tr(),
+                    onPressed: () async {
+                      var data = ClipboardData(text: _value);
+                      await Clipboard.setData(data);
+                      context.showSnackBar(
+                        "addressCopied".tr(),
+                      );
+                    },
+                    icon: GradientIcon(
+                      icon: Icons.copy,
+                    )),
+              ],
+            ),
           ),
         ],
       ),

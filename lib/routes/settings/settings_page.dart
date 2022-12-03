@@ -128,17 +128,17 @@ class SettingsPage extends StatelessWidget {
                   },
               ),
             ])),
-        Center(
-          child: Container(
-            constraints: BoxConstraints(
-              maxWidth: WalletTheme.instance.maxWidth,
-            ),
+        const SizedBox(
+          height: 20,
+        ),
+        Material(
+          elevation: 2,
+          color: WalletTheme.instance.primary,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                const Divider(),
                 const SizedBox(
                   height: 10,
                 ),

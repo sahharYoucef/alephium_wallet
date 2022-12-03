@@ -1,13 +1,11 @@
 import 'package:alephium_dart/alephium_dart.dart';
-import 'package:alephium_wallet/api/dto_models/balance_dto.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:uuid/uuid.dart';
 
 class AlephiumWalletService extends BaseWalletService {
-  AlephiumWalletService({Blockchain blockchain = Blockchain.Alephium})
-      : super(blockchain);
+  AlephiumWalletService();
 
   @override
   String signTransaction(String txHash, String privetKey) {
@@ -20,13 +18,17 @@ class AlephiumWalletService extends BaseWalletService {
   }
 
   @override
+  String publicKeyFromAddress(String publicKey) {
+    return WalletService.addressFromPublicKey(publicKey);
+  }
+
+  @override
   WalletStore importWallet(String mnemonic, String passphrase) {
     var wallet = WalletService.importWallet(mnemonic, passphrase);
     final String id = Uuid().v1();
     return WalletStore(
       mainAddress: wallet.addresses.first.address,
       id: id,
-      blockchain: blockchain,
       mnemonic: wallet.mnemonic,
       seed: wallet.seed,
       passphrase: wallet.passphrase,
@@ -51,7 +53,6 @@ class AlephiumWalletService extends BaseWalletService {
     final String id = Uuid().v1();
     return WalletStore(
       id: id,
-      blockchain: blockchain,
       mnemonic: wallet.mnemonic,
       seed: wallet.seed,
       passphrase: wallet.passphrase,

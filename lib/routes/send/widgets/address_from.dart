@@ -6,13 +6,13 @@ import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 
 class AddressFromDropDownMenu extends StatefulWidget {
-  final Function(AddressStore)? onChanged;
-  final List<AddressStore> addresses;
+  final Function(AddressStore?)? onChanged;
+  final List<AddressStore>? addresses;
   final String label;
   final AddressStore? initialAddress;
   AddressFromDropDownMenu({
     Key? key,
-    required this.addresses,
+    this.addresses = const <AddressStore>[],
     required this.label,
     this.initialAddress,
     this.onChanged,
@@ -25,11 +25,24 @@ class AddressFromDropDownMenu extends StatefulWidget {
 
 class _AddressFromDropDownMenuState extends State<AddressFromDropDownMenu> {
   AddressStore? _value;
+  late List<AddressStore> addresses;
 
   @override
   void initState() {
     _value = widget.initialAddress;
+    addresses = widget.addresses ?? [];
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant AddressFromDropDownMenu oldWidget) {
+    if (oldWidget.addresses != widget.addresses) {
+      setState(() {
+        addresses = widget.addresses ?? [];
+        if (widget.onChanged != null) widget.onChanged!(null);
+      });
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -40,10 +53,13 @@ class _AddressFromDropDownMenuState extends State<AddressFromDropDownMenu> {
         menuMaxHeight: context.height / 2,
         alignment: AlignmentDirectional.bottomStart,
         elevation: 0,
-        dropdownColor: WalletTheme.instance.primary,
+        dropdownColor: WalletTheme.instance.dropDownBackground,
         borderRadius: BorderRadius.circular(16),
         decoration: InputDecoration(
-          label: Text(widget.label),
+          label: Text(
+            widget.label,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
           suffixIcon: GradientIcon(
             icon: Icons.arrow_drop_down,
             size: 24,
@@ -56,7 +72,7 @@ class _AddressFromDropDownMenuState extends State<AddressFromDropDownMenu> {
         isDense: true,
         icon: const SizedBox(),
         iconSize: 24,
-        items: widget.addresses
+        items: addresses
             .map((address) => DropdownMenuItem<AddressStore>(
                   value: address,
                   child: Row(
@@ -74,20 +90,22 @@ class _AddressFromDropDownMenuState extends State<AddressFromDropDownMenu> {
                       Text(
                         address.formattedBalance,
                         style: Theme.of(context).textTheme.bodySmall,
-                      )
+                      ).obscure(),
                     ],
                   ),
                 ))
             .toList(),
-        onChanged: (value) {
-          if (value == null) return;
-          setState(() {
-            _value = value;
-          });
-          if (widget.onChanged != null) {
-            widget.onChanged!(_value!);
-          }
-        },
+        onChanged: addresses.isEmpty
+            ? null
+            : (value) {
+                if (value == null) return;
+                setState(() {
+                  _value = value;
+                });
+                if (widget.onChanged != null) {
+                  widget.onChanged!(_value!);
+                }
+              },
       ),
     );
   }
