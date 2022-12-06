@@ -42,11 +42,11 @@ class _MultisigAddressesPageState extends State<MultisigAddressesPage> {
           child: Column(children: [
             WalletAppBar(
               label: Text(
-                'multisigAddresses'.tr(),
+                'multisigKeys'.tr(),
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               action: AppBarIconButton(
-                tooltip: "add address".tr(),
+                tooltip: "addAddress".tr(),
                 icon: Icon(
                   Icons.add,
                 ),
@@ -79,8 +79,7 @@ class _MultisigAddressesPageState extends State<MultisigAddressesPage> {
                           height: 20,
                         ),
                         Text(
-                          "Please add addresses public keys to be used as signers from your multisig wallet:"
-                              .tr(),
+                          "multisigKeysDescription".tr(),
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         const SizedBox(
@@ -153,8 +152,7 @@ class _MultisigAddressesPageState extends State<MultisigAddressesPage> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
-                            "Please keep all public keys and private keys for those addresses safe, also please note that order of those addresses matter when restoring your address."
-                                .tr(),
+                            "multisigSafetyMsg".tr(),
                             style: Theme.of(context).textTheme.bodyMedium,
                             textAlign: TextAlign.center,
                           ),
@@ -191,6 +189,10 @@ class _MultisigAddressesPageState extends State<MultisigAddressesPage> {
         Positioned.fill(
           child: BlocBuilder<CreateWalletBloc, CreateWalletState>(
               bloc: widget.bloc,
+              buildWhen: (previous, current) {
+                return current is GenerateWalletLoading ||
+                    previous is GenerateWalletLoading;
+              },
               builder: (context, state) {
                 return Visibility(
                   visible: state is GenerateWalletLoading,

@@ -7,7 +7,7 @@ class BalanceStore {
   final BigInt? lockedBalance;
   final String? lockedBalanceHint;
   final String address;
-  final Network network;
+  final NetworkType network;
   final List<TokenStore>? tokens;
 
   BalanceStore({
@@ -26,7 +26,7 @@ class BalanceStore {
     final _balanceHint = data["balanceHint"];
     final _lockedBalance = BigInt.tryParse("${data["balanceLocked"]}");
     final _lockedBalanceHint = data["balanceLockedHint"];
-    final _network = Network.network(data["network"]);
+    final _network = NetworkType.network(data["network"]);
     final _tokens = TokenStore.getTokens(data["tokens"]);
     return BalanceStore(
       address: _address,

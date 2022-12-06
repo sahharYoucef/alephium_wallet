@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WalletTheme {
   late final Color textColor;
@@ -68,7 +69,7 @@ class WalletTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.w),
             side: BorderSide(
               width: 2,
               color: primary,
@@ -82,11 +83,11 @@ class WalletTheme {
           disabledBackgroundColor: disabledButtonsBackground,
           disabledForegroundColor: buttonsForeground,
           backgroundColor: buttonsBackground,
-          minimumSize: Size(450, 50),
+          minimumSize: Size(450, 50.h),
           textStyle: TextStyle(
             fontFamily: fontFamily,
             color: textColor,
-            fontSize: 16,
+            fontSize: 16.sp,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -103,8 +104,8 @@ class WalletTheme {
           fontWeight: FontWeight.w400,
           color: textColor,
           fontFamily: fontFamily,
-          fontSize: 16,
-          height: 1.3,
+          fontSize: 16.sp,
+          height: 1.3.h,
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -113,15 +114,15 @@ class WalletTheme {
         contentPadding: EdgeInsets.symmetric(horizontal: 16),
         hintStyle: TextStyle(
           fontWeight: FontWeight.w400,
-          fontSize: 16,
+          fontSize: 16.sp,
           color: textColor.withOpacity(.6),
-          height: 1.3,
+          height: 1.3.h,
         ),
         labelStyle: TextStyle(
           fontWeight: FontWeight.w400,
-          fontSize: 16,
+          fontSize: 16.sp,
           color: textColor.withOpacity(.6),
-          height: 1.3,
+          height: 1.3.h,
         ),
         filled: true,
         fillColor: secondary,
@@ -164,7 +165,7 @@ class WalletTheme {
       textTheme: TextTheme(
         headlineMedium: TextStyle(
           fontWeight: FontWeight.w100,
-          fontSize: 20,
+          fontSize: 20.sp,
           letterSpacing: 1.2,
           height: 1.3,
           textBaseline: TextBaseline.alphabetic,
@@ -172,24 +173,24 @@ class WalletTheme {
         ),
         headlineSmall: TextStyle(
           fontWeight: FontWeight.w500,
-          fontSize: 18,
+          fontSize: 18.sp,
           letterSpacing: 1.1,
           color: textColor,
         ),
         bodySmall: TextStyle(
           fontWeight: FontWeight.w500,
-          fontSize: 14,
+          fontSize: 14.sp,
           color: textColor,
         ),
         bodyMedium: TextStyle(
           fontWeight: FontWeight.w400,
-          fontSize: 16,
+          fontSize: 16.sp,
           color: textColor,
           height: 1.3,
         ),
         bodyLarge: TextStyle(
           fontWeight: FontWeight.w400,
-          fontSize: 18,
+          fontSize: 18.sp,
           height: 1.3,
           color: textColor,
         ),

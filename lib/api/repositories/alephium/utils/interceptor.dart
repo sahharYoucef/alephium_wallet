@@ -16,16 +16,7 @@ class ApiInterceptor extends QueuedInterceptorsWrapper {
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) async {
     LoggerService.instance.log(err.error, level: Level.debug);
-    if (err.response?.statusCode == 429 ||
-        err.type == DioErrorType.connectTimeout) {
-      try {
-        var res = await dio.fetch(err.requestOptions);
-        handler.resolve(res);
-      } catch (e, trace) {
-        LoggerService.instance.log(trace, level: Level.debug);
-        handler.reject(err);
-      }
-    }
+
     super.onError(err, handler);
   }
 

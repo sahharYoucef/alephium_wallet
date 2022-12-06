@@ -18,7 +18,7 @@ class TransactionStore extends Equatable {
   final String walletId;
   final List<TransactionRefStore> refsIn;
   final List<TransactionRefStore> refsOut;
-  final Network network;
+  final NetworkType network;
 
   TransactionStore({
     required this.txHash,
@@ -56,7 +56,7 @@ class TransactionStore extends Equatable {
     final _walletId = data["walletId"];
     final _txStatus = _getStatus(data["status"] ?? "completed");
     final _timeStamp = data["timeStamp"];
-    final _network = Network.network(data["network"]);
+    final _network = NetworkType.network(data["network"]);
     final _transactionID = data["txID"];
     final _gasPrice = BigInt.tryParse(data["gasPrice"]);
     final _refsIn = _getRefs(data["refsIn"] as Uint8List?);
@@ -89,7 +89,7 @@ class TransactionStore extends Equatable {
     String? walletId,
     List<TransactionRefStore>? refsIn,
     List<TransactionRefStore>? refsOut,
-    Network? network,
+    NetworkType? network,
     String? transactionID,
   }) {
     return TransactionStore(

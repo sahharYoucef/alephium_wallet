@@ -26,7 +26,7 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
   late MultisigClient _multisigClient;
   late Dio _dio;
 
-  Network network;
+  NetworkType network;
 
   AlephiumApiRepository(this.network) : super(network) {
     _dio = Dio(
@@ -36,23 +36,25 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
       ),
     );
     _dio.interceptors.add(ApiInterceptor(_dio));
-    _transactionClient = TransactionClient(_dio, baseUrl: network.nodeHost);
-    _addressClient = AddressClient(_dio, baseUrl: network.nodeHost);
-    _explorerClient = ExplorerClient(_dio, baseUrl: network.explorerApiHost);
+    _transactionClient =
+        TransactionClient(_dio, baseUrl: network.data.nodeHost);
+    _addressClient = AddressClient(_dio, baseUrl: network.data.nodeHost);
+    _explorerClient =
+        ExplorerClient(_dio, baseUrl: network.data.explorerApiHost);
     _coingeckoClient = CoingeckoClient(_dio);
     _infosClient = InfosClient(_dio);
-    _multisigClient = MultisigClient(_dio, baseUrl: network.nodeHost);
+    _multisigClient = MultisigClient(_dio, baseUrl: network.data.nodeHost);
   }
 
-  set changeNetwork(Network network) {
+  set changeNetwork(NetworkType network) {
     this.network = network;
     _transactionClient =
-        TransactionClient(_dio, baseUrl: this.network.nodeHost);
-    _addressClient = AddressClient(_dio, baseUrl: this.network.nodeHost);
+        TransactionClient(_dio, baseUrl: this.network.data.nodeHost);
+    _addressClient = AddressClient(_dio, baseUrl: this.network.data.nodeHost);
     _explorerClient =
-        ExplorerClient(_dio, baseUrl: this.network.explorerApiHost);
+        ExplorerClient(_dio, baseUrl: this.network.data.explorerApiHost);
     _coingeckoClient = CoingeckoClient(_dio);
-    _multisigClient = MultisigClient(_dio, baseUrl: network.nodeHost);
+    _multisigClient = MultisigClient(_dio, baseUrl: network.data.nodeHost);
   }
 
   @override
@@ -249,6 +251,19 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
       return Either<BuildSweepAddressTransactionsResult>(data: data);
     } on Exception catch (e, trace) {
       return Either<BuildSweepAddressTransactionsResult>(
+          error: ApiError(exception: e, trace: trace));
+    }
+  }
+
+  @override
+  Future<Either<DecodeUnsignedTxResult>> decodeTransaction(
+      {required String unsignedTx}) async {
+    try {
+      final data = await _transactionClient.postTransactionsDecodeUnsignedTx(
+          DecodeTransaction(unsignedTx: unsignedTx));
+      return Either<DecodeUnsignedTxResult>(data: data);
+    } on Exception catch (e, trace) {
+      return Either<DecodeUnsignedTxResult>(
           error: ApiError(exception: e, trace: trace));
     }
   }

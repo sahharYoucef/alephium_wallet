@@ -1,8 +1,11 @@
+import 'package:alephium_dart/alephium_dart.dart';
+import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/api/utils/constants.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
+import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -13,7 +16,9 @@ part 'sign_tx_state.dart';
 
 class SignTxBloc extends Bloc<SignTxEvent, SignTxState> {
   final BaseWalletService walletService;
+  final BaseApiRepository repository;
   String? txId;
+  String? unsignedTx;
   AddressStore? addressStore;
   final AuthenticationService authenticationService;
 
@@ -24,10 +29,12 @@ class SignTxBloc extends Bloc<SignTxEvent, SignTxState> {
   SignTxBloc(
     this.walletService,
     this.authenticationService,
+    this.repository,
   ) : super(SignTxUpdateStatus()) {
     on<SignTxEvent>((event, emit) async {
       if (event is UpdateSignTxDataEvent) {
         txId = event.txId;
+        unsignedTx = event.unsignedTx;
         addressStore = event.address;
         emit(SignTxUpdateStatus(
           walletStore: event.walletStore,
@@ -40,6 +47,34 @@ class SignTxBloc extends Bloc<SignTxEvent, SignTxState> {
           address: addressStore,
           reset: true,
         ));
+      } else if (event is VerifyMultisigTransaction) {
+        try {
+          emit(SignTxLoading());
+          final data =
+              await repository.decodeTransaction(unsignedTx: unsignedTx!);
+          if (data.hasException || data.data == null) {
+            emit(SignTxError(
+              message: data.exception?.message ?? 'Unknown error',
+            ));
+            return;
+          }
+          if (data.data!.unsignedTx!.txId != txId) {
+            emit(SignTxError(
+              message: "invalidTransactionDetails".tr(),
+            ));
+            return;
+          }
+          emit(
+            TxIdVerifyCompleted(
+              tx: data.data!,
+              unsignedTx: unsignedTx!,
+            ),
+          );
+        } catch (e) {
+          emit(SignTxError(
+            message: kErrorMessageGenericError,
+          ));
+        }
       } else if (event is SignMultisigTransaction) {
         try {
           emit(SignTxLoading());
@@ -49,7 +84,7 @@ class SignTxBloc extends Bloc<SignTxEvent, SignTxState> {
             );
             if (!didAuthenticate) {
               emit(SignTxError(
-                message: 'Unknown error',
+                message: kErrorMessageGenericError,
               ));
               return;
             }

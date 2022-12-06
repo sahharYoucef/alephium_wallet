@@ -2,6 +2,7 @@ import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 
 class MultisigSlider extends StatefulWidget {
   final void Function(int, int) onChanged;
@@ -31,7 +32,10 @@ class _MultisigSliderState extends State<MultisigSlider> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Select number of signer addresses "),
+          Text(
+            "selectNofSigners".tr(),
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
           const SizedBox(
             height: 10,
           ),
@@ -79,7 +83,10 @@ class _MultisigSliderState extends State<MultisigSlider> {
           const SizedBox(
             height: 10,
           ),
-          Text("Select signature required for transaction validation"),
+          Text(
+            "selectNofRequiredSigners".tr(),
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
           const SizedBox(
             height: 10,
           ),

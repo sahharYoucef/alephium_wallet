@@ -1,4 +1,3 @@
-import 'package:alephium_wallet/app.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/log/logger_service.dart';
 import 'package:alephium_wallet/routes/contacts/widgets/choose_wallet_dialog.dart';
@@ -153,7 +152,8 @@ extension Helper on BuildContext {
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? showSnackBar(
       String content,
       {Level level = Level.info}) {
-    return scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
+    ScaffoldMessenger.of(this).removeCurrentSnackBar();
+    return ScaffoldMessenger.of(this).showSnackBar(SnackBar(
         margin: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         backgroundColor: level == Level.error
@@ -179,6 +179,7 @@ extension Helper on BuildContext {
             child: AutoSizeText(
               content,
               maxFontSize: 14,
+              maxLines: 3,
               style: Theme.of(this)
                   .textTheme
                   .bodyMedium!
@@ -190,7 +191,7 @@ extension Helper on BuildContext {
           ),
           InkWell(
             onTap: () {
-              scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
+              ScaffoldMessenger.of(this).hideCurrentSnackBar();
             },
             child: Icon(
               Icons.close,

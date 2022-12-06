@@ -32,7 +32,7 @@ class _WalletDropdownButtonState extends State<WalletDropdownButton> {
       isExpanded: true,
       validator: (value) {
         if (value == null) {
-          return "Please select a wallet";
+          return "selectWallet".tr();
         }
         return null;
       },
@@ -43,7 +43,7 @@ class _WalletDropdownButtonState extends State<WalletDropdownButton> {
         widget.onChanged(value!);
       },
       decoration: InputDecoration(
-        hintText: "Please select a wallet",
+        hintText: "selectWallet".tr(),
         label: Text(
           "wallet".tr(),
           style: Theme.of(context).textTheme.bodyMedium,

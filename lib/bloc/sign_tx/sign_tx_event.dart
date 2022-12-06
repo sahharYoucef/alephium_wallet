@@ -23,11 +23,13 @@ class SignMultisigTransaction extends SignTxEvent {
 
 class UpdateSignTxDataEvent extends SignTxEvent {
   final String? txId;
+  final String? unsignedTx;
   final AddressStore? address;
   final WalletStore? walletStore;
 
   UpdateSignTxDataEvent({
     this.txId,
+    this.unsignedTx,
     this.address,
     this.walletStore,
   });
@@ -35,7 +37,15 @@ class UpdateSignTxDataEvent extends SignTxEvent {
   @override
   List<Object?> get props => [
         txId,
+        unsignedTx,
         address,
         walletStore,
       ];
+}
+
+class VerifyMultisigTransaction extends SignTxEvent {
+  VerifyMultisigTransaction();
+
+  @override
+  List<Object?> get props => [];
 }

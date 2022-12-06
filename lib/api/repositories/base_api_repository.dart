@@ -9,7 +9,9 @@ import '../../storage/models/transaction_store.dart';
 import '../utils/either.dart';
 
 abstract class BaseApiRepository {
-  Network network;
+  NetworkType network;
+
+  set changeNetwork(NetworkType network);
 
   BaseApiRepository(this.network);
 
@@ -65,6 +67,10 @@ abstract class BaseApiRepository {
 
   FutureOr<Either<TxResult>> submitMultisigTx({
     required List<String> signatures,
+    required String unsignedTx,
+  });
+
+  FutureOr<Either<DecodeUnsignedTxResult>> decodeTransaction({
     required String unsignedTx,
   });
 }

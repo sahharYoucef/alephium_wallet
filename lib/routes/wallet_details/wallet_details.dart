@@ -99,12 +99,9 @@ class _WalletDetailsState extends State<WalletDetails> {
                                 _refresh?.complete();
                               }
                             } else if (state is WalletDetailsError) {
-                              if (state is WalletDetailsCompleted) {
-                                _refresh?.complete();
-                                if (state.message != null)
-                                  context.showSnackBar(state.message!,
-                                      level: Level.info);
-                              }
+                              if (state.message != null)
+                                context.showSnackBar(state.message!,
+                                    level: Level.error);
                             }
                           },
                           builder: (context, state) {
@@ -141,7 +138,7 @@ class _WalletDetailsState extends State<WalletDetails> {
                               return previous.transactions !=
                                   current.transactions;
                             }
-                            return true;
+                            return current is! WalletDetailsError;
                           },
                           builder: (context, state) {
                             return StickyHeader(state,
@@ -186,7 +183,7 @@ class _WalletDetailsState extends State<WalletDetails> {
             child: WalletAppBar(
                 controller: scrollController,
                 label: Text(
-                  '${widget.wallet.title} ${'wallet'.tr()}',
+                  '${widget.wallet.title?.capitalize}',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 action: AppBarIconButton(

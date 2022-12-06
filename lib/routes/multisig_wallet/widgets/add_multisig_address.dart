@@ -29,7 +29,7 @@ class AddMultisigAddressDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Add public key".tr(),
+              "addPublicKey".tr(),
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(
@@ -40,8 +40,7 @@ class AddMultisigAddressDialog extends StatelessWidget {
               height: 6,
             ),
             Text(
-              "Add public key to the list by scanning qr or paste clipboard or from your existing wallets"
-                  .tr(),
+              "addPublicKeyDescription".tr(),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(
@@ -78,7 +77,7 @@ class AddMultisigAddressDialog extends StatelessWidget {
                             Icon(Icons.paste),
                             const Spacer(),
                             Text(
-                              "paste data from clipboard".tr(),
+                              "clipboardIconMsg".tr(),
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
@@ -134,7 +133,7 @@ class AddMultisigAddressDialog extends StatelessWidget {
                               height: 10,
                             ),
                             Text(
-                              "scan address public key".tr(),
+                              "QrIconMsg".tr(),
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
@@ -171,9 +170,8 @@ class AddMultisigAddressDialog extends StatelessWidget {
                           : () async {
                               final wallet = await showChooseWalletDialog(
                                 context,
-                                title: "wallets".tr(),
-                                content:
-                                    "Please choose wallet to add address from:",
+                                title: "alephiumWallet".tr(),
+                                content: "selectKeyDialogMessage".tr(),
                               );
                               if (wallet == null) {
                                 return;
@@ -196,7 +194,7 @@ class AddMultisigAddressDialog extends StatelessWidget {
                               height: 10,
                             ),
                             Text(
-                              "address from your wallets".tr(),
+                              "selectKeyIconMsg".tr(),
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!

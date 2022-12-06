@@ -70,15 +70,14 @@ class _ContactsPageState extends State<ContactsPage>
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Text(
-                    "Addresses book is empty, Add new one to your addresses book"
-                        .tr(),
+                    "addressBookEmpty".tr(),
                     style: Theme.of(context).textTheme.bodyLarge,
                     textAlign: TextAlign.center,
                   ),
                 ),
                 AppBarIconButton(
                   icon: Icon(CupertinoIcons.add),
-                  label: "Add contact",
+                  label: "addContact".tr(),
                   onPressed: () {
                     showGeneralDialog(
                       barrierDismissible: true,

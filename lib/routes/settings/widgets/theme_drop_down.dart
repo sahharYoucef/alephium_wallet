@@ -6,15 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class ThemeSwitch extends StatefulWidget {
+class ThemeSwitch extends StatelessWidget {
   const ThemeSwitch({super.key});
-
-  @override
-  State<ThemeSwitch> createState() => _ThemeSwitchState();
-}
-
-class _ThemeSwitchState extends State<ThemeSwitch> {
-  ThemeMode _themeMode = AppStorage.instance.themeMode;
   @override
   Widget build(BuildContext context) {
     return ButtonTheme(
@@ -27,11 +20,7 @@ class _ThemeSwitchState extends State<ThemeSwitch> {
         borderRadius: BorderRadius.circular(16),
         isExpanded: true,
         onChanged: (value) {
-          setState(() {
-            _themeMode = value!;
-          });
-          BlocProvider.of<SettingsBloc>(context)
-              .add(ChangeAppTheme(_themeMode));
+          BlocProvider.of<SettingsBloc>(context).add(ChangeAppTheme(value!));
         },
         decoration: InputDecoration(
           label: Text(
@@ -39,7 +28,7 @@ class _ThemeSwitchState extends State<ThemeSwitch> {
             style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),
-        value: _themeMode,
+        value: AppStorage.instance.themeMode,
         items: [
           ...ThemeMode.values
               .map(

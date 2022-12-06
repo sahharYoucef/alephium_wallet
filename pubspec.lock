@@ -13,7 +13,7 @@ packages:
     description:
       path: "."
       ref: multisig
-      resolved-ref: d1794fcb6775df74a1f96576263884f5874453b7
+      resolved-ref: e80513e0aed43249f3b2a1d3c37fbf09b0800bf8
       url: "https://github.com/sahharYoucef/alephium_dart.git"
     source: git
     version: "1.0.0"
@@ -437,6 +437,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.7"
+  flutter_screenutil:
+    dependency: "direct main"
+    description:
+      name: flutter_screenutil
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.6.0"
   flutter_speed_dial:
     dependency: "direct main"
     description:
@@ -997,7 +1004,7 @@ packages:
       name: sqflite
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0+3"
+    version: "2.2.2"
   sqflite_common:
     dependency: transitive
     description:

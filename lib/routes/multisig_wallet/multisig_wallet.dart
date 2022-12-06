@@ -44,16 +44,8 @@ class MultisigWalletPage extends StatelessWidget {
                     textInputAction: TextInputAction.next,
                     autocorrect: false,
                     validator: (value) {
-                      if (value?.isEmpty ?? true) {
-                        return null;
-                      }
-                      var validator = RegExp(r'^[1-9A-HJ-NP-Za-km-z]+$');
-                      if (!validator.hasMatch(value!)) {
-                        return 'Invalid Address';
-                      }
                       return null;
                     },
-                    onChanged: (value) {},
                     style: Theme.of(context).textTheme.bodyMedium,
                     decoration: InputDecoration(
                       labelText: 'walletName'.tr(),
@@ -68,9 +60,9 @@ class MultisigWalletPage extends StatelessWidget {
                     validator: (value) {
                       if (value == null ||
                           (value.item1 == 0 && value.item2 == 0)) {
-                        return "Please choose number of wallets and required number!";
+                        return "signersErrorMessage".tr();
                       } else if (value.item2 == 0) {
-                        return "Please choose number of required signatures!";
+                        return "requiredSignersErrorMessage".tr();
                       }
                       return null;
                     },

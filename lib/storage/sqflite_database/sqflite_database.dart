@@ -17,9 +17,11 @@ final String _contactsTable = "contacts";
 
 class SQLiteDBHelper extends BaseDBHelper {
   @override
-  Map<String, Map<String, List<TransactionStore>>> transactions = {
-    ...Network.values.asMap().map((key, value) =>
-        MapEntry(value.name, <String, List<TransactionStore>>{}))
+  Map<NetworkType, Map<String, List<TransactionStore>>> txCaches = {
+    ...NetworkType.values
+        .asMap()
+        .map<NetworkType, Map<String, List<TransactionStore>>>(
+            (key, value) => MapEntry(value, <String, List<TransactionStore>>{}))
   };
 
   SQLiteDBHelper() : super();
@@ -229,7 +231,7 @@ class SQLiteDBHelper extends BaseDBHelper {
   }
 
   @override
-  Future<List<WalletStore>> getWallets({required Network network}) async {
+  Future<List<WalletStore>> getWallets({required NetworkType network}) async {
     var _db = await _database.future;
     var data = await _db.rawQuery("""
         SELECT * FROM ${_walletTable} wallets
@@ -246,10 +248,7 @@ class SQLiteDBHelper extends BaseDBHelper {
   }
 
   @override
-  updateWalletName(
-    String id,
-    String title,
-  ) async {
+  updateWalletName(String id, String title) async {
     var _db = await _database.future;
     await _db.update(
       _walletTable,
@@ -263,10 +262,7 @@ class SQLiteDBHelper extends BaseDBHelper {
   }
 
   @override
-  updateWalletMainAddress(
-    String id,
-    String mainAddress,
-  ) async {
+  updateWalletMainAddress(String id, String mainAddress) async {
     var _db = await _database.future;
     await _db.update(
       _walletTable,
@@ -314,10 +310,13 @@ class SQLiteDBHelper extends BaseDBHelper {
 
   @override
   Future<void> insertTransactions(
-    String walletId,
-    List<TransactionStore> transactionStores,
-  ) async {
+      String walletId, List<TransactionStore> transactionStores) async {
     if (transactionStores.isEmpty) return;
+    final network = transactionStores.first.network;
+    if (txCaches[network]?[walletId] == null)
+      txCaches[network]?[walletId] = transactionStores;
+    else
+      txCaches[network]?[walletId]?.addAll(transactionStores);
     var _db = await _database.future;
     var batch = _db.batch();
     transactionStores.forEach((element) {
@@ -332,7 +331,7 @@ class SQLiteDBHelper extends BaseDBHelper {
 
   @override
   Future<List<TransactionStore>> getTransactions(
-      String walletID, Network network) async {
+      String walletID, NetworkType network) async {
     var _db = await _database.future;
     var data = await _db.rawQuery(
       '''SELECT * FROM $_transactionTable t 

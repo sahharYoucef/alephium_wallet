@@ -20,18 +20,6 @@ class AddressesPage extends StatefulWidget {
 
 class _AddressesPageState extends State<AddressesPage> {
   var isDialOpen = ValueNotifier<bool>(false);
-  late final ScrollController controller;
-  @override
-  void initState() {
-    controller = ScrollController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +75,6 @@ class _AddressesPageState extends State<AddressesPage> {
                 ),
               ),
             WalletAppBar(
-              controller: controller,
               label: Text(
                 'walletAddresses'.tr(),
                 style: Theme.of(context).textTheme.headlineMedium,

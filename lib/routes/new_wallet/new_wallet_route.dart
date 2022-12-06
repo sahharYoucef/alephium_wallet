@@ -1,8 +1,6 @@
 import 'package:alephium_wallet/bloc/create_wallet/create_wallet_bloc.dart';
-import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/routes/constants.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
-import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/new_wallet/widgets/new_wallet_checkbox.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
@@ -126,15 +124,7 @@ class _NewWalletPageState extends State<NewWalletPage> {
                           ),
                           NewWalletCheckbox(
                             title: "multisigWallet".tr(),
-                            description:
-                                "create a multisig wallet with multiple signatures"
-                                    .tr(),
-                            enabled: context
-                                .read<WalletHomeBloc>()
-                                .wallets
-                                .where((element) =>
-                                    element.type == WalletType.normal)
-                                .isNotEmpty,
+                            description: "multisigWalletDescription".tr(),
                             value: "multisig",
                             selected: selected,
                             onTap: (value) {
@@ -194,13 +184,16 @@ class _NewWalletPageState extends State<NewWalletPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 42),
                 ],
               ),
             ),
             Positioned.fill(
               child: BlocBuilder<CreateWalletBloc, CreateWalletState>(
                   bloc: _createWalletBloc,
+                  buildWhen: (previous, current) {
+                    return current is GenerateWalletLoading ||
+                        previous is GenerateWalletLoading;
+                  },
                   builder: (context, state) {
                     return Visibility(
                       visible: state is GenerateWalletLoading,

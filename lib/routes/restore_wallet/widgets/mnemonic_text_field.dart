@@ -4,6 +4,7 @@ import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MnemonicTextField extends StatefulWidget {
   MnemonicTextField({Key? key}) : super(key: key);
@@ -56,27 +57,30 @@ class MnemonicTextFieldState extends State<MnemonicTextField> {
     return Column(
       children: [
         Wrap(
-          spacing: 4.0,
-          runSpacing: 6.0,
+          spacing: 4.0.w,
+          runSpacing: 4.0.h,
           children: [
             ...words.mapIndexed((index, value) {
               return Material(
-                color: WalletTheme.instance.primary,
-                shadowColor: WalletTheme.instance.gradientOne,
-                shape: GradientStadiumBorder(),
+                color: WalletTheme.instance.buttonsBackground,
+                shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                        color: WalletTheme.instance.buttonsForeground,
+                        width: 2),
+                    borderRadius: BorderRadius.circular(8.0)),
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         "${index + 1} - $value",
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: WalletTheme.instance.buttonsForeground),
                       ),
                       SizedBox(
-                        height: 24,
-                        width: 24,
+                        height: 24.w,
+                        width: 24.w,
                         child: IconButton(
                           iconSize: 24,
                           padding: EdgeInsets.zero,
@@ -88,7 +92,7 @@ class MnemonicTextFieldState extends State<MnemonicTextField> {
                           icon: Icon(
                             Icons.close,
                             size: 18,
-                            color: WalletTheme.instance.textColor,
+                            color: WalletTheme.instance.buttonsForeground,
                           ),
                         ),
                       )

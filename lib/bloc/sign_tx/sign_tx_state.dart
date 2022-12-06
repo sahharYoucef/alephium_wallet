@@ -9,12 +9,14 @@ abstract class SignTxState extends Equatable {
 
 class SignTxUpdateStatus extends SignTxState {
   final String? txId;
+  final String? unsignedTx;
   final AddressStore? address;
   final WalletStore? walletStore;
   final bool reset;
 
   SignTxUpdateStatus({
     this.txId,
+    this.unsignedTx,
     this.address,
     this.walletStore,
     this.reset = false,
@@ -22,6 +24,7 @@ class SignTxUpdateStatus extends SignTxState {
   @override
   List<Object?> get props => [
         txId,
+        unsignedTx,
         address,
         reset,
         walletStore,
@@ -42,4 +45,15 @@ class SignTxCompleted extends SignTxState {
   const SignTxCompleted({required this.signature});
   @override
   List<Object?> get props => [signature];
+}
+
+class TxIdVerifyCompleted extends SignTxState {
+  final String unsignedTx;
+  final DecodeUnsignedTxResult tx;
+  const TxIdVerifyCompleted({
+    required this.unsignedTx,
+    required this.tx,
+  });
+  @override
+  List<Object?> get props => [unsignedTx];
 }

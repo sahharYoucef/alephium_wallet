@@ -17,6 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../constants.dart';
 
@@ -136,13 +137,15 @@ class _HomePageState extends State<HomePage>
                                 slivers: [
                                   SliverToBoxAdapter(
                                     child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 16.w, vertical: 16.h),
                                       child: Material(
                                         color: WalletTheme.instance.primary,
                                         elevation: 1,
                                         borderRadius: BorderRadius.circular(16),
                                         child: Padding(
-                                          padding: const EdgeInsets.all(16.0),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 16.w, vertical: 16.h),
                                           child: Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
@@ -150,46 +153,54 @@ class _HomePageState extends State<HomePage>
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceEvenly,
                                             children: [
-                                              AppBarIconButton(
-                                                tooltip: "QRscanner".tr(),
-                                                label: "QR scan",
-                                                icon: Icon(
-                                                  CupertinoIcons
-                                                      .qrcode_viewfinder,
+                                              Expanded(
+                                                child: AppBarIconButton(
+                                                  tooltip: "QRscanner".tr(),
+                                                  label: "QRscanner".tr(),
+                                                  icon: Icon(
+                                                    CupertinoIcons
+                                                        .qrcode_viewfinder,
+                                                  ),
+                                                  onPressed: () async {
+                                                    var data = await showQRView(
+                                                      context,
+                                                      walletHomeBloc:
+                                                          _walletHomeBloc,
+                                                    );
+                                                    if (data != null) {
+                                                      Navigator.pushNamed(
+                                                          context, Routes.send,
+                                                          arguments: {
+                                                            "wallet":
+                                                                data["wallet"],
+                                                            "address":
+                                                                data["wallet"]
+                                                                    .addresses
+                                                                    .first,
+                                                            "initial-data":
+                                                                data,
+                                                          });
+                                                    }
+                                                  },
                                                 ),
-                                                onPressed: () async {
-                                                  var data = await showQRView(
-                                                    context,
-                                                    walletHomeBloc:
-                                                        _walletHomeBloc,
-                                                  );
-                                                  if (data != null) {
-                                                    Navigator.pushNamed(
-                                                        context, Routes.send,
-                                                        arguments: {
-                                                          "wallet":
-                                                              data["wallet"],
-                                                          "address":
-                                                              data["wallet"]
-                                                                  .addresses
-                                                                  .first,
-                                                          "initial-data": data,
-                                                        });
-                                                  }
-                                                },
                                               ),
-                                              AppBarIconButton(
-                                                tooltip: "signature".tr(),
-                                                label: "Signature",
-                                                icon: Icon(
-                                                  CupertinoIcons.signature,
+                                              SizedBox(
+                                                width: 8.w,
+                                              ),
+                                              Expanded(
+                                                child: AppBarIconButton(
+                                                  tooltip: "signer".tr(),
+                                                  label: "signer".tr(),
+                                                  icon: Icon(
+                                                    CupertinoIcons.signature,
+                                                  ),
+                                                  onPressed: () async {
+                                                    Navigator.pushNamed(
+                                                      context,
+                                                      Routes.signMultisigTx,
+                                                    );
+                                                  },
                                                 ),
-                                                onPressed: () async {
-                                                  Navigator.pushNamed(
-                                                    context,
-                                                    Routes.signMultisigTx,
-                                                  );
-                                                },
                                               ),
                                             ],
                                           ),

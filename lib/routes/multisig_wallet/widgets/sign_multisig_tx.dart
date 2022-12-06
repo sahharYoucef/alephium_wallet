@@ -1,9 +1,16 @@
+import 'dart:convert';
+
+import 'package:alephium_wallet/api/repositories/alephium/alephium_api_repository.dart';
+import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
+import 'package:alephium_wallet/api/utils/constants.dart';
 import 'package:alephium_wallet/bloc/sign_tx/sign_tx_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/main.dart';
+import 'package:alephium_wallet/routes/multisig_wallet/widgets/tx_verify_dialog.dart';
 import 'package:alephium_wallet/routes/multisig_wallet/widgets/wallets_drop_down.dart';
 import 'package:alephium_wallet/routes/send/widgets/address_from.dart';
+import 'package:alephium_wallet/routes/send/widgets/success_dialog.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
@@ -36,6 +43,7 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
     _bloc = SignTxBloc(
       getIt.get<BaseWalletService>(),
       getIt.get<AuthenticationService>(),
+      getIt.get<BaseApiRepository>(),
     );
     _controller =
         TextEditingController(text: "Please copy transaction details");
@@ -57,9 +65,16 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
         Positioned.fill(
           child: BlocConsumer<SignTxBloc, SignTxState>(
             bloc: _bloc,
-            listener: (context, state) {
+            listener: (context, state) async {
               if (state is SignTxError) {
                 context.showSnackBar(state.message, level: Level.error);
+              } else if (state is TxIdVerifyCompleted) {
+                await showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context) => TransactionVerifyDialog(
+                          transaction: state.tx,
+                        ));
               }
             },
             builder: (context, state) {
@@ -79,14 +94,19 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                         context,
                         isTransfer: false,
                       );
-                      if (data?["address"] != null &&
-                          data!["address"] is String &&
-                          data["address"].trim().isNotEmpty) {
+                      if (data == null) return;
+                      if (data["txId"] != null && data["unsignedTx"] != null) {
                         _bloc.add(UpdateSignTxDataEvent(
                           walletStore: wallet,
-                          txId: data["address"],
+                          txId: data["txId"],
+                          unsignedTx: data["unsignedTx"],
                           address: _bloc.addressStore,
                         ));
+                      } else {
+                        context.showSnackBar(
+                          "invalidTransactionDetails".tr(),
+                          level: Level.error,
+                        );
                       }
                     },
                   ),
@@ -103,8 +123,7 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                               height: 20,
                             ),
                             Text(
-                              "Please select wallet address to used a signer from your wallets"
-                                  .tr(),
+                              "selectSignerAddress".tr(),
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
                             const SizedBox(
@@ -118,6 +137,7 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                                     walletStore: wallet,
                                     address: null,
                                     txId: _bloc.txId,
+                                    unsignedTx: _bloc.unsignedTx,
                                   ));
                                 }),
                             const SizedBox(
@@ -125,12 +145,13 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                             ),
                             AddressFromDropDownMenu(
                               addresses: wallet?.addresses,
-                              label: "Choose address",
+                              label: "chooseAddress".tr(),
                               onChanged: (address) {
                                 _bloc.add(UpdateSignTxDataEvent(
                                   walletStore: wallet,
                                   address: address,
                                   txId: _bloc.txId,
+                                  unsignedTx: _bloc.unsignedTx,
                                 ));
                               },
                             ),
@@ -138,7 +159,7 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                               height: 10,
                             ),
                             Text(
-                              "Please enter the transaction id".tr(),
+                              "pasteTxId".tr(),
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
                             const SizedBox(
@@ -170,14 +191,24 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                                     onPressed: () async {
                                       var text =
                                           await Clipboard.getData("text/plain");
-                                      _controller.text =
-                                          "Transaction details copied!";
-                                      final txId = text?.text;
-                                      _bloc.add(UpdateSignTxDataEvent(
-                                        walletStore: wallet,
-                                        txId: txId,
-                                        address: _bloc.addressStore,
-                                      ));
+                                      if (text != null) {
+                                        try {
+                                          var data = json.decode(text.text!);
+                                          _controller.text = "txIdFilled".tr();
+                                          final txId = data["txId"];
+                                          final unsignedTx = data["unsignedTx"];
+                                          _bloc.add(UpdateSignTxDataEvent(
+                                            walletStore: wallet,
+                                            txId: txId,
+                                            unsignedTx: unsignedTx,
+                                            address: _bloc.addressStore,
+                                          ));
+                                        } catch (_) {
+                                          context.showSnackBar(
+                                              "invalidTransactionDetails".tr(),
+                                              level: Level.error);
+                                        }
+                                      }
                                     },
                                     child: Text(
                                       "paste".tr(),
@@ -195,11 +226,11 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                                   child: OutlinedButton(
                                     onPressed: (state is SignTxCompleted)
                                         ? () {
-                                            _controller.text =
-                                                "Please copy transaction details";
+                                            _controller.text = "pasteTxId".tr();
                                             _bloc.add(UpdateSignTxDataEvent(
                                               walletStore: wallet,
                                               txId: null,
+                                              unsignedTx: null,
                                               address: _bloc.addressStore,
                                             ));
                                           }
@@ -218,34 +249,6 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                             const SizedBox(
                               width: 20,
                             ),
-                            if (state is SignTxCompleted)
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Center(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: WalletTheme.instance.primary,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: QrImage(
-                                        data: state.signature,
-                                        backgroundColor: Colors.transparent,
-                                        foregroundColor:
-                                            WalletTheme.instance.textColor,
-                                        version: QrVersions.auto,
-                                        size: 200.0,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                ],
-                              ),
                           ],
                         )),
                       ),
@@ -253,7 +256,40 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                         hasScrollBody: false,
                         child: Column(
                           children: [
-                            Spacer(),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 200),
+                                  child: state is SignTxCompleted
+                                      ? Container(
+                                          height: 200,
+                                          decoration: BoxDecoration(
+                                            color: WalletTheme.instance.primary,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: QrImage(
+                                            data: state.signature,
+                                            backgroundColor: Colors.transparent,
+                                            foregroundColor:
+                                                WalletTheme.instance.textColor,
+                                            version: QrVersions.auto,
+                                            size: 200.0,
+                                          ),
+                                        )
+                                      : state is TxIdVerifyCompleted
+                                          ? Icon(
+                                              Icons.check_circle_outline,
+                                              color: Colors.green,
+                                              size: 100,
+                                            )
+                                          : SizedBox(),
+                                ),
+                              ),
+                            ),
                             if (state is SignTxCompleted)
                               Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -273,7 +309,7 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                                           "copySignature".tr(),
                                         ),
                                       )))
-                            else
+                            else if (state is TxIdVerifyCompleted)
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16, vertical: 16),
@@ -285,6 +321,24 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                                         ? () {
                                             _bloc.add(
                                               SignMultisigTransaction(),
+                                            );
+                                          }
+                                        : null,
+                                  ),
+                                ),
+                              )
+                            else
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 16),
+                                child: Hero(
+                                  tag: "Button1",
+                                  child: OutlinedButton(
+                                    child: Text("verifyTransaction".tr()),
+                                    onPressed: _bloc.activateButton
+                                        ? () {
+                                            _bloc.add(
+                                              VerifyMultisigTransaction(),
                                             );
                                           }
                                         : null,
@@ -304,6 +358,9 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
         Positioned.fill(
           child: BlocBuilder<SignTxBloc, SignTxState>(
               bloc: _bloc,
+              buildWhen: (previous, current) {
+                return current is SignTxLoading || previous is SignTxLoading;
+              },
               builder: (context, state) {
                 return Visibility(
                   visible: state is SignTxLoading,

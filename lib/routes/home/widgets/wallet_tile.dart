@@ -42,7 +42,7 @@ class WalletTile extends StatelessWidget {
                           Text(
                             wallet.title == null
                                 ? "alephiumWallet".tr()
-                                : wallet.title!,
+                                : wallet.title!.capitalize,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           Row(

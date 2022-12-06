@@ -131,7 +131,7 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
                       Hero(
                         tag: "button",
                         child: OutlinedButton(
-                          child: Text('sweep'.tr().toUpperCase()),
+                          child: Text('sweep'.tr()),
                           onPressed: () {
                             _bloc.add(SweepTransaction(
                                 _fromAddressStore, _toAddressStore));

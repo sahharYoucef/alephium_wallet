@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:alephium_wallet/bloc/transaction/transaction_bloc.dart';
 import 'package:alephium_wallet/routes/constants.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
@@ -11,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:convert/convert.dart';
 
 class WaitForOtherSignatures extends StatefulWidget {
   final String txId;
@@ -32,9 +35,14 @@ class WaitForOtherSignatures extends StatefulWidget {
 class _WaitForOtherSignaturesState extends State<WaitForOtherSignatures> {
   late final List<String?> signatures;
   String? signature;
+  late final String qrData;
 
   @override
   void initState() {
+    qrData = json.encode({
+      "txId": widget.bloc.transaction?.txId,
+      "unsignedTx": widget.bloc.transaction?.unsignedTx,
+    });
     signatures =
         List.generate(widget.wallet.signatures!.length, (index) => null);
     super.initState();
@@ -107,7 +115,7 @@ class _WaitForOtherSignaturesState extends State<WaitForOtherSignatures> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: QrImage(
-                              data: widget.txId,
+                              data: qrData,
                               backgroundColor: Colors.transparent,
                               foregroundColor: WalletTheme.instance.textColor,
                               version: QrVersions.auto,
@@ -129,7 +137,7 @@ class _WaitForOtherSignaturesState extends State<WaitForOtherSignatures> {
                               Icons.copy,
                             ),
                             onPressed: () async {
-                              var data = ClipboardData(text: widget.txId);
+                              var data = ClipboardData(text: qrData);
                               await Clipboard.setData(data);
                               context.showSnackBar(
                                 "addressCopied".tr(),
@@ -232,7 +240,10 @@ class _WaitForOtherSignaturesState extends State<WaitForOtherSignatures> {
                   width: double.infinity,
                   child: Center(
                     child: Text(
-                      "${confirmedSignatures.length} of ${widget.wallet.mRequired} signatures required",
+                      "waitRequiredSignature".tr(args: [
+                        "${confirmedSignatures.length}",
+                        "${widget.wallet.mRequired}"
+                      ]),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
@@ -245,7 +256,7 @@ class _WaitForOtherSignaturesState extends State<WaitForOtherSignatures> {
                     Expanded(
                       child: OutlinedButton(
                         child: Text(
-                          'cancel'.tr().toUpperCase(),
+                          'cancel'.tr(),
                         ),
                         onPressed: () {
                           Navigator.pop(context);
@@ -258,7 +269,7 @@ class _WaitForOtherSignaturesState extends State<WaitForOtherSignatures> {
                     Expanded(
                       child: OutlinedButton(
                         child: Text(
-                          'confirm'.tr().toUpperCase(),
+                          'confirm'.tr(),
                         ),
                         onPressed: confirmedSignatures.length >=
                                 widget.wallet.mRequired!

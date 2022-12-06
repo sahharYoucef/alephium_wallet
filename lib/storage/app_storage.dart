@@ -14,6 +14,18 @@ class AppStorage {
     Hive.init(dir.path);
   }
 
+  Map<String, dynamic>? get customNetwork {
+    var settings = Hive.box("settings");
+    var _customNetwork = settings.get("networkSetting");
+    if (_customNetwork == null) return null;
+    return Map<String, String?>.from(_customNetwork);
+  }
+
+  set customNetwork(Map<String, dynamic>? network) {
+    var settings = Hive.box("settings");
+    settings.put("networkSetting", network);
+  }
+
   String get currency {
     var settings = Hive.box("settings");
     var _currency = settings.get("currency");
@@ -86,17 +98,17 @@ class AppStorage {
     settings.put("firstRun", value);
   }
 
-  Network get network {
+  NetworkType get network {
     var settings = Hive.box("settings");
     var _network = settings.get("network") as String?;
     if (_network == null) {
-      network = Network.mainnet;
+      network = NetworkType.mainnet;
       _network = network.name;
     }
-    return Network.network(_network);
+    return NetworkType.network(_network);
   }
 
-  set network(Network value) {
+  set network(NetworkType value) {
     var settings = Hive.box("settings");
     settings.put("network", value.name);
   }

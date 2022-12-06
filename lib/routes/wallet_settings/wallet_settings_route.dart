@@ -146,8 +146,7 @@ class _WalletSettingState extends State<WalletSetting> {
                         height: 10,
                       ),
                       Text(
-                        "Multisig address signers addresses and it's public keys with the correct order"
-                            .tr(),
+                        "signersSettingButton".tr(),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const SizedBox(

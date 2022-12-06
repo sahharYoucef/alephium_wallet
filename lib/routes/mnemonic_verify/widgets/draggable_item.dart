@@ -1,5 +1,6 @@
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class DraggableItem extends StatelessWidget {
   final String value;
@@ -32,7 +33,7 @@ class DraggableItem extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             child: Align(
               alignment: Alignment.center,
-              child: Text(
+              child: AutoSizeText(
                 value,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
@@ -51,7 +52,7 @@ class DraggableItem extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           child: Align(
             alignment: Alignment.center,
-            child: Text(
+            child: AutoSizeText(
               value,
               style: Theme.of(context).textTheme.bodyMedium,
             ),

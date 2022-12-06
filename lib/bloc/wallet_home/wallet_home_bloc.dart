@@ -1,3 +1,5 @@
+import 'package:alephium_wallet/api/utils/constants.dart';
+import 'package:alephium_wallet/api/utils/error_handler.dart';
 import 'package:bloc/bloc.dart';
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/main.dart';
@@ -37,9 +39,16 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
           }
           AppStorage.instance.price = _price.data;
           final updatedAddresses = await _updateAddresses();
-          await getIt
-              .get<BaseDBHelper>()
-              .updateAddressBalance(updatedAddresses);
+          if (updatedAddresses.data!.isNotEmpty) {
+            await getIt
+                .get<BaseDBHelper>()
+                .updateAddressBalance(updatedAddresses.data!);
+          }
+          if (updatedAddresses.hasException) {
+            emit(WalletHomeError(
+              message: updatedAddresses.exception?.message,
+            ));
+          }
           wallets = await getIt.get<BaseDBHelper>().getWallets(
                 network: apiRepository.network,
               );
@@ -65,9 +74,16 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
           ));
           try {
             final updatedAddresses = await _updateAddresses();
-            await getIt
-                .get<BaseDBHelper>()
-                .updateAddressBalance(updatedAddresses);
+            if (updatedAddresses.data!.isNotEmpty) {
+              await getIt
+                  .get<BaseDBHelper>()
+                  .updateAddressBalance(updatedAddresses.data!);
+            }
+            if (updatedAddresses.hasException) {
+              emit(WalletHomeError(
+                message: updatedAddresses.exception?.message,
+              ));
+            }
             wallets = await getIt.get<BaseDBHelper>().getWallets(
                   network: apiRepository.network,
                 );
@@ -100,8 +116,9 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
     });
   }
 
-  Future<List<AddressStore>> _updateAddresses() async {
+  Future<Either<List<AddressStore>>> _updateAddresses() async {
     var addresses = <AddressStore>[];
+    bool withException = false;
     for (var wallet in wallets) {
       for (var address in wallet.addresses) addresses.add(address);
     }
@@ -125,8 +142,16 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
     for (var address in data) {
       if (address.hasData && address.data != null) {
         updatedAddresses.add(address.data!);
+      } else if (address.hasException) {
+        withException = true;
       }
     }
-    return updatedAddresses;
+    return Either(
+      data: updatedAddresses,
+      error: withException
+          ? ApiError(exception: Exception(kErrorMessageGenericError))
+          : null,
+    );
+    ;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:alephium_dart/alephium_dart.dart';
+import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
@@ -60,12 +61,14 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final WalletStore wallet;
   final BaseApiRepository apiRepository;
   final BaseWalletService walletService;
+  late final NetworkType network;
   TransactionBloc(
     this.authenticationService,
     this.apiRepository,
     this.walletService,
     this.wallet,
-  ) : super(TransactionStatusState()) {
+  )   : network = apiRepository.network,
+        super(TransactionStatusState()) {
     on<TransactionEvent>((event, emit) async {
       if (event is TransactionValuesChangedEvent) {
         if (event.fromAddress != null) {
@@ -163,7 +166,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             transaction: transaction,
             tokens: tokens,
           ));
-        } catch (e, trace) {
+        } catch (e, _) {
           emit(TransactionError(
             message: e.toString(),
           ));
@@ -205,6 +208,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           data.add(_createTransaction(
               value.data!, event.fromAddress, event.toAddress.address));
         }
+        await getIt.get<BaseDBHelper>().insertTransactions(wallet.id, data);
         emit(
           TransactionSendingCompleted(
             transactions: data,
@@ -241,17 +245,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           }
           var data =
               _createTransaction(sending.data!, fromAddress!, toAddress!);
-          if (getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
-                  ?[wallet.id] ==
-              null) {
-            getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
-                ?[wallet.id] = [data];
-          } else
-            getIt
-                .get<BaseDBHelper>()
-                .transactions[apiRepository.network.name]?[wallet.id]
-                ?.addAll([data]);
-          getIt.get<BaseDBHelper>().insertTransactions(wallet.id, [data]);
+          await getIt.get<BaseDBHelper>().insertTransactions(wallet.id, [data]);
           emit(
             TransactionSendingCompleted(
               transactions: [data],
@@ -263,46 +257,23 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           ));
         }
       } else if (event is CheckSignMultisigTransaction) {
-        emit(TransactionLoading());
-        var addresses = <String>[];
-        for (final signature in wallet.signatures!) {
-          addresses.add(walletService.addressFromPublicKey(signature));
+        try {
+          emit(TransactionLoading());
+          var addresses = <String>[];
+          for (final signature in wallet.signatures!) {
+            addresses.add(walletService.addressFromPublicKey(signature));
+          }
+          emit(
+            WaitForOtherSignatureState(
+              addresses: addresses,
+              txId: transaction!.txId!,
+            ),
+          );
+        } catch (e) {
+          emit(TransactionError(
+            message: e.toString(),
+          ));
         }
-        // if (wallet.mRequired == 1) {
-        //   final sending = await apiRepository.submitMultisigTx(
-        //       signatures: [signature], unsignedTx: transaction!.unsignedTx!);
-        //   if (sending.hasException || sending.data == null) {
-        //     emit(TransactionError(
-        //       message: sending.exception?.message ?? 'Unknown error',
-        //     ));
-        //     return;
-        //   }
-        //   var data =
-        //       _createTransaction(sending.data!, fromAddress!, toAddress!);
-        //   if (getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
-        //           ?[wallet.id] ==
-        //       null) {
-        //     getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
-        //         ?[wallet.id] = [data];
-        //   } else
-        //     getIt
-        //         .get<BaseDBHelper>()
-        //         .transactions[apiRepository.network.name]?[wallet.id]
-        //         ?.addAll([data]);
-        //   getIt.get<BaseDBHelper>().insertTransactions(wallet.id, [data]);
-        //   emit(
-        //     TransactionSendingCompleted(
-        //       transactions: [data],
-        //     ),
-        //   );
-        // } else {
-        emit(
-          WaitForOtherSignatureState(
-            addresses: addresses,
-            txId: transaction!.txId!,
-          ),
-        );
-        // }
       } else if (event is SendMultisigTransaction) {
         try {
           if (AppStorage.instance.localAuth) {
@@ -329,17 +300,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           }
           var data =
               _createTransaction(sending.data!, fromAddress!, toAddress!);
-          if (getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
-                  ?[wallet.id] ==
-              null) {
-            getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
-                ?[wallet.id] = [data];
-          } else
-            getIt
-                .get<BaseDBHelper>()
-                .transactions[apiRepository.network.name]?[wallet.id]
-                ?.addAll([data]);
-          getIt.get<BaseDBHelper>().insertTransactions(wallet.id, [data]);
+          await getIt.get<BaseDBHelper>().insertTransactions(wallet.id, [data]);
           emit(
             TransactionSendingCompleted(
               transactions: [data],
@@ -365,7 +326,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       txHash: value.txId!,
       gasPrice: transaction?.gasPrice,
       gasAmount: transaction?.gasAmount,
-      network: apiRepository.network,
+      network: network,
     );
     var fee = data.feeValue;
     data = data.copyWith(

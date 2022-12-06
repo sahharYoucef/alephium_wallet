@@ -4,15 +4,9 @@ import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class LanguageDropDown extends StatefulWidget {
+class LanguageDropDown extends StatelessWidget {
   const LanguageDropDown({super.key});
 
-  @override
-  State<LanguageDropDown> createState() => _LanguageDropDownState();
-}
-
-class _LanguageDropDownState extends State<LanguageDropDown> {
-  String _language = AppStorage.instance.language;
   @override
   Widget build(BuildContext context) {
     final _languages = {
@@ -38,10 +32,7 @@ class _LanguageDropDownState extends State<LanguageDropDown> {
           } else {
             EasyLocalization.of(context)!.setLocale(Locale(value!));
           }
-          setState(() {
-            _language = value!;
-          });
-          AppStorage.instance.language = _language;
+          AppStorage.instance.language = value;
         },
         decoration: InputDecoration(
           label: Text(
@@ -49,7 +40,7 @@ class _LanguageDropDownState extends State<LanguageDropDown> {
             style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),
-        value: _language,
+        value: AppStorage.instance.language,
         items: [
           ..._languages
               .map(

@@ -100,6 +100,7 @@ class _AddressQRDialogState extends State<AddressQRDialog>
                 Expanded(
                   child: AddressText(
                     address: _value,
+                    align: TextAlign.center,
                   ),
                 ),
                 const SizedBox(
