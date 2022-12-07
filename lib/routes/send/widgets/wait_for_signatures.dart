@@ -13,7 +13,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:convert/convert.dart';
 
 class WaitForOtherSignatures extends StatefulWidget {
   final String txId;
