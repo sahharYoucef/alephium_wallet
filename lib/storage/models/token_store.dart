@@ -12,6 +12,7 @@ class TokenStore extends Equatable {
     var value = String.fromCharCodes(data.cast<int>());
     var decoded = jsonDecode(value.toString()) as List<dynamic>;
     var _tokens = decoded.map((ref) => TokenStore.fromDb(ref)).toList();
+    return [];
     return _tokens;
   }
 

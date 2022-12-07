@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/storage/models/token_store.dart';
 
@@ -10,7 +7,7 @@ class BalanceStore {
   final BigInt? lockedBalance;
   final String? lockedBalanceHint;
   final String address;
-  final Network network;
+  final NetworkType network;
   final List<TokenStore>? tokens;
 
   BalanceStore({
@@ -29,7 +26,7 @@ class BalanceStore {
     final _balanceHint = data["balanceHint"];
     final _lockedBalance = BigInt.tryParse("${data["balanceLocked"]}");
     final _lockedBalanceHint = data["balanceLockedHint"];
-    final _network = Network.network(data["network"]);
+    final _network = NetworkType.network(data["network"]);
     final _tokens = TokenStore.getTokens(data["tokens"]);
     return BalanceStore(
       address: _address,

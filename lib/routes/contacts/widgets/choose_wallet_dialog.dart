@@ -6,11 +6,17 @@ import 'package:easy_localization/easy_localization.dart';
 
 class ChooseWalletDialog extends StatelessWidget {
   final WalletHomeBloc bloc;
-  final String address;
+  final String? address;
+  final bool showAmount;
+  final String? title;
+  final String? content;
   const ChooseWalletDialog({
     super.key,
     required this.bloc,
-    required this.address,
+    this.showAmount = true,
+    this.address,
+    this.content,
+    this.title,
   });
 
   @override
@@ -31,23 +37,24 @@ class ChooseWalletDialog extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: "${'sendTo'.tr()} ",
+                    text: title ?? "${'sendTo'.tr()} ",
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  TextSpan(
-                    text: "(${address})",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(overflow: TextOverflow.ellipsis),
-                  ),
+                  if (address != null)
+                    TextSpan(
+                      text: "(${address})",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(overflow: TextOverflow.ellipsis),
+                    ),
                 ],
               )),
           const SizedBox(
             height: 10,
           ),
           Text(
-            "${'chooseWallet'.tr()}",
+            content ?? "${'chooseWallet'.tr()}",
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(
@@ -58,6 +65,7 @@ class ChooseWalletDialog extends StatelessWidget {
             height: 10,
           ),
           ...bloc.wallets
+              .where((element) => element.type != WalletType.readOnly)
               .map((wallet) => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -68,11 +76,15 @@ class ChooseWalletDialog extends StatelessWidget {
                           },
                           child: Row(
                             children: [
-                              Text(wallet.title.isEmpty
-                                  ? "Alephium"
-                                  : wallet.title),
-                              Spacer(),
-                              Text("${wallet.balance} ℵ")
+                              Text(
+                                wallet.title == null
+                                    ? "Alephium"
+                                    : wallet.title!,
+                              ),
+                              if (showAmount) ...[
+                                Spacer(),
+                                Text("${wallet.balance} ℵ")
+                              ]
                             ],
                           )),
                       const SizedBox(

@@ -23,7 +23,8 @@ class AddTokenDialog extends StatefulWidget {
 }
 
 class _AddTokenDialogState extends State<AddTokenDialog> with InputValidators {
-  GlobalKey<FormFieldState> _amountKey = GlobalKey<FormFieldState>();
+  GlobalKey<ShakeTextFormFieldState> _amountKey =
+      GlobalKey<ShakeTextFormFieldState>();
   String? _id;
   String? _amount;
 

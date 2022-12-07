@@ -3,8 +3,9 @@ import 'package:alephium_wallet/routes/contacts/widgets/add_contact_dialog.dart'
 import 'package:alephium_wallet/routes/contacts/widgets/contact_tile.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
-import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -44,11 +45,12 @@ class _ContactsPageState extends State<ContactsPage>
                 spinning: true,
               ),
             );
-          } else if (state is ContactsCompletedState)
+          } else if (state is ContactsCompletedState &&
+              state.contacts.isNotEmpty)
             return ListView.builder(
               padding: EdgeInsets.only(
                 top: 16,
-                bottom: 16,
+                bottom: 70 + context.bottomPadding,
                 left: 16,
                 right: 16,
               ),
@@ -61,7 +63,49 @@ class _ContactsPageState extends State<ContactsPage>
                 );
               },
             );
-          return SizedBox();
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    "addressBookEmpty".tr(),
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                AppBarIconButton(
+                  icon: Icon(CupertinoIcons.add),
+                  label: "addContact".tr(),
+                  onPressed: () {
+                    showGeneralDialog(
+                      barrierDismissible: true,
+                      barrierLabel: "AddContactDialog",
+                      context: context,
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          AddContactDialog(
+                        bloc: context.read<ContactsBloc>(),
+                      ),
+                      transitionDuration: const Duration(milliseconds: 200),
+                      transitionBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        return SlideTransition(
+                          position: animation.drive(
+                            Tween<Offset>(
+                              begin: Offset(0, 1),
+                              end: Offset.zero,
+                            ),
+                          ),
+                          child: child,
+                        );
+                      },
+                    );
+                  },
+                )
+              ],
+            ),
+          );
         },
       ),
     );

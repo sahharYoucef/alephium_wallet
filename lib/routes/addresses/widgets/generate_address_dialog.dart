@@ -1,11 +1,14 @@
 import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
+import 'package:alephium_wallet/routes/addresses/widgets/group_drop_down.dart';
+import 'package:alephium_wallet/routes/addresses/widgets/main_address_switch.dart';
+import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 enum GenerationType { single, group }
 
-class GenerateWalletDialog extends StatefulWidget {
+class GenerateWalletDialog extends StatelessWidget {
   final WalletDetailsBloc bloc;
   final GenerationType type;
   GenerateWalletDialog({
@@ -14,29 +17,12 @@ class GenerateWalletDialog extends StatefulWidget {
     required this.type,
   }) : super(key: key);
 
-  @override
-  State<GenerateWalletDialog> createState() => _GenerateWalletDialogState();
-}
-
-class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
-  late int _group;
-  late bool _switch;
-  late final TextEditingController _controller;
-
-  @override
-  void initState() {
-    _group = 1;
-    _switch = false;
-    _controller = TextEditingController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
+  final GlobalKey<ShakeTextFormFieldState> _key =
+      GlobalKey<ShakeTextFormFieldState>();
+  final GlobalKey<MainAddressSwitchState> _switchKey =
+      GlobalKey<MainAddressSwitchState>();
+  final GlobalKey<GroupDropDownState> _groupKey =
+      GlobalKey<GroupDropDownState>();
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -58,27 +44,22 @@ class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
                     children: [
                       Expanded(
                         child: Text(
-                          widget.type == GenerationType.single
+                          type == GenerationType.single
                               ? "mainAddress".tr()
                               : "generateOneAddress".tr(),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
-                      if (widget.type == GenerationType.single)
-                        Switch.adaptive(
-                            value: _switch,
-                            onChanged: (value) {
-                              setState(() {
-                                _switch = !_switch;
-                              });
-                            })
+                      if (type == GenerationType.single)
+                        MainAddressSwitch(
+                          key: _switchKey,
+                        )
                     ],
                   ),
-                  if (widget.type == GenerationType.single) ...[
+                  if (type == GenerationType.single) ...[
                     Text(
-                      "generateAddressDescription".tr(args: [
-                        widget.bloc.wallet.mainAddress.substring(0, 10)
-                      ]),
+                      "generateAddressDescription"
+                          .tr(args: [bloc.wallet.mainAddress.substring(0, 10)]),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
@@ -89,8 +70,8 @@ class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
                   const SizedBox(
                     height: 10,
                   ),
-                  TextField(
-                    controller: _controller,
+                  ShakeTextFormField(
+                    key: _key,
                     autofocus: true,
                     decoration: InputDecoration(
                       label: Text("title".tr()),
@@ -99,42 +80,9 @@ class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
                   const SizedBox(
                     height: 20,
                   ),
-                  if (widget.type == GenerationType.single) ...[
-                    ButtonTheme(
-                      alignedDropdown: true,
-                      child: DropdownButtonFormField<int>(
-                        alignment: AlignmentDirectional.bottomEnd,
-                        elevation: 3,
-                        borderRadius: BorderRadius.circular(16),
-                        decoration: InputDecoration(
-                          labelStyle: Theme.of(context).textTheme.bodyMedium!,
-                        ),
-                        isExpanded: true,
-                        onChanged: (value) {
-                          setState(() {
-                            _group = value!;
-                          });
-                        },
-                        value: _group,
-                        items: [
-                          ...List.generate(4, (index) => index)
-                              .map(
-                                (index) => DropdownMenuItem<int>(
-                                  value: index,
-                                  child: SizedBox(
-                                    width: 100,
-                                    child: Text(
-                                      "${'group'.tr()} $index",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList()
-                        ],
-                      ),
+                  if (type == GenerationType.single) ...[
+                    GroupDropDown(
+                      key: _groupKey,
                     ),
                     const SizedBox(
                       height: 20,
@@ -144,22 +92,22 @@ class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
                     tag: "button",
                     child: OutlinedButton(
                       onPressed: () {
-                        if (widget.type == GenerationType.single)
-                          widget.bloc.add(GenerateNewAddress(
-                            isMain: _switch,
-                            title: _controller.text,
+                        if (type == GenerationType.single)
+                          bloc.add(GenerateNewAddress(
+                            isMain: _switchKey.currentState!.value,
+                            title: _key.currentState?.value,
                             color: "",
-                            group: _group,
+                            group: _groupKey.currentState!.value,
                           ));
                         else
-                          widget.bloc.add(GenerateOneAddressPerGroup(
-                            title: _controller.text,
+                          bloc.add(GenerateOneAddressPerGroup(
+                            title: _key.currentState?.value,
                             color: "",
                           ));
                         Navigator.pop(context);
                       },
                       child: Text(
-                        widget.type == GenerationType.single
+                        type == GenerationType.single
                             ? "generateAddress".tr()
                             : "generate".tr(),
                       ),

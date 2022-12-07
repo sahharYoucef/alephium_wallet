@@ -7,6 +7,25 @@ abstract class CreateWalletEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class CreateWalletMultisigWallet extends CreateWalletEvent {
+  final List<String> signatures;
+  final int mrequired;
+  final String? title;
+
+  CreateWalletMultisigWallet({
+    required this.signatures,
+    required this.mrequired,
+    required this.title,
+  });
+
+  @override
+  List<Object?> get props => [
+        signatures,
+        mrequired,
+        title,
+      ];
+}
+
 class CreateWalletGenerateMnemonic extends CreateWalletEvent {
   final String passphrase;
 
@@ -43,13 +62,16 @@ class CreateWalletRestore extends CreateWalletEvent {
 
 class AddReadOnlyWallet extends CreateWalletEvent {
   final String value;
+  final String? title;
   AddReadOnlyWallet({
     required this.value,
+    this.title,
   });
 
   @override
   List<Object?> get props => [
         value,
+        title,
         DateTime.now(),
       ];
 }

@@ -6,7 +6,7 @@ import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:flutter/material.dart';
 
 abstract class BaseDBHelper {
-  Map<String, Map<String, List<TransactionStore>>> get transactions;
+  Map<NetworkType, Map<String, List<TransactionStore>>> get txCaches;
 
   @mustCallSuper
   BaseDBHelper() {
@@ -26,7 +26,7 @@ abstract class BaseDBHelper {
   Future<void> insertWallet(
       WalletStore wallet, List<AddressStore> addressStore);
 
-  Future<List<WalletStore>> getWallets({required Network network});
+  Future<List<WalletStore>> getWallets({required NetworkType network});
 
   Future<void> updateWalletName(String id, String title);
 
@@ -44,5 +44,5 @@ abstract class BaseDBHelper {
   );
 
   Future<List<TransactionStore>> getTransactions(
-      String walletID, Network network);
+      String walletID, NetworkType network);
 }

@@ -1,4 +1,3 @@
-import 'package:alephium_wallet/api/dto_models/balance_dto.dart';
 import 'package:alephium_wallet/bloc/create_wallet/create_wallet_bloc.dart';
 import 'package:alephium_wallet/routes/constants.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
@@ -24,7 +23,7 @@ class _NewWalletPageState extends State<NewWalletPage> {
   @override
   void initState() {
     FlutterNativeSplash.remove();
-    _createWalletBloc = CreateWalletBloc(Blockchain.Alephium);
+    _createWalletBloc = CreateWalletBloc();
     super.initState();
   }
 
@@ -123,6 +122,21 @@ class _NewWalletPageState extends State<NewWalletPage> {
                             },
                             icon: Icons.lock_rounded,
                           ),
+                          NewWalletCheckbox(
+                            title: "multisigWallet".tr(),
+                            description: "multisigWalletDescription".tr(),
+                            value: "multisig",
+                            selected: selected,
+                            onTap: (value) {
+                              setState(() {
+                                if (selected == value)
+                                  selected = null;
+                                else
+                                  selected = value;
+                              });
+                            },
+                            icon: Icons.multiple_stop,
+                          ),
                         ],
                       )),
                     ),
@@ -156,19 +170,30 @@ class _NewWalletPageState extends State<NewWalletPage> {
                                       "bloc": _createWalletBloc,
                                     },
                                   );
+                                else if (selected == "multisig")
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.multisigWallet,
+                                    arguments: {
+                                      "bloc": _createWalletBloc,
+                                    },
+                                  );
                               }
                             : null,
                         child: Text("next".tr()),
                       ),
                     ),
                   ),
-                  SizedBox(height: 42),
                 ],
               ),
             ),
             Positioned.fill(
               child: BlocBuilder<CreateWalletBloc, CreateWalletState>(
                   bloc: _createWalletBloc,
+                  buildWhen: (previous, current) {
+                    return current is GenerateWalletLoading ||
+                        previous is GenerateWalletLoading;
+                  },
                   builder: (context, state) {
                     return Visibility(
                       visible: state is GenerateWalletLoading,

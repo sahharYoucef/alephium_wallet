@@ -1,5 +1,4 @@
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
-import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +9,7 @@ class NewWalletCheckbox extends StatelessWidget {
   final Function(String) onTap;
   final String description;
   final IconData icon;
+  final bool enabled;
   const NewWalletCheckbox({
     Key? key,
     this.selected,
@@ -18,6 +18,7 @@ class NewWalletCheckbox extends StatelessWidget {
     required this.onTap,
     required this.description,
     required this.icon,
+    this.enabled = true,
   }) : super(key: key);
 
   @override
@@ -29,15 +30,19 @@ class NewWalletCheckbox extends StatelessWidget {
       child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Material(
-            elevation: value == selected ? 5 : 0,
-            color: Theme.of(context).primaryColor,
-            shadowColor: Color(0xff1902d5),
+            elevation: value == selected && enabled ? 5 : 0,
+            color: !enabled
+                ? Theme.of(context).disabledColor
+                : Theme.of(context).primaryColor,
+            shadowColor: !enabled ? null : Color(0xff1902d5),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0)),
             child: InkWell(
-              onTap: () {
-                onTap(value);
-              },
+              onTap: !enabled
+                  ? null
+                  : () {
+                      onTap(value);
+                    },
               borderRadius: BorderRadius.circular(8),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -80,7 +85,11 @@ class NewWalletCheckbox extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!
-                                .copyWith(letterSpacing: 1.5),
+                                .copyWith(
+                                  wordSpacing: 1.5,
+                                  letterSpacing: 1.0,
+                                  fontSize: 15,
+                                ),
                           ),
                         ],
                       ),

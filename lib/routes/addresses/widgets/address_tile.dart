@@ -69,45 +69,35 @@ class AddressTile extends StatelessWidget {
                     const SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      "${'group'.tr()} : ${address.group.toString()}",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
+                    if (address.group != null)
+                      Text(
+                        "${'group'.tr()} : ${address.group.toString()}",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                   ],
                 ),
                 const Divider(),
-                Row(children: [
-                  Text("${'balance'.tr()} : ",
-                      style: Theme.of(context).textTheme.headlineSmall),
-                  Text("${address.formattedBalance} ℵ",
-                          style: Theme.of(context).textTheme.headlineSmall)
-                      .obscure("ℵ"),
-                  if (address.balanceConverted != null &&
-                      address.balance?.balance != "0.0000") ...[
-                    Text(" = ", style: Theme.of(context).textTheme.bodyMedium),
-                    Text("${address.balanceConverted}  ",
-                            style: Theme.of(context).textTheme.bodyMedium)
-                        .obscure(),
-                  ]
-                ]),
+                if (address.balance != null)
+                  Row(children: [
+                    Text("${'balance'.tr()} : ",
+                        style: Theme.of(context).textTheme.headlineSmall),
+                    Text("${address.formattedBalance} ℵ",
+                            style: Theme.of(context).textTheme.headlineSmall)
+                        .obscure("ℵ"),
+                    if (address.balanceConverted != null &&
+                        address.balance?.balance != "0.0000") ...[
+                      Text(" = ",
+                          style: Theme.of(context).textTheme.bodyMedium),
+                      Text("${address.balanceConverted}  ",
+                              style: Theme.of(context).textTheme.bodyMedium)
+                          .obscure(),
+                    ]
+                  ]),
                 Row(
                   children: [
                     Expanded(
                       child: AddressText(
                         address: address.address,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              foreground: Paint()
-                                ..shader = LinearGradient(
-                                  begin: Alignment.topRight,
-                                  end: Alignment.bottomLeft,
-                                  colors: [
-                                    WalletTheme.instance.gradientOne,
-                                    WalletTheme.instance.gradientTwo,
-                                  ],
-                                ).createShader(
-                                    Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
-                            ),
                       ),
                     ),
                     const SizedBox(
@@ -116,18 +106,16 @@ class AddressTile extends StatelessWidget {
                     IconButton(
                         tooltip: "copy".tr(),
                         onPressed: () async {
-                          showGeneralDialog(
-                            barrierDismissible: true,
-                            barrierLabel: "receive",
+                          showModalBottomSheet(
+                            isDismissible: true,
                             context: context,
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    Padding(
+                            backgroundColor: Colors.transparent,
+                            builder: (
+                              context,
+                            ) =>
+                                Padding(
                               padding: EdgeInsets.only(
-                                  top: 16,
-                                  bottom: 16 + context.viewInsetsBottom,
-                                  left: 16,
-                                  right: 16),
+                                  top: 16, bottom: 16, left: 16, right: 16),
                               child: Center(
                                 child: Material(
                                     color: WalletTheme.instance.secondary,
@@ -140,20 +128,6 @@ class AddressTile extends StatelessWidget {
                                     )),
                               ),
                             ),
-                            transitionDuration:
-                                const Duration(milliseconds: 300),
-                            transitionBuilder: (context, animation,
-                                secondaryAnimation, child) {
-                              return SlideTransition(
-                                position: animation.drive(
-                                  Tween<Offset>(
-                                    begin: Offset(0, 1),
-                                    end: Offset.zero,
-                                  ),
-                                ),
-                                child: child,
-                              );
-                            },
                           );
                         },
                         icon: GradientIcon(

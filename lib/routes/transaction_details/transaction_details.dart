@@ -12,7 +12,7 @@ import 'package:alephium_wallet/api/repositories/alephium/alephium_api_repositor
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/main.dart';
 
-class TransactionDetails extends StatefulWidget {
+class TransactionDetails extends StatelessWidget {
   final TransactionStore transaction;
   const TransactionDetails({
     Key? key,
@@ -20,33 +20,13 @@ class TransactionDetails extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<TransactionDetails> createState() => _TransactionDetailsState();
-}
-
-class _TransactionDetailsState extends State<TransactionDetails> {
-  late final ScrollController scrollController;
-
-  @override
-  void initState() {
-    scrollController = ScrollController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final status = widget.transaction.status == TXStatus.completed;
-    final title = widget.transaction.blockHash != null
-        ? "Hash"
-        : "${'transaction'.tr()} id";
-    final value = widget.transaction.blockHash != null
-        ? widget.transaction.blockHash
-        : widget.transaction.transactionID;
+    final status = transaction.status == TXStatus.completed;
+    final title =
+        transaction.blockHash != null ? "Hash" : "${'transaction'.tr()} id";
+    final value = transaction.blockHash != null
+        ? transaction.blockHash
+        : transaction.transactionID;
     return Scaffold(
       body: Stack(
         children: [
@@ -56,7 +36,6 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                 top: 20 + 70 + context.topPadding,
                 bottom: 32,
               ),
-              controller: scrollController,
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -83,7 +62,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                               height: 6,
                             ),
                             AddressText(
-                              address: "${widget.transaction.blockHash}",
+                              address: value,
                             ),
                             const Divider(),
                           ],
@@ -95,7 +74,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                               ),
                               Spacer(),
                               Text(
-                                widget.transaction.network.name,
+                                transaction.network.name,
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineSmall!
@@ -133,7 +112,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                               ),
                               Spacer(),
                               Text(
-                                "${widget.transaction.amount}",
+                                "${transaction.amount}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineSmall!
@@ -153,7 +132,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                               ),
                               Text(
                                 DateTime.fromMillisecondsSinceEpoch(
-                                        widget.transaction.timeStamp)
+                                        transaction.timeStamp)
                                     .toIso8601String(),
                                 style: Theme.of(context)
                                     .textTheme
@@ -170,7 +149,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           TransactionReferences(
-                            refs: widget.transaction.refsIn,
+                            refs: transaction.refsIn,
                           ),
                           const Divider(),
                           Text(
@@ -178,7 +157,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           TransactionReferences(
-                            refs: widget.transaction.refsOut,
+                            refs: transaction.refsOut,
                           ),
                           const Divider(),
                           Column(
@@ -189,7 +168,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               Text(
-                                widget.transaction.gasAmount.toString(),
+                                transaction.gasAmount.toString(),
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineSmall!
@@ -208,7 +187,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               Text(
-                                "${widget.transaction.gasPrice}",
+                                "${transaction.gasPrice}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineSmall!
@@ -227,7 +206,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               Text(
-                                "${widget.transaction.fee} ℵ",
+                                "${transaction.fee} ℵ",
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineSmall!
@@ -261,7 +240,6 @@ class _TransactionDetailsState extends State<TransactionDetails> {
           Align(
             alignment: Alignment.topCenter,
             child: WalletAppBar(
-                controller: scrollController,
                 label: Text(
                   'transactionDetails'.tr(),
                   style: Theme.of(context).textTheme.headlineMedium,
@@ -282,7 +260,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   Future<void> _launchUrl() async {
     final repo = getIt.get<BaseApiRepository>() as AlephiumApiRepository;
     final url =
-        "${repo.network.explorerUrl}/transactions/${widget.transaction.txHash}";
+        "${repo.network.data.explorerUrl}/transactions/${transaction.txHash}";
     await launch(url);
   }
 }

@@ -10,7 +10,7 @@ abstract class TransactionState extends Equatable {
 class TransactionLoading extends TransactionState {}
 
 class TransactionStatusState extends TransactionState {
-  final TransactionBuildDto? transaction;
+  final BuildTransactionResult? transaction;
   final bool isFinished;
   final double? amount;
   final String? toAddress;
@@ -50,9 +50,32 @@ class TransactionSendingCompleted extends TransactionState {
       ];
 }
 
+class WaitForOtherSignatureState extends TransactionState {
+  final String txId;
+  final List<String> addresses;
+
+  const WaitForOtherSignatureState({
+    required this.addresses,
+    required this.txId,
+  });
+
+  @override
+  List<Object?> get props => [
+        this.addresses,
+        this.txId,
+      ];
+}
+
 class TransactionError extends TransactionState {
   final String message;
   const TransactionError({required this.message});
   @override
   List<Object?> get props => [message];
+}
+
+class TransactionSingingCompleted extends TransactionState {
+  final String signature;
+  const TransactionSingingCompleted({required this.signature});
+  @override
+  List<Object?> get props => [signature];
 }

@@ -9,7 +9,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 
 class WalletAppBar extends StatefulWidget {
-  final AppBarIconButton? action;
+  final Widget? action;
   final Text? label;
   final bool withLoadingIndicator;
   final ScrollController? controller;
@@ -23,10 +23,10 @@ class WalletAppBar extends StatefulWidget {
     this.label,
     this.withLoadingIndicator = false,
     this.leading,
-    this.elevation = 0,
+    this.elevation = 1,
     Color? color,
   }) : super(key: key) {
-    this.color = color ?? WalletTheme.instance.background;
+    this.color = color ?? WalletTheme.instance.primary;
   }
 
   @override
@@ -46,12 +46,12 @@ class _WalletAppBarState extends State<WalletAppBar> {
 
   @override
   void didUpdateWidget(covariant WalletAppBar oldWidget) {
-    if (widget.controller != null) {
-      appBarColor = Color.lerp(widget.color, WalletTheme.instance.primary,
-          (widget.controller!.offset / 50).clamp(0, 1))!;
-    } else {
-      appBarColor = widget.color;
-    }
+    //   if (widget.controller != null) {
+    //     appBarColor = Color.lerp(widget.color, WalletTheme.instance.primary,
+    //         (widget.controller!.offset / 50).clamp(0, 1))!;
+    //   } else {
+    appBarColor = widget.color;
+    //   }
     setState(() {});
     super.didUpdateWidget(oldWidget);
   }
@@ -124,37 +124,37 @@ class _WalletAppBarState extends State<WalletAppBar> {
       ),
     );
     late final Widget child;
-    if (widget.controller != null) {
-      child = AnimatedBuilder(
-        animation: widget.controller!,
-        builder: (context, child) {
-          try {
-            appBarColor = Color.lerp(widget.color, WalletTheme.instance.primary,
-                (widget.controller!.offset / 50).clamp(0, 1))!;
-            elevation = (widget.controller!.offset / 50 * 2).clamp(0, 2);
-          } catch (_) {
-            appBarColor = widget.color;
-            elevation = widget.elevation;
-          }
-          return Material(
-            shape: AppBarShape(),
-            elevation: elevation,
-            color: appBarColor,
-            shadowColor: WalletTheme.instance.gradientOne,
-            child: child,
-          );
-        },
-        child: safeArea,
-      );
-    } else {
-      child = Material(
-        shape: AppBarShape(),
-        elevation: elevation,
-        color: appBarColor,
-        shadowColor: WalletTheme.instance.gradientOne,
-        child: safeArea,
-      );
-    }
+    // if (widget.controller != null) {
+    //   child = AnimatedBuilder(
+    //     animation: widget.controller!,
+    //     builder: (context, child) {
+    //       try {
+    //         appBarColor = Color.lerp(widget.color, WalletTheme.instance.primary,
+    //             (widget.controller!.offset / 50).clamp(0, 1))!;
+    //         elevation = (widget.controller!.offset / 50 * 2).clamp(0, 2);
+    //       } catch (_) {
+    //         appBarColor = widget.color;
+    //         elevation = widget.elevation;
+    //       }
+    //       return Material(
+    //         shape: AppBarShape(),
+    //         elevation: elevation,
+    //         color: appBarColor,
+    //         shadowColor: WalletTheme.instance.gradientOne,
+    //         child: child,
+    //       );
+    //     },
+    //     child: safeArea,
+    //   );
+    // } else {
+    child = Material(
+      shape: AppBarShape(),
+      elevation: elevation,
+      color: appBarColor,
+      shadowColor: WalletTheme.instance.gradientOne,
+      child: safeArea,
+    );
+    // }
     return Align(
       alignment: Alignment.topCenter,
       child: Hero(

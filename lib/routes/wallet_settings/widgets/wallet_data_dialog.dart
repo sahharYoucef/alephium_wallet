@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -22,14 +24,14 @@ class WalletSettingDataDialog extends StatefulWidget {
 class _WalletSettingDataDialogState extends State<WalletSettingDataDialog> {
   @override
   void initState() {
-    if (widget.isSecure)
+    if (widget.isSecure && Platform.isAndroid)
       FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     super.initState();
   }
 
   @override
   void dispose() {
-    if (widget.isSecure)
+    if (widget.isSecure && Platform.isAndroid)
       FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
     super.dispose();
   }

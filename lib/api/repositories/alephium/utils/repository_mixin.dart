@@ -1,7 +1,7 @@
 part of "../alephium_api_repository.dart";
 
 mixin RepositoryMixin {
-  Network get network;
+  NetworkType get network;
 
   AddressStore updateAddressBalance(Balance data,
       {required AddressStore address}) {

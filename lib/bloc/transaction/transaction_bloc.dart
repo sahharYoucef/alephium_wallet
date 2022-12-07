@@ -1,3 +1,6 @@
+import 'package:alephium_dart/alephium_dart.dart';
+import 'package:alephium_wallet/api/utils/constants.dart';
+import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
@@ -5,8 +8,6 @@ import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:alephium_wallet/storage/models/token_store.dart';
 import 'package:alephium_wallet/utils/format.dart';
 import 'package:bloc/bloc.dart';
-import 'package:alephium_wallet/api/dto_models/transaction_build_dto.dart';
-import 'package:alephium_wallet/api/dto_models/transaction_result_dto.dart';
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/api/utils/either.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
@@ -29,8 +30,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   String? toAddress;
   String? txId;
   String? signature;
-  String? unsignedTx;
-  TransactionBuildDto? transaction;
+  BuildTransactionResult? transaction;
   List<TokenStore> tokens = [];
   final AuthenticationService authenticationService;
 
@@ -62,12 +62,14 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final WalletStore wallet;
   final BaseApiRepository apiRepository;
   final BaseWalletService walletService;
+  late final NetworkType network;
   TransactionBloc(
     this.authenticationService,
     this.apiRepository,
     this.walletService,
     this.wallet,
-  ) : super(TransactionStatusState()) {
+  )   : network = apiRepository.network,
+        super(TransactionStatusState()) {
     on<TransactionEvent>((event, emit) async {
       if (event is TransactionValuesChangedEvent) {
         if (event.fromAddress != null) {
@@ -127,28 +129,47 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           if (!activateButton) {
             return;
           }
-          var data = await apiRepository.createTransaction(
-            amount: amount?.parseToAlphValue ?? BigInt.zero,
-            fromPublicKey: fromAddress!.publicKey!,
-            toAddress: toAddress!,
-            gasAmount: gasAmount,
-            gasPrice: gasPrice,
-            tokens: tokens.isEmpty ? null : tokens,
-          );
-          if (data.hasException || data.data == null) {
-            emit(TransactionError(
-              message: data.exception?.message ?? 'Unknown error',
-            ));
-            return;
+          if (wallet.type == WalletType.normal) {
+            var data = await apiRepository.createTransaction(
+              amount: amount?.parseToAlphValue ?? BigInt.zero,
+              fromPublicKey: fromAddress!.publicKey!,
+              toAddress: toAddress!,
+              gasAmount: gasAmount,
+              gasPrice: gasPrice,
+              tokens: tokens.isEmpty ? null : tokens,
+            );
+            if (data.hasException || data.data == null) {
+              emit(TransactionError(
+                message: data.exception?.message ?? 'Unknown error',
+              ));
+              return;
+            }
+            transaction = data.data;
+          } else if (wallet.type == WalletType.multisig) {
+            var data = await apiRepository.buildMultisigTx(
+              fromAddress: fromAddress!.address,
+              amount: amount?.parseToAlphValue ?? BigInt.zero,
+              fromPublicKey: [...wallet.signatures!],
+              toAddress: toAddress!,
+              gasAmount: gasAmount,
+              gasPrice: gasPrice,
+              tokens: tokens.isEmpty ? null : tokens,
+            );
+            if (data.hasException || data.data == null) {
+              emit(TransactionError(
+                message: data.exception?.message ?? 'Unknown error',
+              ));
+              return;
+            }
+            transaction = data.data;
           }
-          transaction = data.data;
           emit(TransactionStatusState(
-            transaction: data.data!,
+            transaction: transaction,
             tokens: tokens,
           ));
-        } catch (e) {
+        } catch (e, _) {
           emit(TransactionError(
-            message: e.toString(),
+            message: kErrorMessageGenericError,
           ));
         }
       } else if (event is SweepTransaction) {
@@ -166,7 +187,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           ));
           return;
         }
-        var transactions = await Future.wait<Either<TransactionResultDTO>>([
+        var transactions = await Future.wait<Either<TxResult>>([
           ...sending.data!.unsignedTxs!.map((value) async {
             var signature = walletService.signTransaction(
                 value.txId!, event.fromAddress.privateKey!);
@@ -188,6 +209,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           data.add(_createTransaction(
               value.data!, event.fromAddress, event.toAddress.address));
         }
+        await getIt.get<BaseDBHelper>().insertTransactions(wallet.id, data);
         emit(
           TransactionSendingCompleted(
             transactions: data,
@@ -224,17 +246,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           }
           var data =
               _createTransaction(sending.data!, fromAddress!, toAddress!);
-          if (getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
-                  ?[wallet.id] ==
-              null) {
-            getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
-                ?[wallet.id] = [data];
-          } else
-            getIt
-                .get<BaseDBHelper>()
-                .transactions[apiRepository.network.name]?[wallet.id]
-                ?.addAll([data]);
-          getIt.get<BaseDBHelper>().insertTransactions(wallet.id, [data]);
+          await getIt.get<BaseDBHelper>().insertTransactions(wallet.id, [data]);
           emit(
             TransactionSendingCompleted(
               transactions: [data],
@@ -242,15 +254,70 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           );
         } catch (e) {
           emit(TransactionError(
-            message: e.toString(),
+            message: kErrorMessageGenericError,
+          ));
+        }
+      } else if (event is CheckSignMultisigTransaction) {
+        try {
+          emit(TransactionLoading());
+          var addresses = <String>[];
+          for (final signature in wallet.signatures!) {
+            addresses.add(walletService.addressFromPublicKey(signature));
+          }
+          emit(
+            WaitForOtherSignatureState(
+              addresses: addresses,
+              txId: transaction!.txId!,
+            ),
+          );
+        } catch (e) {
+          emit(TransactionError(
+            message: kErrorMessageGenericError,
+          ));
+        }
+      } else if (event is SendMultisigTransaction) {
+        try {
+          if (AppStorage.instance.localAuth) {
+            final didAuthenticate = await authenticationService.authenticate(
+              "authenticateToSendTransaction".tr(),
+            );
+            if (!didAuthenticate) {
+              emit(TransactionError(
+                message: 'Unknown error',
+              ));
+              return;
+            }
+          }
+          emit(TransactionLoading());
+          var sending = await apiRepository.submitMultisigTx(
+            signatures: event.signatures,
+            unsignedTx: transaction!.unsignedTx!,
+          );
+          if (sending.hasException || sending.data == null) {
+            emit(TransactionError(
+              message: sending.exception?.message ?? 'Unknown error',
+            ));
+            return;
+          }
+          var data =
+              _createTransaction(sending.data!, fromAddress!, toAddress!);
+          await getIt.get<BaseDBHelper>().insertTransactions(wallet.id, [data]);
+          emit(
+            TransactionSendingCompleted(
+              transactions: [data],
+            ),
+          );
+        } catch (e) {
+          emit(TransactionError(
+            message: kErrorMessageGenericError,
           ));
         }
       }
     });
   }
 
-  TransactionStore _createTransaction(TransactionResultDTO value,
-      AddressStore _fromAddress, String _toAddress) {
+  TransactionStore _createTransaction(
+      TxResult value, AddressStore _fromAddress, String _toAddress) {
     var data = TransactionStore(
       transactionID: value.txId ?? "",
       address: _fromAddress.address,
@@ -260,7 +327,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       txHash: value.txId!,
       gasPrice: transaction?.gasPrice,
       gasAmount: transaction?.gasAmount,
-      network: apiRepository.network,
+      network: network,
     );
     var fee = data.feeValue;
     data = data.copyWith(

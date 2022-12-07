@@ -1,5 +1,10 @@
 import 'dart:async';
 
+import 'package:alephium_wallet/api/utils/constants.dart';
+import 'package:alephium_wallet/api/utils/either.dart';
+import 'package:alephium_wallet/api/utils/network.dart';
+import 'package:alephium_wallet/storage/models/wallet_store.dart';
+import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:bloc/bloc.dart';
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/api/utils/error_handler.dart';
@@ -11,10 +16,6 @@ import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:equatable/equatable.dart';
 import 'package:collection/collection.dart';
 
-import '../../api/utils/either.dart';
-import '../../storage/models/address_store.dart';
-import '../../storage/models/wallet_store.dart';
-
 part 'wallet_details_event.dart';
 part 'wallet_details_state.dart';
 
@@ -22,6 +23,8 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
   final BaseApiRepository apiRepository;
   final BaseWalletService walletService;
   final WalletHomeBloc walletHomeBloc;
+  late final NetworkType network;
+  late final String id;
   WalletStore wallet;
 
   Timer? periodic;
@@ -32,90 +35,108 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
     required this.walletService,
     required this.wallet,
     required this.walletHomeBloc,
-  }) : super(WalletDetailsInitial()) {
+  })  : network = apiRepository.network,
+        id = wallet.id,
+        super(WalletDetailsInitial()) {
     on<WalletDetailsEvent>((event, emit) async {
       if (event is WalletDetailsLoadData) {
         emit(WalletDetailsLoading());
-        _transactions = getIt
-                .get<BaseDBHelper>()
-                .transactions[apiRepository.network.name]?[wallet.id] ??
-            await getIt
-                .get<BaseDBHelper>()
-                .getTransactions(wallet.id, apiRepository.network);
+        _transactions = await _getSortedTransactions;
         emit(WalletDetailsCompleted(
           transactions: List.from(_transactions),
           withLoadingIndicator: true,
           wallet: wallet,
         ));
         try {
-          var updateTransactions = await _updateTransactions();
-          _transactions
-              .removeWhere((element) => updateTransactions.contains(element));
-          _transactions.addAll(updateTransactions);
-          _transactions.sort(((a, b) => a.timeStamp.compareTo(b.timeStamp)));
-          getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
-              ?[wallet.id] = List.from(_transactions.reversed);
-          await Future.delayed(Duration(seconds: 2));
+          var updateTransactions = await _updateTransactions;
+
+          if (updateTransactions.data!.isNotEmpty) {
+            _transactions.removeWhere(
+                (element) => updateTransactions.data!.contains(element));
+            _transactions.addAll(updateTransactions.data!);
+            _transactions.sort(((a, b) {
+              return -a.timeStamp.compareTo(b.timeStamp);
+            }));
+            getIt.get<BaseDBHelper>().txCaches[network]?[id] =
+                List.from(_transactions);
+            getIt
+                .get<BaseDBHelper>()
+                .insertTransactions(id, updateTransactions.data!);
+          }
+          if (updateTransactions.hasException) {
+            emit(WalletDetailsError(
+              message: updateTransactions.exception?.message,
+            ));
+          }
           emit(WalletDetailsCompleted(
-            transactions: List.from(_transactions.reversed),
+            transactions: List.from(_transactions),
             wallet: wallet,
           ));
-          await getIt
-              .get<BaseDBHelper>()
-              .insertTransactions(wallet.id, updateTransactions);
-        } catch (e, trace) {
+        } catch (e) {
           emit(WalletDetailsError(
-            message: ApiError(exception: e).message,
+            message: kErrorMessageGenericError,
           ));
         }
       } else if (event is WalletDetailsRefreshData) {
         emit(WalletDetailsCompleted(
-          transactions: List.from(_transactions.reversed),
+          transactions: List.from(_transactions),
           wallet: wallet,
           withLoadingIndicator: true,
         ));
         try {
-          var updateTransactions = await _updateTransactions();
-          if (updateTransactions.isEmpty && (periodic?.isActive ?? false))
+          var updateTransactions = await _updateTransactions;
+
+          if (updateTransactions.data!.isEmpty &&
+              (periodic?.isActive ?? false)) {
+            if (updateTransactions.hasException) {
+              emit(WalletDetailsError(
+                message: updateTransactions.exception?.message,
+              ));
+            }
             return;
+          }
 
-          var updatedAddresses = await _updateAddresses();
-          getIt.get<BaseDBHelper>().updateAddressBalance(
-                updatedAddresses,
-              );
-          wallet = wallet.copyWith(addresses: updatedAddresses);
-          walletHomeBloc.add(HomeUpdateWalletDetails(wallet));
-
-          _transactions
-              .removeWhere((element) => updateTransactions.contains(element));
-          _transactions.addAll(updateTransactions);
-          _transactions.sort(((a, b) => a.timeStamp.compareTo(b.timeStamp)));
-          getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
-              ?[wallet.id] = _transactions.reversed.toList();
+          var updatedAddresses = await _updateAddresses;
+          if (updatedAddresses.data!.isNotEmpty) {
+            getIt.get<BaseDBHelper>().updateAddressBalance(
+                  updatedAddresses.data!,
+                );
+            wallet = wallet.copyWith(addresses: updatedAddresses.data!);
+            walletHomeBloc.add(HomeUpdateWalletDetails(wallet));
+          }
+          if (updateTransactions.data!.isNotEmpty) {
+            _transactions.removeWhere(
+                (element) => updateTransactions.data!.contains(element));
+            _transactions.addAll(updateTransactions.data!);
+            _transactions.sort(((a, b) {
+              return -a.timeStamp.compareTo(b.timeStamp);
+            }));
+            getIt.get<BaseDBHelper>().txCaches[network]?[id] =
+                _transactions.toList();
+          }
+          if (updateTransactions.hasException ||
+              updatedAddresses.hasException) {
+            emit(WalletDetailsError(
+              message: updatedAddresses.exception?.message,
+            ));
+          }
           emit(WalletDetailsCompleted(
-            transactions: List.from(_transactions.reversed),
+            transactions: List.from(_transactions),
             wallet: wallet,
             withLoadingIndicator: false,
           ));
           await getIt
               .get<BaseDBHelper>()
-              .insertTransactions(wallet.id, updateTransactions);
-        } catch (e, trace) {
+              .insertTransactions(id, updateTransactions.data!);
+        } catch (e) {
           emit(WalletDetailsError(
-            message: ApiError(exception: e).message,
+            message: kErrorMessageGenericError,
           ));
         }
       } else if (event is AddPendingTxs) {
         try {
-          _transactions = getIt
-                  .get<BaseDBHelper>()
-                  .transactions[apiRepository.network.name]?[wallet.id] ??
-              await getIt
-                  .get<BaseDBHelper>()
-                  .getTransactions(wallet.id, apiRepository.network);
-          _transactions.sort(((a, b) => a.timeStamp.compareTo(b.timeStamp)));
-          getIt.get<BaseDBHelper>().transactions[apiRepository.network.name]
-              ?[wallet.id] = _transactions;
+          _transactions = await _getSortedTransactions;
+          getIt.get<BaseDBHelper>().txCaches[network]?[id] = _transactions;
           periodic = Timer.periodic(Duration(seconds: 10), (value) {
             var tx = _transactions.firstWhereOrNull(
                 (element) => element.status == TXStatus.pending);
@@ -126,35 +147,45 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
             if (!this.isClosed) add(WalletDetailsRefreshData());
           });
           emit(WalletDetailsCompleted(
-            transactions: List.from(_transactions.reversed),
+            transactions: List.from(_transactions),
             withLoadingIndicator: true,
             wallet: wallet,
           ));
           add(UpdateWalletBalance());
-          getIt
-              .get<BaseDBHelper>()
-              .insertTransactions(wallet.id, event.transactions);
         } catch (e) {
           emit(WalletDetailsError(
-            message: ApiError(exception: e).message,
+            message: kErrorMessageGenericError,
           ));
         }
       } else if (event is UpdateWalletBalance) {
-        var updatedAddresses = await _updateAddresses();
-        getIt.get<BaseDBHelper>().updateAddressBalance(
-              updatedAddresses,
-            );
-        wallet = wallet.copyWith(addresses: updatedAddresses);
-        walletHomeBloc.add(HomeUpdateWalletDetails(wallet));
-        emit(WalletDetailsCompleted(
-          transactions: List.from(_transactions.reversed),
-          wallet: wallet,
-          withLoadingIndicator: false,
-        ));
+        try {
+          var updatedAddresses = await _updateAddresses;
+          if (updatedAddresses.data!.isNotEmpty) {
+            getIt.get<BaseDBHelper>().updateAddressBalance(
+                  updatedAddresses.data!,
+                );
+            wallet = wallet.copyWith(addresses: updatedAddresses.data);
+            walletHomeBloc.add(HomeUpdateWalletDetails(wallet));
+          }
+          if (updatedAddresses.hasException) {
+            emit(WalletDetailsError(
+              message: updatedAddresses.exception?.message,
+            ));
+          }
+          emit(WalletDetailsCompleted(
+            transactions: List.from(_transactions),
+            wallet: wallet,
+            withLoadingIndicator: false,
+          ));
+        } catch (e) {
+          emit(WalletDetailsError(
+            message: kErrorMessageGenericError,
+          ));
+        }
       } else if (event is GenerateNewAddress) {
         var indexes = wallet.addresses.map((e) => e.index).toList();
         var newAddress = walletService.deriveNewAddress(
-          walletId: wallet.id,
+          walletId: id,
           seed: wallet.seed!,
           skipAddressIndexes: indexes,
           forGroup: event.group,
@@ -165,10 +196,10 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
           wallet = wallet.copyWith(mainAddress: newAddress.address);
           getIt
               .get<BaseDBHelper>()
-              .updateWalletMainAddress(wallet.id, wallet.mainAddress);
+              .updateWalletMainAddress(id, wallet.mainAddress);
         }
         emit(WalletDetailsCompleted(
-            transactions: List.from(_transactions.reversed),
+            transactions: List.from(_transactions),
             wallet: wallet,
             withLoadingIndicator: true));
         await getIt.get<BaseDBHelper>().insertAddress([newAddress]);
@@ -181,17 +212,17 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
         );
         wallet.addresses.addAll(newAddresses);
         emit(WalletDetailsCompleted(
-            transactions: List.from(_transactions.reversed),
+            transactions: List.from(_transactions),
             wallet: wallet,
             withLoadingIndicator: true));
         await getIt.get<BaseDBHelper>().insertAddress(newAddresses);
         add(WalletDetailsRefreshData());
       } else if (event is UpdateWalletName) {
         wallet = wallet.copyWith(title: event.name);
-        await getIt.get<BaseDBHelper>().updateWalletName(wallet.id, event.name);
+        await getIt.get<BaseDBHelper>().updateWalletName(id, event.name);
         emit(
           WalletDetailsCompleted(
-            transactions: List.from(_transactions.reversed),
+            transactions: List.from(_transactions),
             wallet: wallet,
           ),
         );
@@ -200,8 +231,18 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
     });
   }
 
-  Future<List<TransactionStore>> _updateTransactions() async {
+  Future<List<TransactionStore>> get _getSortedTransactions async {
+    _transactions = getIt.get<BaseDBHelper>().txCaches[network]?[id] ??
+        await getIt.get<BaseDBHelper>().getTransactions(id, network);
+    _transactions.sort(((a, b) {
+      return -a.timeStamp.compareTo(b.timeStamp);
+    }));
+    return _transactions;
+  }
+
+  Future<Either<List<TransactionStore>>> get _updateTransactions async {
     var addresses = <AddressStore>[];
+    bool withException = false;
     for (var address in wallet.addresses) addresses.add(address);
     List<Either<List<TransactionStore>>> data = [];
     var chunks = <List<AddressStore>>[];
@@ -235,13 +276,21 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
           if (a == null || a.status == TXStatus.pending)
             updateTransactions.add(tx);
         }
+      } else if (value.hasException) {
+        withException = true;
       }
     }
-    return updateTransactions;
+    return Either(
+      data: updateTransactions,
+      error: withException
+          ? ApiError(exception: Exception(kErrorMessageGenericError))
+          : null,
+    );
   }
 
-  Future<List<AddressStore>> _updateAddresses() async {
+  Future<Either<List<AddressStore>>> get _updateAddresses async {
     var addresses = <AddressStore>[];
+    bool withException = false;
     for (var address in wallet.addresses) addresses.add(address);
     List<Either<AddressStore>> data = [];
     var chunks = <List<AddressStore>>[];
@@ -263,8 +312,15 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
     for (var address in data) {
       if (address.hasData && address.data != null) {
         updatedAddresses.add(address.data!);
+      } else if (address.hasException) {
+        withException = true;
       }
     }
-    return updatedAddresses;
+    return Either(
+      data: updatedAddresses,
+      error: withException
+          ? ApiError(exception: Exception(kErrorMessageGenericError))
+          : null,
+    );
   }
 }

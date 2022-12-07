@@ -1,17 +1,26 @@
 import 'package:alephium_wallet/routes/restore_wallet/widgets/mnemonic_text_field.dart';
+import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../bloc/create_wallet/create_wallet_bloc.dart';
 
-class RestoreWallet extends StatelessWidget {
+class RestoreWallet extends StatefulWidget {
   final CreateWalletBloc bloc;
 
   RestoreWallet({super.key, required this.bloc});
 
+  @override
+  State<RestoreWallet> createState() => _RestoreWalletState();
+}
+
+class _RestoreWalletState extends State<RestoreWallet> {
   final GlobalKey<MnemonicTextFieldState> _key =
       GlobalKey<MnemonicTextFieldState>();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -31,7 +40,8 @@ class RestoreWallet extends StatelessWidget {
                   ),
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 16.w, vertical: 16.h),
                       child: Text(
                         "enterMnemonic".tr(),
                         style: Theme.of(context).textTheme.bodyLarge,
@@ -41,7 +51,8 @@ class RestoreWallet extends StatelessWidget {
                   SliverToBoxAdapter(
                     child: Center(
                       child: Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.w, vertical: 16.h),
                         child: MnemonicTextField(
                           key: _key,
                         ),
@@ -57,13 +68,14 @@ class RestoreWallet extends StatelessWidget {
                           bottom: true,
                           top: false,
                           child: Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.w, vertical: 16.h),
                             child: Hero(
                               tag: "button",
                               child: OutlinedButton(
                                 onPressed: () {
                                   if (_key.currentState?.mnemonic != null)
-                                    bloc.add(
+                                    widget.bloc.add(
                                       CreateWalletRestore(
                                         mnemonic: _key.currentState!.mnemonic,
                                       ),
@@ -85,6 +97,29 @@ class RestoreWallet extends StatelessWidget {
                 'restoreWallet'.tr(),
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
+            ),
+            Positioned.fill(
+              child: BlocBuilder<CreateWalletBloc, CreateWalletState>(
+                  bloc: widget.bloc,
+                  buildWhen: (previous, current) {
+                    return current is GenerateWalletLoading ||
+                        previous is GenerateWalletLoading;
+                  },
+                  builder: (context, state) {
+                    return Visibility(
+                      visible: state is GenerateWalletLoading,
+                      child: Container(
+                        height: double.infinity,
+                        width: double.infinity,
+                        color: Colors.black.withOpacity(0.3),
+                        child: Center(
+                          child: AlephiumIcon(
+                            spinning: true,
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
             ),
           ],
         ),

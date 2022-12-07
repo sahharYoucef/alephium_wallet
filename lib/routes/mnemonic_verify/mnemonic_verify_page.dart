@@ -7,6 +7,8 @@ import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class WalletMnemonicVerifyPage extends StatefulWidget {
   final WalletStore wallet;
@@ -75,114 +77,147 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
                     delegate: SliverChildListDelegate(
                   [
                     Padding(
-                      padding: const EdgeInsets.only(
-                          top: 16, left: 16, right: 16, bottom: 4),
+                      padding: EdgeInsets.only(
+                          top: 16.h, left: 16.w, right: 16.w, bottom: 4.h),
                       child: Text(
                         "verifyMnemonicDescription".tr(),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
-                    ...List.generate(
-                        2,
-                        ((index) => Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 4),
-                              child: DragTarget<Map<String, dynamic>>(
-                                onAccept: ((data) {
-                                  if (_data[index] != null) {
-                                    values[_data[0]["index"]] =
-                                        _data[0]["value"];
-                                  }
-                                  values[data["index"]] = null;
-                                  _data[index] = data;
-                                  setState(() {});
-                                }),
-                                builder:
-                                    (context, candidateData, rejectedData) {
-                                  String? data = _data[index]?["value"];
-                                  return data != null
-                                      ? Material(
-                                          color: color,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0)),
-                                          elevation: 2,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              if (_data[index] != null) {
-                                                values[_data[index]["index"]] =
-                                                    _data[index]["value"];
-                                                _data[index] = null;
-                                              }
-                                              if (message.isNotEmpty) {
-                                                color = WalletTheme
-                                                    .instance.primary;
-                                                message = "";
-                                              }
-                                              setState(() {});
-                                            },
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 16,
-                                                      vertical: 16),
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    "${indexes[index] + 1} - $data",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyLarge,
-                                                  ),
-                                                  Spacer(),
-                                                  Icon(Icons.close)
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : Material(
-                                          color: color,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0)),
-                                          elevation: 0,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 16, vertical: 16),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  "${indexes[index] + 1} -",
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyLarge,
-                                                ),
-                                                Spacer(),
-                                                Opacity(
-                                                    opacity:
-                                                        data != null ? 1 : 0,
-                                                    child: Icon(Icons.close))
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                },
-                              ),
-                            ))),
-                    const SizedBox(
-                      height: 4,
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+                      child: Row(
+                        children: [
+                          ...List.generate(
+                              2,
+                              ((index) => Expanded(
+                                    child: Padding(
+                                      padding: index == 0
+                                          ? EdgeInsets.only(right: 4.0)
+                                          : EdgeInsets.only(left: 4.0),
+                                      child: SizedBox(
+                                        height: 70.h,
+                                        child: DragTarget<Map<String, dynamic>>(
+                                          onAccept: ((data) {
+                                            if (_data[index] != null) {
+                                              values[_data[0]["index"]] =
+                                                  _data[0]["value"];
+                                            }
+                                            values[data["index"]] = null;
+                                            _data[index] = data;
+                                            setState(() {});
+                                          }),
+                                          builder: (context, candidateData,
+                                              rejectedData) {
+                                            String? data =
+                                                _data[index]?["value"];
+                                            return data != null
+                                                ? Material(
+                                                    color: color,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0.w)),
+                                                    elevation: 2,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        if (_data[index] !=
+                                                            null) {
+                                                          values[_data[index]
+                                                                  ["index"]] =
+                                                              _data[index]
+                                                                  ["value"];
+                                                          _data[index] = null;
+                                                        }
+                                                        if (message
+                                                            .isNotEmpty) {
+                                                          color = WalletTheme
+                                                              .instance.primary;
+                                                          message = "";
+                                                        }
+                                                        setState(() {});
+                                                      },
+                                                      child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: 16.w,
+                                                          vertical: 16.h,
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            AutoSizeText(
+                                                              "${indexes[index] + 1} - $data",
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .bodyLarge,
+                                                            ),
+                                                            Spacer(),
+                                                            Icon(Icons.close)
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Material(
+                                                    color: color,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0)),
+                                                    elevation: 0,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 16,
+                                                          vertical: 16),
+                                                      child: Row(
+                                                        children: [
+                                                          Text(
+                                                            "${indexes[index] + 1} -",
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyLarge,
+                                                          ),
+                                                          Spacer(),
+                                                          Opacity(
+                                                              opacity:
+                                                                  data != null
+                                                                      ? 1
+                                                                      : 0,
+                                                              child: Icon(
+                                                                  Icons.close))
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ))),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 4.h,
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                       child: Material(
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16)),
+                            borderRadius: BorderRadius.circular(16.w)),
                         elevation: 0,
                         color: Theme.of(context).primaryColor,
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0.w),
                           child: Column(
                             children: [
                               ...List.generate(
@@ -245,8 +280,8 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
                     children: [
                       const Spacer(),
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 16),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.w, vertical: 16.h),
                         child: Hero(
                           tag: "Button",
                           child: OutlinedButton(

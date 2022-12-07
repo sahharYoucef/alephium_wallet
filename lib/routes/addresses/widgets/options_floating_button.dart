@@ -39,8 +39,8 @@ class FloatingOptionsButton extends StatelessWidget {
           SpeedDialChild(
             labelBackgroundColor: WalletTheme.instance.primary,
             child: const Icon(Icons.generating_tokens),
-            backgroundColor: WalletTheme.instance.secondary,
-            foregroundColor: WalletTheme.instance.textColor,
+            backgroundColor: WalletTheme.instance.buttonsBackground,
+            foregroundColor: WalletTheme.instance.primary,
             elevation: 0,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0)),
@@ -74,8 +74,8 @@ class FloatingOptionsButton extends StatelessWidget {
           SpeedDialChild(
             labelBackgroundColor: WalletTheme.instance.primary,
             child: const Icon(Icons.engineering_outlined),
-            backgroundColor: WalletTheme.instance.secondary,
-            foregroundColor: WalletTheme.instance.textColor,
+            backgroundColor: WalletTheme.instance.buttonsBackground,
+            foregroundColor: WalletTheme.instance.primary,
             elevation: 0,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0)),

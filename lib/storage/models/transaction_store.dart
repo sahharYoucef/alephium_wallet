@@ -2,19 +2,11 @@ import 'dart:convert';
 
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/storage/models/transaction_ref_store.dart';
-import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
 class TransactionStore extends Equatable {
-  // txHash TEXT PRIMARY KEY,
-  // blockHash TEXT,
-  // timeStamp INTEGER,
-  // amount INTEGER,
-  // gas TEXT,
-  // status tx_status,
-  // wallet_id INTEGER,
   final String address;
   final String? transactionID;
   final String txHash;
@@ -26,7 +18,7 @@ class TransactionStore extends Equatable {
   final String walletId;
   final List<TransactionRefStore> refsIn;
   final List<TransactionRefStore> refsOut;
-  final Network network;
+  final NetworkType network;
 
   TransactionStore({
     required this.txHash,
@@ -64,7 +56,7 @@ class TransactionStore extends Equatable {
     final _walletId = data["walletId"];
     final _txStatus = _getStatus(data["status"] ?? "completed");
     final _timeStamp = data["timeStamp"];
-    final _network = Network.network(data["network"]);
+    final _network = NetworkType.network(data["network"]);
     final _transactionID = data["txID"];
     final _gasPrice = BigInt.tryParse(data["gasPrice"]);
     final _refsIn = _getRefs(data["refsIn"] as Uint8List?);
@@ -97,7 +89,7 @@ class TransactionStore extends Equatable {
     String? walletId,
     List<TransactionRefStore>? refsIn,
     List<TransactionRefStore>? refsOut,
-    Network? network,
+    NetworkType? network,
     String? transactionID,
   }) {
     return TransactionStore(

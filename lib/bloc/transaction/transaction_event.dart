@@ -64,15 +64,42 @@ class CheckTransactionEvent extends TransactionEvent {
       ];
 }
 
+class CheckSignMultisigTransaction extends TransactionEvent {
+  final AddressStore? fromAddress;
+  const CheckSignMultisigTransaction(this.fromAddress);
+
+  @override
+  List<Object?> get props => [
+        this.fromAddress,
+      ];
+}
+
+class SendMultisigTransaction extends TransactionEvent {
+  final List<String> signatures;
+  final String unsignedTx;
+
+  SendMultisigTransaction({
+    required this.signatures,
+    required this.unsignedTx,
+  });
+
+  @override
+  List<Object?> get props => [
+        signatures,
+        unsignedTx,
+      ];
+}
+
 class SignAndSendTransaction extends TransactionEvent {
   final String privateKey;
   final String transactionID;
   final String unsignedTx;
 
-  SignAndSendTransaction(
-      {required this.privateKey,
-      required this.transactionID,
-      required this.unsignedTx});
+  SignAndSendTransaction({
+    required this.privateKey,
+    required this.transactionID,
+    required this.unsignedTx,
+  });
 
   @override
   List<Object?> get props => [

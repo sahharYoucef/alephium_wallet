@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:alephium_wallet/api/utils/constants.dart';
+import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRScannerView extends StatefulWidget {
@@ -39,19 +41,32 @@ class _QRScannerViewState extends State<QRScannerView> {
         width: context.width * .9,
         height: context.height * .6,
         child: QRView(
+          overlay: QrScannerOverlayShape(
+              borderColor: Colors.red,
+              borderRadius: 8,
+              borderWidth: 5,
+              overlayColor: WalletTheme.instance.disabledButtonsBackground
+                  .withOpacity(.8)),
           key: qrKey,
           onQRViewCreated: _onQRViewCreated,
         ),
       );
     } else
       return AnimatedSwitcher(
-        duration: Duration(milliseconds: 500),
+        duration: Duration(milliseconds: 300),
         child: transactionData == null
             ? SizedBox(
                 width: context.width * .9,
                 height: context.height * .6,
                 child: QRView(
                   key: qrKey,
+                  overlay: QrScannerOverlayShape(
+                      borderColor: Colors.red,
+                      borderRadius: 8,
+                      borderWidth: 5,
+                      overlayColor: WalletTheme
+                          .instance.disabledButtonsBackground
+                          .withOpacity(.8)),
                   onQRViewCreated: _onQRViewCreated,
                 ),
               )
@@ -84,22 +99,11 @@ class _QRScannerViewState extends State<QRScannerView> {
                     ),
                     AddressText(
                       address: transactionData!["address"],
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            foreground: Paint()
-                              ..shader = LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomLeft,
-                                colors: [
-                                  WalletTheme.instance.gradientOne,
-                                  WalletTheme.instance.gradientTwo,
-                                ],
-                              ).createShader(
-                                  Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
-                          ),
                     ),
                     if (transactionData!["amount"] != null) ...[
-                      Divider(),
+                      SizedBox(
+                        height: 4.h,
+                      ),
                       Row(
                         children: [
                           Text(
@@ -121,6 +125,7 @@ class _QRScannerViewState extends State<QRScannerView> {
                     ],
                     Divider(),
                     ...widget.bloc!.wallets
+                        .where((element) => element.type != WalletType.readOnly)
                         .map((wallet) => Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
@@ -133,9 +138,11 @@ class _QRScannerViewState extends State<QRScannerView> {
                                     },
                                     child: Row(
                                       children: [
-                                        Text(wallet.title.isEmpty
-                                            ? "Alephium"
-                                            : wallet.title),
+                                        Text(
+                                          wallet.title == null
+                                              ? "Alephium"
+                                              : wallet.title!,
+                                        ),
                                         Spacer(),
                                         Text("${wallet.balance} ℵ")
                                       ],
@@ -170,22 +177,18 @@ class _QRScannerViewState extends State<QRScannerView> {
           }
           if (scannedData is String) {
             data["address"] = scanData.code;
-            data["Type"] = "ALEPHIUM";
           } else {
             data = scannedData;
           }
-          if (data["Type"] == "ALEPHIUM") {
-            transactionData = data;
-            controller.stopCamera();
-            if (!widget.isTransfer) {
-              Navigator.pop<Map<String, dynamic>>(context, transactionData);
-            } else {
-              setState(() {});
-            }
-            return;
+          transactionData = data;
+          controller.stopCamera();
+          if (!widget.isTransfer) {
+            Navigator.pop<Map<String, dynamic>>(context, transactionData);
+          } else {
+            setState(() {});
           }
           isClosed = true;
-        } catch (e, trace) {
+        } catch (e, _) {
           var closedReason = context.showSnackBar(kErrorMessageGenericError,
               level: Level.error);
           isClosed = (await closedReason?.closed != null);

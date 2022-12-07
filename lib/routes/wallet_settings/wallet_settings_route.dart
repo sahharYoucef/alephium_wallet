@@ -1,17 +1,21 @@
 import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_setting/wallet_setting_bloc.dart';
+import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/routes/constants.dart';
 import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
 import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
+import 'package:alephium_wallet/storage/models/address_store.dart';
+import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/wallet_settings/widgets/wallet_data_dialog.dart';
 import 'package:alephium_wallet/routes/widgets/confirmation_dialog.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class WalletSetting extends StatefulWidget {
@@ -28,12 +32,12 @@ class WalletSetting extends StatefulWidget {
 class _WalletSettingState extends State<WalletSetting> {
   late FocusNode _focusNode;
   late final WalletSettingBloc _settingBloc;
-  late final GlobalKey<FormFieldState> _nameKey;
+  late final GlobalKey<ShakeTextFormFieldState> _nameKey;
   late final ScrollController controller;
 
   @override
   void initState() {
-    _nameKey = GlobalKey<FormFieldState>();
+    _nameKey = GlobalKey<ShakeTextFormFieldState>();
     _settingBloc = WalletSettingBloc(
       widget.detailsBloc.wallet,
       getIt.get<AuthenticationService>(),
@@ -122,9 +126,9 @@ class _WalletSettingState extends State<WalletSetting> {
                           onPressed: () {
                             _focusNode.unfocus();
                             if (_nameKey.currentState?.value != null &&
-                                _nameKey.currentState!.value.trim().isNotEmpty)
+                                _nameKey.currentState!.value!.trim().isNotEmpty)
                               widget.detailsBloc.add(UpdateWalletName(
-                                  _nameKey.currentState?.value));
+                                  _nameKey.currentState!.value!));
                           },
                           child: Text(
                             "apply".tr(),
@@ -136,7 +140,53 @@ class _WalletSettingState extends State<WalletSetting> {
                       height: 10,
                     ),
                     const Divider(),
-                    if (!widget.detailsBloc.wallet.readOnly) ...[
+                    if (widget.detailsBloc.wallet.type ==
+                        WalletType.multisig) ...[
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "signersSettingButton".tr(),
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      OutlinedButton(
+                        onPressed: () {
+                          _focusNode.unfocus();
+                          Navigator.pushNamed(context, Routes.addresses,
+                              arguments: {
+                                "wallet": WalletStore(
+                                    id: "",
+                                    mainAddress: "",
+                                    type: WalletType.multisig,
+                                    addresses: [
+                                      ...widget.detailsBloc.wallet.signatures!
+                                          .mapIndexed(
+                                        (index, e) => AddressStore(
+                                          address: getIt
+                                              .get<BaseWalletService>()
+                                              .addressFromPublicKey(e),
+                                          index: index,
+                                          publicKey: e,
+                                          walletId: "",
+                                        ),
+                                      ),
+                                    ]),
+                              });
+                        },
+                        child: Text(
+                          "addresses".tr(),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Divider(),
+                    ],
+                    if (widget.detailsBloc.wallet.type ==
+                        WalletType.normal) ...[
                       const SizedBox(
                         height: 10,
                       ),

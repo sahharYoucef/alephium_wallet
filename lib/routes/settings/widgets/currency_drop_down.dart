@@ -7,22 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class CurrencyDropDown extends StatefulWidget {
+class CurrencyDropDown extends StatelessWidget {
   const CurrencyDropDown({super.key});
-
-  @override
-  State<CurrencyDropDown> createState() => _CurrencyDropDownState();
-}
-
-class _CurrencyDropDownState extends State<CurrencyDropDown> {
-  String _currency = AppStorage.instance.currency;
-  @override
   Widget build(BuildContext context) {
     return ButtonTheme(
       alignedDropdown: true,
       child: DropdownButtonFormField<String>(
         menuMaxHeight: context.height / 2,
-        dropdownColor: WalletTheme.instance.primary,
+        dropdownColor: WalletTheme.instance.dropDownBackground,
         alignment: AlignmentDirectional.bottomEnd,
         elevation: 3,
         decoration: InputDecoration(
@@ -34,13 +26,10 @@ class _CurrencyDropDownState extends State<CurrencyDropDown> {
         borderRadius: BorderRadius.circular(16),
         isExpanded: true,
         onChanged: (value) {
-          setState(() {
-            _currency = value!;
-          });
-          AppStorage.instance.currency = _currency;
+          AppStorage.instance.currency = value!;
           context.read<WalletHomeBloc>().add(WalletHomeLoadData());
         },
-        value: _currency,
+        value: AppStorage.instance.currency,
         items: [
           ...currencies
               .map(

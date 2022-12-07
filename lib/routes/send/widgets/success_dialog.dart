@@ -1,6 +1,5 @@
 import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
-import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 

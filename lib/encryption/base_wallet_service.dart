@@ -1,13 +1,13 @@
-import 'package:alephium_wallet/api/dto_models/balance_dto.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 
 import '../storage/models/wallet_store.dart';
 
 abstract class BaseWalletService {
-  BaseWalletService(this.blockchain);
+  BaseWalletService();
 
   WalletStore generateWallet(String passphrase);
   String addressFromPublicKey(String publicKey);
+  String publicKeyFromAddress(String publicKey);
   WalletStore importWallet(String mnemonic, String passphrase);
   AddressStore deriveNewAddress({
     required String walletId,
@@ -24,6 +24,4 @@ abstract class BaseWalletService {
     String? color,
     List<int> skipGroups = const <int>[],
   });
-
-  final Blockchain blockchain;
 }

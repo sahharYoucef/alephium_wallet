@@ -2,7 +2,6 @@ import 'package:alephium_wallet/api/utils/constants.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
