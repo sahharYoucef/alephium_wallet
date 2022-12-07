@@ -71,7 +71,7 @@ If you like the project and want to donate.
 
 **Addresses:**
  - Alephium => 1279QsTUT4uA7GqdmqRA8e3LHpnS7osDgiPeZBME35oZv
- - ERGO => 9hTr7HpgSnjwdiP6CAwtP4VVZEBmU42gDG4zNArMyWEprmR7daV
+ - ERGO => 9ecxQNdmRgjNM3SFsBeDa9R4SuTVH5ra6pYzUCchca5k2SeVDBg
 
 
 ## Screenshots
