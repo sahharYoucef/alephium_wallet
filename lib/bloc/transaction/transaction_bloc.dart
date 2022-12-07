@@ -1,4 +1,5 @@
 import 'package:alephium_dart/alephium_dart.dart';
+import 'package:alephium_wallet/api/utils/constants.dart';
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
@@ -168,7 +169,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           ));
         } catch (e, _) {
           emit(TransactionError(
-            message: e.toString(),
+            message: kErrorMessageGenericError,
           ));
         }
       } else if (event is SweepTransaction) {
@@ -253,7 +254,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           );
         } catch (e) {
           emit(TransactionError(
-            message: e.toString(),
+            message: kErrorMessageGenericError,
           ));
         }
       } else if (event is CheckSignMultisigTransaction) {
@@ -271,7 +272,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           );
         } catch (e) {
           emit(TransactionError(
-            message: e.toString(),
+            message: kErrorMessageGenericError,
           ));
         }
       } else if (event is SendMultisigTransaction) {
@@ -308,7 +309,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           );
         } catch (e) {
           emit(TransactionError(
-            message: e.toString(),
+            message: kErrorMessageGenericError,
           ));
         }
       }

@@ -106,7 +106,7 @@ class SignTxBloc extends Bloc<SignTxEvent, SignTxState> {
           );
         } catch (e) {
           emit(SignTxError(
-            message: e.toString(),
+            message: kErrorMessageGenericError,
           ));
         }
       }

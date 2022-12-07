@@ -8,23 +8,29 @@ class ApiError {
   late int statusCode;
 
   ApiError({required exception, StackTrace? trace}) {
-    LoggerService.instance.log(trace, level: Level.debug);
+    if (!kReleaseMode) {
+      LoggerService.instance.log(exception.toString(), level: Level.error);
+      LoggerService.instance.log(trace, level: Level.error);
+    }
     if (exception is DioError) {
       LoggerService.instance.log(exception.response?.data, level: Level.error);
       if (exception.response?.data is Map<String, dynamic>) {
         message =
             exception.response?.data?["detail"] ?? kErrorMessageGenericError;
       } else {
-        if (kDebugMode)
-          message = kErrorMessageGenericError;
-        else
+        if (kDebugMode) {
           message =
               exception.response?.data.toString() ?? kErrorMessageGenericError;
+        } else {
+          message = kErrorMessageGenericError;
+        }
       }
       statusCode = exception.response?.statusCode ?? 500;
     } else {
-      LoggerService.instance.log(exception.toString(), level: Level.error);
-      message = exception.toString();
+      if (kDebugMode) {
+        message = exception.message;
+      } else
+        message = kErrorMessageGenericError;
       statusCode = 500;
     }
   }

@@ -42,7 +42,7 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
           );
           add(SaveWalletToDatabase(wallet: wallet));
         } catch (e) {
-          emit(CreateWalletFailure(error: e.toString()));
+          emit(CreateWalletFailure(error: kErrorMessageGenericError));
         }
       } else if (event is CreateWalletGenerateMnemonic) {
         emit(GenerateWalletLoading());
@@ -70,15 +70,15 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
             ),
           );
         } catch (e) {
-          emit(CreateWalletFailure(error: e.toString()));
+          emit(CreateWalletFailure(error: kErrorMessageGenericError));
         }
       } else if (event is CreateWalletRestore) {
         try {
           emit(GenerateWalletLoading());
           var wallet = walletService.importWallet(event.mnemonic, "");
           add(SaveWalletToDatabase(wallet: wallet));
-        } on Exception catch (e) {
-          emit(CreateWalletFailure(error: e.toString()));
+        } catch (e) {
+          emit(CreateWalletFailure(error: kErrorMessageGenericError));
         }
       } else if (event is AddReadOnlyWallet) {
         try {
@@ -101,8 +101,8 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
               ),
             ),
           );
-        } on Exception catch (e) {
-          emit(CreateWalletFailure(error: e.toString()));
+        } catch (e) {
+          emit(CreateWalletFailure(error: kErrorMessageGenericError));
         }
       }
     });

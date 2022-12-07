@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/api/utils/constants.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
@@ -37,8 +38,8 @@ class WalletSettingBloc extends Bloc<WalletSettingEvent, WalletSettingState> {
             return;
           }
           emit(WalletSettingErrorState("Authentication cancelled"));
-        } on PlatformException catch (error) {
-          emit(WalletSettingErrorState("${error.message}"));
+        } catch (error) {
+          emit(WalletSettingErrorState(kErrorMessageGenericError));
         }
       }
     });
