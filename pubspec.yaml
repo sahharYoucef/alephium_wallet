@@ -45,7 +45,7 @@ dependencies:
   alephium_dart:
     git:
       url: https://github.com/sahharYoucef/alephium_dart.git
-      ref: multisig
+      ref: master
   sqflite: ^2.1.0+1
   intl: ^0.17.0
   google_fonts: ^3.0.1
