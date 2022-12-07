@@ -21,7 +21,7 @@ Framework: Flutter (>=3.3)
   
 **Release:**
 
-* Currently [`version v0.4.8`](https://github.com/sahharYoucef/alephium_wallet/releases/)
+* Currently [`version v0.6.0`](https://github.com/sahharYoucef/alephium_wallet/releases/)
 
 ## Getting Started
 
@@ -73,24 +73,38 @@ If you like the project and want to donate.
  - Alephium => 1279QsTUT4uA7GqdmqRA8e3LHpnS7osDgiPeZBME35oZv
  - ERGO => 9ecxQNdmRgjNM3SFsBeDa9R4SuTVH5ra6pYzUCchca5k2SeVDBg
 
+## Multi signatures (Multisig)
+[![Watch the video](https://user-images.githubusercontent.com/63554007/206170257-86c29870-1c2b-4aaa-8456-4208e03a4ab1.png)](https://www.youtube.com/watch?v=uAseUydyddw)
 
 ## Screenshots
 
 <p float="left">
-  <img src="https://user-images.githubusercontent.com/63554007/195376921-e5f2a479-deec-4b7a-94cd-89173a21f7ac.png" width="150" />
-  <img src="https://user-images.githubusercontent.com/63554007/195376923-0d5d52e0-e491-4edb-b2b3-d7e8c3351495.png" width="150" /> 
-  <img src="https://user-images.githubusercontent.com/63554007/195376926-398d8fc9-0154-431d-a845-361edaafbf97.png" width="150" />
-  <img src="https://user-images.githubusercontent.com/63554007/195376928-95dd0020-7aaa-4cde-b105-cd608709441f.png" width="150" />
-  <img src="https://user-images.githubusercontent.com/63554007/195376929-4dbe6975-2e68-4486-b395-8291c69e7bd3.png" width="150" />
-  <img src="https://user-images.githubusercontent.com/63554007/195376933-134aacf6-dfeb-4bf3-a73b-6a7901408215.png" width="150" />
-  <img src="https://user-images.githubusercontent.com/63554007/195376938-84c67dc4-aac4-40e8-ba37-b2cc38338f0c.png" width="150" />
-  <img src="https://user-images.githubusercontent.com/63554007/195376940-da6c3423-e0bb-4a51-b21a-3c2933ee9f41.png" width="150" />
-  <img src="https://user-images.githubusercontent.com/63554007/195376942-9289e805-f7dc-4837-9fc7-fef85269ed39.png" width="150" />
-  <img src="https://user-images.githubusercontent.com/63554007/195376945-a11614dd-2cff-4863-b8dc-e6ef10e847cf.png" width="150" />
-  <img src="https://user-images.githubusercontent.com/63554007/195376947-298ecb18-0189-48ff-9998-f3735f450fa0.png" width="150" />
-  <img src="https://user-images.githubusercontent.com/63554007/195376949-463bd1ac-f7da-43a5-839c-b1563b1e7d6c.png" width="150" />
-  <img src="https://user-images.githubusercontent.com/63554007/195376951-31d621f0-2c68-4337-9532-59b13663332e.png" width="150" />
-  <img src="https://user-images.githubusercontent.com/63554007/195376955-6a088870-1a50-43e8-8a96-f46e063cc926.png" width="150" />
-  <img src="https://user-images.githubusercontent.com/63554007/195376957-0493ce37-fd5a-479e-aced-9fec631a9f8f.png" width="150" />
-  <img src="https://user-images.githubusercontent.com/63554007/195376960-c41f487c-6bad-4d94-bfd3-af461791be52.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167935-e5d575a8-740c-4c81-b026-f673c4771337.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167943-132ddc86-62f6-4253-936a-8f4424f4b2a8.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167947-4de49400-71d5-4462-bb1c-a3b30acb2478.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167949-15614d53-3768-490c-90c2-13e5215fbc0d.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167951-4a732422-41a1-448d-8083-de958494ad20.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167953-1483aa76-5bea-4c20-9b36-cb4962bf30b0.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167957-93824027-a271-446f-a7db-720f56cc7db6.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167961-800dd8c4-60cc-4a25-8ab1-8ed735f41b26.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167966-3a0fd7a2-3992-4ddc-ae07-b89e8bf7b1ee.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167967-02837bc8-7f22-4e48-a0c6-a520c2628f7b.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167969-02a69d46-f4a6-46f9-9c90-ddc6e223949d.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167970-52819736-d7a7-4be9-be68-bf7291974aea.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167975-f808fb32-c236-4e35-97bf-6e6c4a5735bf.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167980-e1809025-4f0c-453d-806d-f7b48546e5a9.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167981-3f0942fe-9fb6-4b30-ad83-943ad058c505.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167985-486a886e-8827-410e-8337-e7fb6907089d.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167986-3677c833-e5f8-47e9-9c05-8d7db2f4da54.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167987-e51ef6e2-b62d-41bf-82ea-708f6258d52f.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167988-7ac2a171-c5ef-4e09-a7f2-8e4c8210875a.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167992-c880a169-6763-4e3c-b93a-40295d66756d.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206167997-6ed8cea4-84a2-4637-81f3-172359e4ae6a.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206168000-cab705d0-4256-47a7-9124-4df46f67e982.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206168002-1a25ba4f-5d55-4fda-b38c-4f9b721fd8e3.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206169295-9ddaefa2-c608-4bb4-b6a8-3ee7c1fbcb24.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206169301-431984e7-b113-4b9b-8c90-be6a5efe6797.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206169305-329961b3-8929-4752-b489-fe3967be7f70.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206169308-3e414968-8bf7-4cbf-87ae-53aac06293f2.png" width="150" />
+<img src="https://user-images.githubusercontent.com/63554007/206169312-644a1217-e995-439d-abc0-de874406f1e2.png" width="150" />
 </p>
