@@ -290,6 +290,7 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                             ),
                             if (state is SignTxCompleted)
                               SafeArea(
+                                  top: false,
                                   bottom: true,
                                   minimum: EdgeInsets.only(
                                       left: 16.w,
@@ -313,6 +314,7 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                                       )))
                             else if (state is TxIdVerifyCompleted)
                               SafeArea(
+                                  top: false,
                                   bottom: true,
                                   minimum: EdgeInsets.only(
                                       left: 16.w,
@@ -334,6 +336,7 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                                   ))
                             else
                               SafeArea(
+                                top: false,
                                 bottom: true,
                                 minimum: EdgeInsets.only(
                                     left: 16.w,

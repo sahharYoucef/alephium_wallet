@@ -29,6 +29,7 @@ class BuildTransactionResultView extends StatelessWidget {
       builder: (context, state) {
         transaction = bloc.transaction;
         return Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             if (bloc.transaction != null)
               CheckTransactionResult(

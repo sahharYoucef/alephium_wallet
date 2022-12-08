@@ -129,6 +129,7 @@ class _WalletMnemonicPageState extends State<WalletMnemonicPage>
               ),
               SafeArea(
                   bottom: true,
+                  top: false,
                   minimum: EdgeInsets.only(
                       left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
                   child: Hero(

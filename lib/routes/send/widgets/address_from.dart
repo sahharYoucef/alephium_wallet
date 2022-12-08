@@ -4,6 +4,7 @@ import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddressFromDropDownMenu extends StatefulWidget {
   final Function(AddressStore?)? onChanged;
@@ -62,7 +63,6 @@ class _AddressFromDropDownMenuState extends State<AddressFromDropDownMenu> {
           ),
           suffixIcon: GradientIcon(
             icon: Icons.arrow_drop_down,
-            size: 24,
           ),
           isDense: true,
           alignLabelWithHint: false,
@@ -71,7 +71,7 @@ class _AddressFromDropDownMenuState extends State<AddressFromDropDownMenu> {
         isExpanded: true,
         isDense: true,
         icon: const SizedBox(),
-        iconSize: 24,
+        iconSize: 24.w,
         items: addresses
             .map((address) => DropdownMenuItem<AddressStore>(
                   value: address,

@@ -8,6 +8,7 @@ import 'package:alephium_wallet/utils/theme.dart';
 import 'package:alephium_wallet/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddContactDialog extends StatefulWidget {
   final ContactsBloc bloc;
@@ -64,12 +65,12 @@ class _AddContactDialogState extends State<AddContactDialog>
                       "addNewAddress".tr(),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    const SizedBox(
-                      height: 10,
+                    SizedBox(
+                      height: 10.h,
                     ),
                     const Divider(),
-                    const SizedBox(
-                      height: 10,
+                    SizedBox(
+                      height: 10.h,
                     ),
                     ShakeTextFormField(
                       validator: nameValidator,
@@ -86,8 +87,8 @@ class _AddContactDialogState extends State<AddContactDialog>
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
+                    SizedBox(
+                      height: 10.h,
                     ),
                     ShakeTextFormField(
                       validator: nameValidator,
@@ -103,8 +104,8 @@ class _AddContactDialogState extends State<AddContactDialog>
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
+                    SizedBox(
+                      height: 10.h,
                     ),
                     ToAddressField(
                       validator: addressToValidator,
@@ -114,8 +115,8 @@ class _AddContactDialogState extends State<AddContactDialog>
                         address = value;
                       },
                     ),
-                    const SizedBox(
-                      height: 20,
+                    SizedBox(
+                      height: 20.h,
                     ),
                     Hero(
                       tag: "button",

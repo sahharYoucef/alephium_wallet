@@ -112,7 +112,10 @@ class WalletTheme {
       inputDecorationTheme: InputDecorationTheme(
         errorStyle: TextStyle(fontSize: 0, height: 0.01),
         errorMaxLines: 1,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 16.w,
+        ),
+        // isDense: true,
         hintStyle: TextStyle(
           fontWeight: FontWeight.w400,
           fontSize: 16.sp,

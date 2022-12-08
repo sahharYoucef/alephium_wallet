@@ -156,21 +156,24 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                     horizontal: 16.w, vertical: 8.h),
                                 sliver: SliverList(
                                     delegate: SliverChildListDelegate([
-                                  ShaderMask(
-                                    shaderCallback: (bounds) {
-                                      return LinearGradient(
-                                        begin: Alignment.topRight,
-                                        end: Alignment.bottomLeft,
-                                        colors: [
-                                          WalletTheme.instance.gradientOne,
-                                          WalletTheme.instance.gradientTwo,
-                                        ],
-                                      ).createShader(bounds);
-                                    },
-                                    child: SvgPicture.asset(
-                                      WalletIcons.sendIcon,
-                                      color: Colors.white,
-                                      fit: BoxFit.fitWidth,
+                                  SizedBox(
+                                    height: context.height / 4,
+                                    child: ShaderMask(
+                                      shaderCallback: (bounds) {
+                                        return LinearGradient(
+                                          begin: Alignment.topRight,
+                                          end: Alignment.bottomLeft,
+                                          colors: [
+                                            WalletTheme.instance.gradientOne,
+                                            WalletTheme.instance.gradientTwo,
+                                          ],
+                                        ).createShader(bounds);
+                                      },
+                                      child: SvgPicture.asset(
+                                        WalletIcons.sendIcon,
+                                        color: Colors.white,
+                                        fit: BoxFit.fitWidth,
+                                      ),
                                     ),
                                   ),
                                   AddressFromDropDownMenu(
@@ -211,8 +214,8 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                   ),
                                   AddedTokensList(
                                     bloc: _bloc,
-                                  )
-                                  // const SizedBox(height: 8),
+                                  ),
+                                  SizedBox(height: 8.h),
                                 ])),
                               ),
                               SliverFillRemaining(
@@ -236,6 +239,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                       SafeArea(
                                         minimum: EdgeInsets.only(bottom: 16.h),
                                         bottom: true,
+                                        top: false,
                                         child: IntrinsicHeight(
                                           child: Row(
                                             children: [

@@ -103,6 +103,7 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                       ),
                       Spacer(),
                       SafeArea(
+                        top: false,
                         bottom: true,
                         minimum: EdgeInsets.only(top: 16.h, bottom: 16.h),
                         child: Hero(

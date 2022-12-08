@@ -127,6 +127,7 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
                       ),
                       Spacer(),
                       SafeArea(
+                        top: false,
                         bottom: true,
                         minimum: EdgeInsets.only(top: 16.h, bottom: 16.h),
                         child: Hero(

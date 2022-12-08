@@ -80,6 +80,7 @@ class MultisigWalletPage extends StatelessWidget {
                 children: [
                   const Spacer(),
                   SafeArea(
+                    top: false,
                     bottom: true,
                     minimum: EdgeInsets.only(
                         left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
