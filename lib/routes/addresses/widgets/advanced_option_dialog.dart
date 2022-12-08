@@ -6,6 +6,7 @@ import 'package:alephium_wallet/utils/gradient_input_border.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AdvancedOptionsDialog extends StatelessWidget {
@@ -17,10 +18,13 @@ class AdvancedOptionsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return SafeArea(
+      bottom: true,
+      minimum:
+          EdgeInsets.only(left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding:
+            EdgeInsets.only(left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
         decoration: BoxDecoration(
             color: WalletTheme.instance.background,
             borderRadius: BorderRadius.circular(
@@ -92,7 +96,7 @@ class AdvancedOptionsDialog extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
-                                  .copyWith(fontSize: 14),
+                                  .copyWith(fontSize: 14.sp),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -167,7 +171,7 @@ class AdvancedOptionsDialog extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
-                                  .copyWith(fontSize: 14),
+                                  .copyWith(fontSize: 14.sp),
                               textAlign: TextAlign.center,
                             ),
                           ],

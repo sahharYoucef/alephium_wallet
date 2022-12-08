@@ -5,6 +5,7 @@ import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tuple/tuple.dart';
 
 class MultisigWalletPage extends StatelessWidget {
@@ -78,11 +79,12 @@ class MultisigWalletPage extends StatelessWidget {
               child: Column(
                 children: [
                   const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 16),
+                  SafeArea(
+                    bottom: true,
+                    minimum: EdgeInsets.only(
+                        left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
                     child: Hero(
-                      tag: "Button",
+                      tag: "button",
                       child: OutlinedButton(
                         child: Text("next".tr()),
                         onPressed: () {

@@ -9,6 +9,7 @@ import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class ReceivePage extends StatefulWidget {
@@ -36,7 +37,7 @@ class _ReceivePageState extends State<ReceivePage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(16.0.w),
       child: ListView(
         padding: EdgeInsets.zero,
         shrinkWrap: true,
@@ -45,12 +46,12 @@ class _ReceivePageState extends State<ReceivePage> {
             "${'receive'.tr()} :",
             style: Theme.of(context).textTheme.headlineMedium,
           ),
-          const SizedBox(
-            height: 6,
+          SizedBox(
+            height: 6.h,
           ),
           Divider(),
-          const SizedBox(
-            height: 6,
+          SizedBox(
+            height: 6.h,
           ),
           AddressFromDropDownMenu(
             addresses: widget.wallet.addresses,
@@ -61,11 +62,12 @@ class _ReceivePageState extends State<ReceivePage> {
               setState(() {});
             },
           ),
-          const SizedBox(
-            height: 6,
+          SizedBox(
+            height: 6.h,
           ),
           Center(
             child: Container(
+              height: 200.h,
               decoration: BoxDecoration(
                 color: WalletTheme.instance.primary,
                 borderRadius: BorderRadius.circular(8),
@@ -75,12 +77,11 @@ class _ReceivePageState extends State<ReceivePage> {
                 backgroundColor: Colors.transparent,
                 foregroundColor: WalletTheme.instance.textColor,
                 version: QrVersions.auto,
-                size: 200.0,
               ),
             ),
           ),
-          const SizedBox(
-            height: 6,
+          SizedBox(
+            height: 6.h,
           ),
           Row(
             children: [
@@ -89,8 +90,8 @@ class _ReceivePageState extends State<ReceivePage> {
                   address: _addressStore.address,
                 ),
               ),
-              const SizedBox(
-                width: 8,
+              SizedBox(
+                width: 8.w,
               ),
               IconButton(
                   tooltip: "copy".tr(),
@@ -107,8 +108,8 @@ class _ReceivePageState extends State<ReceivePage> {
                   )),
             ],
           ),
-          const SizedBox(
-            height: 10,
+          SizedBox(
+            height: 6.h,
           ),
           ReceiveAmountField(
             onChanged: (_value) {

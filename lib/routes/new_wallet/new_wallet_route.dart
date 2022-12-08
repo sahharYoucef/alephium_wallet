@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NewWalletPage extends StatefulWidget {
   const NewWalletPage({Key? key}) : super(key: key);
@@ -60,6 +61,7 @@ class _NewWalletPageState extends State<NewWalletPage> {
         }
       }),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             Positioned.fill(
@@ -141,8 +143,10 @@ class _NewWalletPageState extends State<NewWalletPage> {
                       )),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
+                  SafeArea(
+                    bottom: true,
+                    minimum: EdgeInsets.only(
+                        left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
                     child: Hero(
                       tag: "button",
                       child: OutlinedButton(

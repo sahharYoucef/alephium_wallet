@@ -6,6 +6,7 @@ import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ReadOnlyWalletPage extends StatefulWidget {
   const ReadOnlyWalletPage({
@@ -54,9 +55,8 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                 child: Padding(
                   padding: EdgeInsets.only(
                     top: 70 + context.topPadding,
-                    left: 16,
-                    right: 16,
-                    bottom: 16,
+                    left: 16.w,
+                    right: 16.w,
                   ),
                   child: Column(
                     children: [
@@ -65,8 +65,8 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                         "enterAddressOrPublicKey".tr(),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
-                      const SizedBox(
-                        height: 20,
+                      SizedBox(
+                        height: 20.h,
                       ),
                       ShakeTextFormField(
                         key: _nameKey,
@@ -78,8 +78,8 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                           labelText: 'walletName'.tr(),
                         ),
                       ),
-                      const SizedBox(
-                        height: 10,
+                      SizedBox(
+                        height: 10.h,
                       ),
                       ShakeTextFormField(
                         key: _addressValueKey,
@@ -102,23 +102,24 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                         ),
                       ),
                       Spacer(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Hero(
-                        tag: "button",
-                        child: OutlinedButton(
-                            onPressed: () {
-                              FocusScope.of(context).unfocus();
-                              if (_controller.text.trim().isNotEmpty)
-                                widget.bloc.add(
-                                  AddReadOnlyWallet(
-                                      value: _controller.text,
-                                      title: _nameKey.currentState?.value),
-                                );
-                            },
-                            child: Text("confirm".tr())),
-                      ),
+                      SafeArea(
+                        bottom: true,
+                        minimum: EdgeInsets.only(top: 16.h, bottom: 16.h),
+                        child: Hero(
+                          tag: "button",
+                          child: OutlinedButton(
+                              onPressed: () {
+                                FocusScope.of(context).unfocus();
+                                if (_controller.text.trim().isNotEmpty)
+                                  widget.bloc.add(
+                                    AddReadOnlyWallet(
+                                        value: _controller.text,
+                                        title: _nameKey.currentState?.value),
+                                  );
+                              },
+                              child: Text("confirm".tr())),
+                        ),
+                      )
                     ],
                   ),
                 ),

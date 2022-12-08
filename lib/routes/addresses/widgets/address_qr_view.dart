@@ -6,6 +6,7 @@ import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class AddressQRDialog extends StatefulWidget {
@@ -39,7 +40,8 @@ class _AddressQRDialogState extends State<AddressQRDialog>
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding:
+          EdgeInsets.only(left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
       child: ListView(
         padding: EdgeInsets.zero,
         shrinkWrap: true,

@@ -7,6 +7,7 @@ import 'package:alephium_wallet/utils/gradient_input_border.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddressTile extends StatelessWidget {
   final AddressStore address;
@@ -113,20 +114,22 @@ class AddressTile extends StatelessWidget {
                             builder: (
                               context,
                             ) =>
-                                Padding(
-                              padding: EdgeInsets.only(
-                                  top: 16, bottom: 16, left: 16, right: 16),
-                              child: Center(
-                                child: Material(
-                                    color: WalletTheme.instance.secondary,
-                                    borderRadius: BorderRadius.circular(
-                                      16,
-                                    ),
-                                    elevation: 6,
-                                    child: AddressQRDialog(
-                                      addressStore: address,
-                                    )),
-                              ),
+                                SafeArea(
+                              bottom: true,
+                              minimum: EdgeInsets.only(
+                                  left: 16.w,
+                                  right: 16.w,
+                                  top: 16.h,
+                                  bottom: 16.h),
+                              child: Material(
+                                  color: WalletTheme.instance.secondary,
+                                  borderRadius: BorderRadius.circular(
+                                    16,
+                                  ),
+                                  elevation: 6,
+                                  child: AddressQRDialog(
+                                    addressStore: address,
+                                  )),
                             ),
                           );
                         },

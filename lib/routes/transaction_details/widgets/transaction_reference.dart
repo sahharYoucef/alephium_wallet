@@ -3,6 +3,7 @@ import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/storage/models/transaction_ref_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TransactionReferences extends StatelessWidget {
   final List<TransactionRefStore> refs;
@@ -33,7 +34,7 @@ class TransactionReferences extends StatelessWidget {
                       Text(
                         "\u2022  ",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w900),
+                            fontSize: 20.sp, fontWeight: FontWeight.w900),
                       ),
                       Expanded(
                           child: Column(
@@ -63,7 +64,8 @@ class TransactionReferences extends StatelessWidget {
                               Text(
                                 "\u2022  ",
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w900),
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w900),
                               ),
                               Expanded(
                                   child: Column(
@@ -91,7 +93,7 @@ class TransactionReferences extends StatelessWidget {
             return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
                 "\u2022  ",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w900),
               ),
               Expanded(
                   child: Column(

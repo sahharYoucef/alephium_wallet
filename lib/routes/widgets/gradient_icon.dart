@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GradientIcon extends StatelessWidget {
   GradientIcon({
     required this.icon,
-    this.size = 24,
+    double? size,
     this.gradient = const LinearGradient(
       begin: Alignment.topRight,
       end: Alignment.bottomLeft,
@@ -12,7 +13,7 @@ class GradientIcon extends StatelessWidget {
         Color(0xfffe594e),
       ],
     ),
-  });
+  }) : size = size ?? 24.w;
 
   final IconData icon;
   final double? size;

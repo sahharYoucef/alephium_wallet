@@ -41,12 +41,13 @@ class _CustomNetworkSettingState extends State<CustomNetworkSetting>
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 16.w,
-        right: 16.w,
-        bottom: 16.h + context.viewInsetsBottom,
-      ),
+    return SafeArea(
+      bottom: true,
+      minimum: EdgeInsets.only(
+          left: 16.w,
+          right: 16.w,
+          top: 16.h,
+          bottom: 16.h + context.viewInsetsBottom),
       child: Material(
           elevation: 3,
           borderRadius: BorderRadius.circular(16.0),

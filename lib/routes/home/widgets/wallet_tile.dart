@@ -5,6 +5,7 @@ import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../constants.dart';
 
 class WalletTile extends StatelessWidget {
@@ -127,10 +128,10 @@ class WalletTile extends StatelessWidget {
                               (context, animation, secondaryAnimation) =>
                                   Padding(
                             padding: EdgeInsets.only(
-                                top: 16,
-                                bottom: 16 + context.viewInsetsBottom,
-                                left: 16,
-                                right: 16),
+                                top: 16.h,
+                                bottom: 16.h + context.viewInsetsBottom,
+                                left: 16.w,
+                                right: 16.w),
                             child: Center(
                               child: Material(
                                   color: WalletTheme.instance.background,
@@ -143,7 +144,7 @@ class WalletTile extends StatelessWidget {
                                   )),
                             ),
                           ),
-                          transitionDuration: const Duration(milliseconds: 300),
+                          transitionDuration: const Duration(milliseconds: 200),
                           transitionBuilder:
                               (context, animation, secondaryAnimation, child) {
                             return SlideTransition(

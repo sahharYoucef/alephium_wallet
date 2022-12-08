@@ -66,23 +66,20 @@ class _RestoreWalletState extends State<RestoreWallet> {
                         Spacer(),
                         SafeArea(
                           bottom: true,
-                          top: false,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 16.w, vertical: 16.h),
-                            child: Hero(
-                              tag: "button",
-                              child: OutlinedButton(
-                                onPressed: () {
-                                  if (_key.currentState?.mnemonic != null)
-                                    widget.bloc.add(
-                                      CreateWalletRestore(
-                                        mnemonic: _key.currentState!.mnemonic,
-                                      ),
-                                    );
-                                },
-                                child: Text("restoreWallet".tr()),
-                              ),
+                          minimum: EdgeInsets.only(
+                              left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
+                          child: Hero(
+                            tag: "button",
+                            child: OutlinedButton(
+                              onPressed: () {
+                                if (_key.currentState?.mnemonic != null)
+                                  widget.bloc.add(
+                                    CreateWalletRestore(
+                                      mnemonic: _key.currentState!.mnemonic,
+                                    ),
+                                  );
+                              },
+                              child: Text("restoreWallet".tr()),
                             ),
                           ),
                         ),

@@ -12,6 +12,7 @@ import 'package:alephium_wallet/utils/constants.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -78,13 +79,10 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.only(top: 16.h, left: 16.w, right: 16.w),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(
-                        height: 50,
-                      ),
                       ShaderMask(
                         shaderCallback: (bounds) {
                           return LinearGradient(
@@ -110,8 +108,8 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
                           });
                         },
                       ),
-                      const SizedBox(
-                        height: 20,
+                      SizedBox(
+                        height: 20.h,
                       ),
                       AddressFromDropDownMenu(
                         label: "toAddress".tr(),
@@ -120,22 +118,26 @@ class _ConsolidateUtxosRouteState extends State<ConsolidateUtxosRoute> {
                           if (value != null) _toAddressStore = value;
                         },
                       ),
-                      const SizedBox(
-                        height: 20,
+                      SizedBox(
+                        height: 20.h,
                       ),
                       Text(
                         "${'availableBalance'.tr()}: ${_fromAddressStore.formattedBalance}",
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       Spacer(),
-                      Hero(
-                        tag: "button",
-                        child: OutlinedButton(
-                          child: Text('sweep'.tr()),
-                          onPressed: () {
-                            _bloc.add(SweepTransaction(
-                                _fromAddressStore, _toAddressStore));
-                          },
+                      SafeArea(
+                        bottom: true,
+                        minimum: EdgeInsets.only(top: 16.h, bottom: 16.h),
+                        child: Hero(
+                          tag: "button",
+                          child: OutlinedButton(
+                            child: Text('sweep'.tr()),
+                            onPressed: () {
+                              _bloc.add(SweepTransaction(
+                                  _fromAddressStore, _toAddressStore));
+                            },
+                          ),
                         ),
                       ),
                     ]),

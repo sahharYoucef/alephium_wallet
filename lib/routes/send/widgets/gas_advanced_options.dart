@@ -3,6 +3,7 @@ import 'package:alephium_wallet/routes/send/widgets/shake_form_field.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GasAdvancedOption extends StatelessWidget {
   final TransactionBloc bloc;
@@ -54,7 +55,7 @@ class GasAdvancedOption extends StatelessWidget {
               labelText: "gasAmount".tr(),
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: 8.h),
           ShakeTextFormField(
             key: _gasPriceKey,
             style: Theme.of(context).textTheme.bodyMedium,

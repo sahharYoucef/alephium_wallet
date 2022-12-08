@@ -6,6 +6,7 @@ import 'package:alephium_wallet/routes/wallet_details/widgets/shake_widget.dart'
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ShakeForm extends StatefulWidget {
   /// Creates a container for form fields.
@@ -428,7 +429,7 @@ class ShakeFormFieldState<T> extends State<ShakeFormField<T>>
     ShakeForm.of(context)?._register(this);
     return AnimatedSize(
       alignment: Alignment.topCenter,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
       child: ShakeError(
         key: _shakeKey,
         child: Container(
@@ -445,9 +446,9 @@ class ShakeFormFieldState<T> extends State<ShakeFormField<T>>
               widget.builder(this),
               if (hasError)
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                    vertical: 2,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.0.w,
+                    vertical: 2.h,
                   ),
                   child: Text(
                     errorText!,

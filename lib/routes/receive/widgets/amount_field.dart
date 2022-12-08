@@ -5,6 +5,7 @@ import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ReceiveAmountField extends StatefulWidget {
   final void Function(double?)? onChanged;
@@ -50,14 +51,14 @@ class _ReceiveAmountFieldState extends State<ReceiveAmountField> {
 
   InputDecoration textFieldDecoration(String label) {
     return InputDecoration(
-      contentPadding: EdgeInsets.all(8),
+      contentPadding: EdgeInsets.all(8.w),
       labelText: label,
       suffixIcon: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(amountType ? AppStorage.instance.currency.toUpperCase() : "ℵ"),
           SizedBox(
-            width: 4,
+            width: 4.w,
           ),
           IconButton(
             icon: Icon(

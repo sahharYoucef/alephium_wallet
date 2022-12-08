@@ -1,6 +1,7 @@
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NewWalletCheckbox extends StatelessWidget {
   final String title;
@@ -28,7 +29,7 @@ class NewWalletCheckbox extends StatelessWidget {
         maxWidth: WalletTheme.instance.maxWidth,
       ),
       child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           child: Material(
             elevation: value == selected && enabled ? 5 : 0,
             color: !enabled
@@ -45,7 +46,7 @@ class NewWalletCheckbox extends StatelessWidget {
                     },
               borderRadius: BorderRadius.circular(8),
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
@@ -55,7 +56,7 @@ class NewWalletCheckbox extends StatelessWidget {
                     if (value == selected)
                       GradientIcon(
                           icon: icon,
-                          size: 50,
+                          size: 50.w,
                           gradient: LinearGradient(
                             begin: Alignment.topRight,
                             end: Alignment.bottomLeft,
@@ -67,10 +68,10 @@ class NewWalletCheckbox extends StatelessWidget {
                     else
                       Icon(
                         icon,
-                        size: 50,
+                        size: 50.w,
                       ),
-                    const SizedBox(
-                      width: 20,
+                    SizedBox(
+                      width: 20.w,
                     ),
                     Expanded(
                       child: Column(
@@ -88,7 +89,7 @@ class NewWalletCheckbox extends StatelessWidget {
                                 .copyWith(
                                   wordSpacing: 1.5,
                                   letterSpacing: 1.0,
-                                  fontSize: 15,
+                                  fontSize: 15.sp,
                                 ),
                           ),
                         ],

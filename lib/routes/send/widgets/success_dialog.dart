@@ -2,6 +2,7 @@ import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart'
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TransactionSuccessDialog extends StatelessWidget {
   final TransactionStore transaction;
@@ -86,7 +87,7 @@ class TransactionSuccessDialog extends StatelessWidget {
                       Text(
                         "\u2022  ",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w900),
+                            fontSize: 20.sp, fontWeight: FontWeight.w900),
                       ),
                       Expanded(
                         child: Column(

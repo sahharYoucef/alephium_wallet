@@ -153,7 +153,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                             slivers: [
                               SliverPadding(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 16.w, vertical: 16.h),
+                                    horizontal: 16.w, vertical: 8.h),
                                 sliver: SliverList(
                                     delegate: SliverChildListDelegate([
                                   ShaderMask(
@@ -170,6 +170,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                     child: SvgPicture.asset(
                                       WalletIcons.sendIcon,
                                       color: Colors.white,
+                                      fit: BoxFit.fitWidth,
                                     ),
                                   ),
                                   AddressFromDropDownMenu(
@@ -232,23 +233,24 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                       SizedBox(
                                         height: 8.h,
                                       ),
-                                      IntrinsicHeight(
-                                        child: Row(
-                                          children: [
-                                            AddTokenButton(
-                                              bloc: _bloc,
-                                            ),
-                                            Expanded(
-                                                flex: 1,
-                                                child: SendCheckButton(
-                                                  bloc: _bloc,
-                                                  formKey: _formKey,
-                                                )),
-                                          ],
+                                      SafeArea(
+                                        minimum: EdgeInsets.only(bottom: 16.h),
+                                        bottom: true,
+                                        child: IntrinsicHeight(
+                                          child: Row(
+                                            children: [
+                                              AddTokenButton(
+                                                bloc: _bloc,
+                                              ),
+                                              Expanded(
+                                                  flex: 1,
+                                                  child: SendCheckButton(
+                                                    bloc: _bloc,
+                                                    formKey: _formKey,
+                                                  )),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        height: 16.h,
                                       ),
                                     ],
                                   ),

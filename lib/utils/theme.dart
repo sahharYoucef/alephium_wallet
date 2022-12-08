@@ -76,8 +76,9 @@ class WalletTheme {
             ),
           ),
           elevation: 1,
-          maximumSize: Size.fromWidth(
+          maximumSize: Size(
             450,
+            50.h,
           ),
           foregroundColor: buttonsForeground,
           disabledBackgroundColor: disabledButtonsBackground,
@@ -111,7 +112,7 @@ class WalletTheme {
       inputDecorationTheme: InputDecorationTheme(
         errorStyle: TextStyle(fontSize: 0, height: 0.01),
         errorMaxLines: 1,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
         hintStyle: TextStyle(
           fontWeight: FontWeight.w400,
           fontSize: 16.sp,

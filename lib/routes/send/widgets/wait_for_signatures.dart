@@ -12,6 +12,7 @@ import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class WaitForOtherSignatures extends StatefulWidget {
@@ -55,11 +56,10 @@ class _WaitForOtherSignaturesState extends State<WaitForOtherSignatures> {
       onWillPop: () async {
         return false;
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 16,
-        ),
+      child: SafeArea(
+        bottom: true,
+        minimum:
+            EdgeInsets.only(left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
         child: Material(
           color: WalletTheme.instance.background,
           elevation: 1,
@@ -67,7 +67,8 @@ class _WaitForOtherSignaturesState extends State<WaitForOtherSignatures> {
             borderRadius: BorderRadius.circular(16.0),
           ),
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            padding: EdgeInsets.only(
+                left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

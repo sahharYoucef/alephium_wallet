@@ -2,6 +2,7 @@ import 'package:alephium_wallet/bloc/transaction/transaction_bloc.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddedTokensList extends StatelessWidget {
   final TransactionBloc bloc;
@@ -28,7 +29,7 @@ class AddedTokensList extends StatelessWidget {
                             Text(
                               "\u2022  ",
                               style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w900),
+                                  fontSize: 20.sp, fontWeight: FontWeight.w900),
                             ),
                             Expanded(
                               child: Column(

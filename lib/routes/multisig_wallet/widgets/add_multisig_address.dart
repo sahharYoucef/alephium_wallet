@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddMultisigAddressDialog extends StatelessWidget {
   const AddMultisigAddressDialog({
@@ -15,10 +16,13 @@ class AddMultisigAddressDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return SafeArea(
+      bottom: true,
+      minimum:
+          EdgeInsets.only(left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding:
+            EdgeInsets.only(left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
         decoration: BoxDecoration(
             color: WalletTheme.instance.background,
             borderRadius: BorderRadius.circular(
@@ -81,7 +85,7 @@ class AddMultisigAddressDialog extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
-                                  .copyWith(fontSize: 14),
+                                  .copyWith(fontSize: 14.sp),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -137,7 +141,7 @@ class AddMultisigAddressDialog extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
-                                  .copyWith(fontSize: 14),
+                                  .copyWith(fontSize: 14.sp),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -198,7 +202,7 @@ class AddMultisigAddressDialog extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
-                                  .copyWith(fontSize: 14),
+                                  .copyWith(fontSize: 14.sp),
                               textAlign: TextAlign.center,
                             ),
                           ],

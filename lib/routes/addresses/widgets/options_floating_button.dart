@@ -40,7 +40,7 @@ class FloatingOptionsButton extends StatelessWidget {
             labelBackgroundColor: WalletTheme.instance.primary,
             child: const Icon(Icons.generating_tokens),
             backgroundColor: WalletTheme.instance.buttonsBackground,
-            foregroundColor: WalletTheme.instance.primary,
+            foregroundColor: WalletTheme.instance.buttonsForeground,
             elevation: 0,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0)),
@@ -75,7 +75,7 @@ class FloatingOptionsButton extends StatelessWidget {
             labelBackgroundColor: WalletTheme.instance.primary,
             child: const Icon(Icons.engineering_outlined),
             backgroundColor: WalletTheme.instance.buttonsBackground,
-            foregroundColor: WalletTheme.instance.primary,
+            foregroundColor: WalletTheme.instance.buttonsForeground,
             elevation: 0,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0)),

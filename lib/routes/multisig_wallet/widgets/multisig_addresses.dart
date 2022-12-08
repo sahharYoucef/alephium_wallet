@@ -7,6 +7,7 @@ import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MultisigAddressesPage extends StatefulWidget {
   final CreateWalletBloc bloc;
@@ -150,18 +151,23 @@ class _MultisigAddressesPageState extends State<MultisigAddressesPage> {
                       children: [
                         Spacer(),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: EdgeInsets.only(
+                            left: 16.w,
+                            right: 16.w,
+                            top: 16.h,
+                          ),
                           child: Text(
                             "multisigSafetyMsg".tr(),
                             style: Theme.of(context).textTheme.bodyMedium,
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 16),
+                        SafeArea(
+                          bottom: true,
+                          minimum: EdgeInsets.only(
+                              left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
                           child: Hero(
-                            tag: "Button",
+                            tag: "button",
                             child: OutlinedButton(
                               child: Text("next".tr()),
                               onPressed: keys.length == widget.walletsNum

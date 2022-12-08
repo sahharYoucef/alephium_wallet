@@ -80,8 +80,8 @@ class _WalletMnemonicPageState extends State<WalletMnemonicPage>
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Wrap(
-                      spacing: 8.0.w,
-                      runSpacing: 8.0.w,
+                      spacing: 4.0.w,
+                      runSpacing: 4.0.w,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       alignment: WrapAlignment.spaceAround,
                       children: [
@@ -103,7 +103,7 @@ class _WalletMnemonicPageState extends State<WalletMnemonicPage>
                                               BorderRadius.circular(8.0)),
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: 8.0.w, vertical: 4.h),
+                                            horizontal: 12.0.w, vertical: 8.h),
                                         child: AutoSizeText(
                                           "${index + 1} - ${word}",
                                           style: Theme.of(context)
@@ -127,25 +127,26 @@ class _WalletMnemonicPageState extends State<WalletMnemonicPage>
                   textAlign: TextAlign.center,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-                child: Hero(
-                  tag: "Button",
-                  child: OutlinedButton(
-                    child: Text("next".tr()),
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        Routes.walletVerifyMnemonic,
-                        arguments: {
-                          "wallet": widget.wallet,
-                          "bloc": widget.bloc,
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ),
+              SafeArea(
+                  bottom: true,
+                  minimum: EdgeInsets.only(
+                      left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
+                  child: Hero(
+                    tag: "button",
+                    child: OutlinedButton(
+                      child: Text("next".tr()),
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          Routes.walletVerifyMnemonic,
+                          arguments: {
+                            "wallet": widget.wallet,
+                            "bloc": widget.bloc,
+                          },
+                        );
+                      },
+                    ),
+                  )),
             ],
           ),
         ),

@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class SignMultisigTxView extends StatefulWidget {
@@ -115,19 +116,19 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                   child: CustomScrollView(
                     slivers: [
                       SliverPadding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
                         sliver: SliverList(
                             delegate: SliverChildListDelegate(
                           [
-                            const SizedBox(
-                              height: 20,
+                            SizedBox(
+                              height: 20.h,
                             ),
                             Text(
                               "selectSignerAddress".tr(),
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
-                            const SizedBox(
-                              height: 10,
+                            SizedBox(
+                              height: 10.h,
                             ),
                             WalletDropdownButton(
                                 bloc: context.read<WalletHomeBloc>(),
@@ -155,15 +156,15 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                                 ));
                               },
                             ),
-                            const SizedBox(
-                              height: 10,
+                            SizedBox(
+                              height: 10.h,
                             ),
                             Text(
                               "pasteTxId".tr(),
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
-                            const SizedBox(
-                              height: 10,
+                            SizedBox(
+                              height: 10.h,
                             ),
                             TextFormField(
                               readOnly: true,
@@ -181,8 +182,8 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                                       ),
                               ),
                             ),
-                            const SizedBox(
-                              height: 10,
+                            SizedBox(
+                              height: 10.h,
                             ),
                             Row(
                               children: [
@@ -214,13 +215,13 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                                       "paste".tr(),
                                     ),
                                     style: OutlinedButton.styleFrom(
-                                      maximumSize: Size.fromHeight(40),
-                                      minimumSize: Size.fromHeight(40),
+                                      maximumSize: Size.fromHeight(40.h),
+                                      minimumSize: Size.fromHeight(40.h),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 20,
+                                SizedBox(
+                                  width: 20.h,
                                 ),
                                 Expanded(
                                   child: OutlinedButton(
@@ -239,15 +240,12 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                                       "clear".tr(),
                                     ),
                                     style: OutlinedButton.styleFrom(
-                                      maximumSize: Size.fromHeight(40),
-                                      minimumSize: Size.fromHeight(40),
+                                      maximumSize: Size.fromHeight(40.h),
+                                      minimumSize: Size.fromHeight(40.h),
                                     ),
                                   ),
                                 )
                               ],
-                            ),
-                            const SizedBox(
-                              width: 20,
                             ),
                           ],
                         )),
@@ -256,8 +254,8 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                         hasScrollBody: false,
                         child: Column(
                           children: [
-                            const SizedBox(
-                              height: 10,
+                            SizedBox(
+                              height: 10.h,
                             ),
                             Expanded(
                               child: Center(
@@ -265,19 +263,19 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                                   duration: const Duration(milliseconds: 200),
                                   child: state is SignTxCompleted
                                       ? Container(
-                                          height: 200,
+                                          height: 200.h,
                                           decoration: BoxDecoration(
                                             color: WalletTheme.instance.primary,
                                             borderRadius:
                                                 BorderRadius.circular(8),
                                           ),
                                           child: QrImage(
+                                            padding: EdgeInsets.all(8.w),
                                             data: state.signature,
                                             backgroundColor: Colors.transparent,
                                             foregroundColor:
                                                 WalletTheme.instance.textColor,
                                             version: QrVersions.auto,
-                                            size: 200.0,
                                           ),
                                         )
                                       : state is TxIdVerifyCompleted
@@ -291,11 +289,15 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                               ),
                             ),
                             if (state is SignTxCompleted)
-                              Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 16),
+                              SafeArea(
+                                  bottom: true,
+                                  minimum: EdgeInsets.only(
+                                      left: 16.w,
+                                      right: 16.w,
+                                      top: 16.h,
+                                      bottom: 16.h),
                                   child: Hero(
-                                      tag: "Button1",
+                                      tag: "button",
                                       child: OutlinedButton(
                                         onPressed: () async {
                                           var data = ClipboardData(
@@ -310,29 +312,36 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                                         ),
                                       )))
                             else if (state is TxIdVerifyCompleted)
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 16),
-                                child: Hero(
-                                  tag: "Button1",
-                                  child: OutlinedButton(
-                                    child: Text("signTransaction".tr()),
-                                    onPressed: _bloc.activateButton
-                                        ? () {
-                                            _bloc.add(
-                                              SignMultisigTransaction(),
-                                            );
-                                          }
-                                        : null,
-                                  ),
-                                ),
-                              )
+                              SafeArea(
+                                  bottom: true,
+                                  minimum: EdgeInsets.only(
+                                      left: 16.w,
+                                      right: 16.w,
+                                      top: 16.h,
+                                      bottom: 16.h),
+                                  child: Hero(
+                                    tag: "button",
+                                    child: OutlinedButton(
+                                      child: Text("signTransaction".tr()),
+                                      onPressed: _bloc.activateButton
+                                          ? () {
+                                              _bloc.add(
+                                                SignMultisigTransaction(),
+                                              );
+                                            }
+                                          : null,
+                                    ),
+                                  ))
                             else
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 16),
+                              SafeArea(
+                                bottom: true,
+                                minimum: EdgeInsets.only(
+                                    left: 16.w,
+                                    right: 16.w,
+                                    top: 16.h,
+                                    bottom: 16.h),
                                 child: Hero(
-                                  tag: "Button1",
+                                  tag: "button",
                                   child: OutlinedButton(
                                     child: Text("verifyTransaction".tr()),
                                     onPressed: _bloc.activateButton
@@ -344,7 +353,7 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                                         : null,
                                   ),
                                 ),
-                              ),
+                              )
                           ],
                         ),
                       )

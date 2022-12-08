@@ -279,9 +279,10 @@ class _WalletMnemonicVerifyPageState extends State<WalletMnemonicVerifyPage> {
                   child: Column(
                     children: [
                       const Spacer(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 16.w, vertical: 16.h),
+                      SafeArea(
+                        bottom: true,
+                        minimum: EdgeInsets.only(
+                            left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
                         child: Hero(
                           tag: "Button",
                           child: OutlinedButton(
