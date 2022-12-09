@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WalletAppBar extends StatefulWidget {
   final Widget? action;
@@ -62,11 +63,11 @@ class _WalletAppBarState extends State<WalletAppBar> {
       bottom: false,
       child: Container(
         width: double.infinity,
-        height: 70,
+        height: 70.h.clamp(0, 70),
         alignment: Alignment.center,
         color: Colors.transparent,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
+          padding: EdgeInsets.symmetric(horizontal: 8.w),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -88,13 +89,13 @@ class _WalletAppBarState extends State<WalletAppBar> {
                             onPressed: () {
                               Navigator.pop(context);
                             })
-                        : const SizedBox(
-                            height: 50,
-                            width: 50,
+                        : SizedBox(
+                            height: 50.h,
+                            width: 50.h,
                           ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: EdgeInsets.symmetric(horizontal: 8.0.w),
                       child: Align(
                         alignment: Alignment.center,
                         child: widget.label != null
@@ -108,11 +109,11 @@ class _WalletAppBarState extends State<WalletAppBar> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(4.0),
+                    padding: EdgeInsets.all(4.0.h),
                     child: widget.action == null
-                        ? const SizedBox(
-                            height: 50,
-                            width: 50,
+                        ? SizedBox(
+                            height: 50.h,
+                            width: 50.h,
                           )
                         : widget.action,
                   ),
@@ -123,38 +124,13 @@ class _WalletAppBarState extends State<WalletAppBar> {
         ),
       ),
     );
-    late final Widget child;
-    // if (widget.controller != null) {
-    //   child = AnimatedBuilder(
-    //     animation: widget.controller!,
-    //     builder: (context, child) {
-    //       try {
-    //         appBarColor = Color.lerp(widget.color, WalletTheme.instance.primary,
-    //             (widget.controller!.offset / 50).clamp(0, 1))!;
-    //         elevation = (widget.controller!.offset / 50 * 2).clamp(0, 2);
-    //       } catch (_) {
-    //         appBarColor = widget.color;
-    //         elevation = widget.elevation;
-    //       }
-    //       return Material(
-    //         shape: AppBarShape(),
-    //         elevation: elevation,
-    //         color: appBarColor,
-    //         shadowColor: WalletTheme.instance.gradientOne,
-    //         child: child,
-    //       );
-    //     },
-    //     child: safeArea,
-    //   );
-    // } else {
-    child = Material(
-      shape: AppBarShape(),
+    final Widget child = Material(
+      shape: const AppBarShape(),
       elevation: elevation,
       color: appBarColor,
       shadowColor: WalletTheme.instance.gradientOne,
       child: safeArea,
     );
-    // }
     return Align(
       alignment: Alignment.topCenter,
       child: Hero(
@@ -175,11 +151,9 @@ class AppBarShape extends ShapeBorder {
     return path;
   }
 
-  AppBarShape({double radius = 16}) {
-    arcHeight = radius * 2;
-  }
+  const AppBarShape({double radius = 16}) : arcHeight = radius * 2;
 
-  late final arcHeight;
+  final arcHeight;
 
   @override
   Path getOuterPath(Rect rect, {TextDirection? textDirection}) {

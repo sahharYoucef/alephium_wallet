@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WalletSetting extends StatefulWidget {
   final WalletDetailsBloc detailsBloc;
@@ -86,7 +87,7 @@ class _WalletSettingState extends State<WalletSetting> {
                 child: ListView(
                   controller: controller,
                   padding: EdgeInsets.only(
-                    top: 70 + context.topPadding,
+                    top: 70.h + context.topPadding,
                     left: 16,
                     right: 16,
                     bottom: 16,

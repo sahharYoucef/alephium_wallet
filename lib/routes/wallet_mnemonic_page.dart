@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:alephium_wallet/bloc/create_wallet/create_wallet_bloc.dart';
 import 'package:alephium_wallet/main.dart';
+import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
@@ -70,8 +71,7 @@ class _WalletMnemonicPageState extends State<WalletMnemonicPage>
         body: Stack(
       children: [
         Padding(
-          padding:
-              EdgeInsets.only(top: MediaQuery.of(context).padding.top + 70),
+          padding: EdgeInsets.only(top: context.topPadding + 70.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

@@ -1,6 +1,7 @@
 import 'package:alephium_dart/alephium_dart.dart';
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/api/utils/constants.dart';
+import 'package:alephium_wallet/api/utils/error_handler.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
@@ -70,9 +71,9 @@ class SignTxBloc extends Bloc<SignTxEvent, SignTxState> {
               unsignedTx: unsignedTx!,
             ),
           );
-        } catch (e) {
+        } catch (e, trace) {
           emit(SignTxError(
-            message: kErrorMessageGenericError,
+            message: ApiError(exception: e, trace: trace).message,
           ));
         }
       } else if (event is SignMultisigTransaction) {
@@ -104,9 +105,9 @@ class SignTxBloc extends Bloc<SignTxEvent, SignTxState> {
               signature: signature,
             ),
           );
-        } catch (e) {
+        } catch (e, trace) {
           emit(SignTxError(
-            message: kErrorMessageGenericError,
+            message: ApiError(exception: e, trace: trace).message,
           ));
         }
       }

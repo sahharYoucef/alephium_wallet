@@ -2,6 +2,7 @@ import 'package:alephium_wallet/routes/addresses/widgets/address_tile.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddressesListView extends StatelessWidget {
   final List<AddressStore> addresses;
@@ -18,7 +19,7 @@ class AddressesListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
         padding: EdgeInsets.only(
-          top: 20 + 70 + context.topPadding,
+          top: 20 + 70.h + context.topPadding,
           bottom: 32,
         ),
         itemCount: addresses.length,

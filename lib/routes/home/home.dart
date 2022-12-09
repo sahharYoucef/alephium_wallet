@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage>
                     child: Column(
                   children: [
                     SizedBox(
-                      height: 70 + context.topPadding,
+                      height: 70.h + context.topPadding,
                     ),
                     Expanded(
                       child: TabBarView(

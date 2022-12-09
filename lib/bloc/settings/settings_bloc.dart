@@ -1,4 +1,5 @@
 import 'package:alephium_wallet/api/utils/constants.dart';
+import 'package:alephium_wallet/api/utils/error_handler.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:bloc/bloc.dart';
@@ -30,8 +31,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
               emit(SettingsError(kErrorMessageGenericError));
           }
           emit(LocalAuthToSendState(AppStorage.instance.localAuth));
-        } catch (e) {
-          emit(SettingsError(kErrorMessageGenericError));
+        } catch (e, trace) {
+          emit(SettingsError(ApiError(exception: e, trace: trace).message));
         }
       }
     });

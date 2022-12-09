@@ -1,5 +1,6 @@
 import 'package:alephium_dart/alephium_dart.dart';
 import 'package:alephium_wallet/api/utils/constants.dart';
+import 'package:alephium_wallet/api/utils/error_handler.dart';
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
@@ -167,9 +168,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             transaction: transaction,
             tokens: tokens,
           ));
-        } catch (e, _) {
+        } catch (e, trace) {
           emit(TransactionError(
-            message: kErrorMessageGenericError,
+            message: ApiError(exception: e, trace: trace).message,
           ));
         }
       } else if (event is SweepTransaction) {
@@ -252,9 +253,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               transactions: [data],
             ),
           );
-        } catch (e) {
+        } catch (e, trace) {
           emit(TransactionError(
-            message: kErrorMessageGenericError,
+            message: ApiError(exception: e, trace: trace).message,
           ));
         }
       } else if (event is CheckSignMultisigTransaction) {
@@ -270,9 +271,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               txId: transaction!.txId!,
             ),
           );
-        } catch (e) {
+        } catch (e, trace) {
           emit(TransactionError(
-            message: kErrorMessageGenericError,
+            message: ApiError(exception: e, trace: trace).message,
           ));
         }
       } else if (event is SendMultisigTransaction) {
@@ -307,9 +308,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
               transactions: [data],
             ),
           );
-        } catch (e) {
+        } catch (e, trace) {
           emit(TransactionError(
-            message: kErrorMessageGenericError,
+            message: ApiError(exception: e, trace: trace).message,
           ));
         }
       }

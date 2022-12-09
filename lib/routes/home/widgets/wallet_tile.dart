@@ -22,21 +22,21 @@ class WalletTile extends StatelessWidget {
         maxWidth: WalletTheme.instance.maxWidth,
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
         child: Material(
           color: Theme.of(context).primaryColor,
           elevation: 1,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0).w,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: EdgeInsets.symmetric(horizontal: 8.0.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -84,8 +84,8 @@ class WalletTile extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 10,
+                SizedBox(
+                  height: 10.h,
                 ),
                 OutlinedButton(
                   child: Text("details".tr()),
@@ -97,15 +97,16 @@ class WalletTile extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(
-                  height: 4,
+                SizedBox(
+                  height: 4.h,
                 ),
                 Row(
                   children: [
                     if (wallet.type != WalletType.readOnly) ...[
                       Expanded(
-                          child: OutlinedButton(
-                        child: Text("send".tr()),
+                          child: OutlinedButton.icon(
+                        icon: Icon(Icons.call_made),
+                        label: Text("send".tr()),
                         onPressed: () {
                           Navigator.pushNamed(context, Routes.send, arguments: {
                             "wallet": wallet,
@@ -113,12 +114,13 @@ class WalletTile extends StatelessWidget {
                         },
                       )),
                       SizedBox(
-                        width: 16,
+                        width: 16.w,
                       ),
                     ],
                     Expanded(
-                        child: OutlinedButton(
-                      child: Text("receive".tr()),
+                        child: OutlinedButton.icon(
+                      icon: Icon(Icons.call_received),
+                      label: Text("receive".tr()),
                       onPressed: () {
                         showGeneralDialog(
                           barrierDismissible: true,

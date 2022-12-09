@@ -11,6 +11,7 @@ import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:alephium_wallet/api/repositories/alephium/alephium_api_repository.dart';
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/main.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TransactionDetails extends StatelessWidget {
   final TransactionStore transaction;
@@ -33,7 +34,7 @@ class TransactionDetails extends StatelessWidget {
           Positioned.fill(
             child: ListView(
               padding: EdgeInsets.only(
-                top: 20 + 70 + context.topPadding,
+                top: 16 + 70.h + context.topPadding,
                 bottom: 32,
               ),
               children: [

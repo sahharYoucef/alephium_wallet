@@ -18,7 +18,7 @@ class ApiError {
         message =
             exception.response?.data?["detail"] ?? kErrorMessageGenericError;
       } else {
-        if (kDebugMode) {
+        if (!kReleaseMode) {
           message =
               exception.response?.data.toString() ?? kErrorMessageGenericError;
         } else {
@@ -27,7 +27,7 @@ class ApiError {
       }
       statusCode = exception.response?.statusCode ?? 500;
     } else {
-      if (kDebugMode) {
+      if (!kReleaseMode) {
         message = exception.message;
       } else
         message = kErrorMessageGenericError;

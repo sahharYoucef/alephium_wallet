@@ -1,5 +1,6 @@
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppBarIconButton extends StatelessWidget {
   final Widget icon;
@@ -23,29 +24,36 @@ class AppBarIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (label != null)
-      return FloatingActionButton.extended(
-        tooltip: tooltip,
-        heroTag: tag,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        onPressed: onPressed,
-        icon: icon,
-        label: Text(label!),
-        foregroundColor:
-            foregroundColor ?? WalletTheme.instance.buttonsForeground,
-        backgroundColor:
-            backgroundColor ?? WalletTheme.instance.buttonsBackground,
+      return SizedBox(
+        height: 50.h,
+        child: FloatingActionButton.extended(
+          tooltip: tooltip,
+          heroTag: tag,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          onPressed: onPressed,
+          icon: icon,
+          label: Text(label!),
+          foregroundColor:
+              foregroundColor ?? WalletTheme.instance.buttonsForeground,
+          backgroundColor:
+              backgroundColor ?? WalletTheme.instance.buttonsBackground,
+        ),
       );
     else
-      return FloatingActionButton(
-        tooltip: tooltip,
-        heroTag: tag,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        onPressed: onPressed,
-        child: icon,
-        foregroundColor:
-            foregroundColor ?? WalletTheme.instance.buttonsForeground,
-        backgroundColor:
-            backgroundColor ?? WalletTheme.instance.buttonsBackground,
+      return SizedBox(
+        height: 50.h,
+        width: 50.h,
+        child: FloatingActionButton(
+          tooltip: tooltip,
+          heroTag: tag,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          onPressed: onPressed,
+          child: icon,
+          foregroundColor:
+              foregroundColor ?? WalletTheme.instance.buttonsForeground,
+          backgroundColor:
+              backgroundColor ?? WalletTheme.instance.buttonsBackground,
+        ),
       );
   }
 }

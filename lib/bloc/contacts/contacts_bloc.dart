@@ -1,4 +1,5 @@
 import 'package:alephium_wallet/api/utils/constants.dart';
+import 'package:alephium_wallet/api/utils/error_handler.dart';
 import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:alephium_wallet/storage/models/contact_store.dart';
 import 'package:bloc/bloc.dart';
@@ -31,8 +32,9 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
           await dbHelper.deleteContact(event.id);
           add(LoadAllContactsEvent());
         }
-      } catch (e) {
-        emit(ContactsErrorState(message: kErrorMessageGenericError));
+      } catch (e, trace) {
+        emit(ContactsErrorState(
+            message: ApiError(exception: e, trace: trace).message));
       }
     });
   }

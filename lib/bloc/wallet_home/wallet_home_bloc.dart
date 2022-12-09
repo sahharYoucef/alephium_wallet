@@ -56,8 +56,9 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
             wallets: List<WalletStore>.from(wallets),
             withLoadingIndicator: false,
           ));
-        } catch (e, _) {
-          emit(WalletHomeError(message: kErrorMessageGenericError));
+        } catch (e, trace) {
+          emit(WalletHomeError(
+              message: ApiError(exception: e, trace: trace).message));
         }
       } else if (event is WalletHomeRefreshData) {
         if (state is WalletHomeCompleted &&
@@ -91,8 +92,9 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
               wallets: List<WalletStore>.from(wallets),
               withLoadingIndicator: false,
             ));
-          } catch (e) {
-            emit(WalletHomeError(message: kErrorMessageGenericError));
+          } catch (e, trace) {
+            emit(WalletHomeError(
+                message: ApiError(exception: e, trace: trace).message));
           }
         } else {
           add(WalletHomeLoadData());

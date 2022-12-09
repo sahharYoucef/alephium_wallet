@@ -1,4 +1,5 @@
 import 'package:alephium_wallet/api/utils/constants.dart';
+import 'package:alephium_wallet/api/utils/error_handler.dart';
 import 'package:bloc/bloc.dart';
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
@@ -41,8 +42,9 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
             title: event.title,
           );
           add(SaveWalletToDatabase(wallet: wallet));
-        } catch (e) {
-          emit(CreateWalletFailure(error: kErrorMessageGenericError));
+        } catch (e, trace) {
+          emit(CreateWalletFailure(
+              error: ApiError(exception: e, trace: trace).message));
         }
       } else if (event is CreateWalletGenerateMnemonic) {
         emit(GenerateWalletLoading());
@@ -69,16 +71,18 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
               wallet: event.wallet,
             ),
           );
-        } catch (e) {
-          emit(CreateWalletFailure(error: kErrorMessageGenericError));
+        } catch (e, trace) {
+          emit(CreateWalletFailure(
+              error: ApiError(exception: e, trace: trace).message));
         }
       } else if (event is CreateWalletRestore) {
         try {
           emit(GenerateWalletLoading());
           var wallet = walletService.importWallet(event.mnemonic, "");
           add(SaveWalletToDatabase(wallet: wallet));
-        } catch (e) {
-          emit(CreateWalletFailure(error: kErrorMessageGenericError));
+        } catch (e, trace) {
+          emit(CreateWalletFailure(
+              error: ApiError(exception: e, trace: trace).message));
         }
       } else if (event is AddReadOnlyWallet) {
         try {
@@ -101,8 +105,9 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
               ),
             ),
           );
-        } catch (e) {
-          emit(CreateWalletFailure(error: kErrorMessageGenericError));
+        } catch (e, trace) {
+          emit(CreateWalletFailure(
+              error: ApiError(exception: e, trace: trace).message));
         }
       }
     });

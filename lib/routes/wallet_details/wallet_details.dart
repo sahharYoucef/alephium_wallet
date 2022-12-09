@@ -18,6 +18,7 @@ import 'package:alephium_wallet/utils/theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
 import '../constants.dart';
@@ -65,7 +66,7 @@ class _WalletDetailsState extends State<WalletDetails> {
           Column(
             children: [
               SizedBox(
-                height: 70 + context.topPadding,
+                height: 70.h + context.topPadding,
               ),
               Expanded(
                 child: RefreshIndicator(

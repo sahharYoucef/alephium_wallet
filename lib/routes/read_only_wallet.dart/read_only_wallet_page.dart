@@ -54,7 +54,7 @@ class _ReadOnlyWalletPageState extends State<ReadOnlyWalletPage> {
                 key: _formKey,
                 child: Padding(
                   padding: EdgeInsets.only(
-                    top: 70 + context.topPadding,
+                    top: 70.h + context.topPadding,
                     left: 16.w,
                     right: 16.w,
                   ),

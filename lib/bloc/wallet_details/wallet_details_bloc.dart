@@ -72,9 +72,9 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
             transactions: List.from(_transactions),
             wallet: wallet,
           ));
-        } catch (e) {
+        } catch (e, trace) {
           emit(WalletDetailsError(
-            message: kErrorMessageGenericError,
+            message: ApiError(exception: e, trace: trace).message,
           ));
         }
       } else if (event is WalletDetailsRefreshData) {
@@ -128,9 +128,9 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
           await getIt
               .get<BaseDBHelper>()
               .insertTransactions(id, updateTransactions.data!);
-        } catch (e) {
+        } catch (e, trace) {
           emit(WalletDetailsError(
-            message: kErrorMessageGenericError,
+            message: ApiError(exception: e, trace: trace).message,
           ));
         }
       } else if (event is AddPendingTxs) {
@@ -152,9 +152,9 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
             wallet: wallet,
           ));
           add(UpdateWalletBalance());
-        } catch (e) {
+        } catch (e, trace) {
           emit(WalletDetailsError(
-            message: kErrorMessageGenericError,
+            message: ApiError(exception: e, trace: trace).message,
           ));
         }
       } else if (event is UpdateWalletBalance) {
@@ -177,9 +177,9 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
             wallet: wallet,
             withLoadingIndicator: false,
           ));
-        } catch (e) {
+        } catch (e, trace) {
           emit(WalletDetailsError(
-            message: kErrorMessageGenericError,
+            message: ApiError(exception: e, trace: trace).message,
           ));
         }
       } else if (event is GenerateNewAddress) {
