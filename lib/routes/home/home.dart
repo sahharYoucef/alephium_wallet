@@ -328,11 +328,8 @@ class _HomePageState extends State<HomePage>
                   alignment: Alignment.bottomCenter,
                   child: CircleNavigationBar(
                     tabController: _tabController,
-                    navBarSelectedIconsColor:
-                        Theme.of(context).textTheme.headlineMedium!.color!,
-                    navBarColor: Theme.of(context).primaryColor,
-                    onTap: () {},
-                    navbarHeight: 60,
+                    navBarSelectedIconsColor: WalletTheme.instance.textColor,
+                    navBarColor: WalletTheme.instance.primary,
                     circleIconsColor: WalletTheme.instance.secondary,
                     navBarIcons: [
                       IconButton(
@@ -354,7 +351,6 @@ class _HomePageState extends State<HomePage>
                             _tabController.animateTo(2);
                           }),
                     ],
-                    margin: 16.0,
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),

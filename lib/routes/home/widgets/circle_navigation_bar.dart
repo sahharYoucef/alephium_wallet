@@ -1,34 +1,27 @@
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CircleNavigationBar extends StatelessWidget {
-  final double navbarHeight;
   final Color navBarColor;
   final List<Widget> navBarIcons;
   final Color navBarUnselectedIconsColor;
   final Color navBarSelectedIconsColor;
   final Color circleIconsColor;
-  final double margin;
   final BorderRadius? borderRadius;
   final TabController? tabController;
-  final void Function() onTap;
 
-  const CircleNavigationBar(
-      {Key? key,
-      this.navbarHeight = 80,
-      this.tabController,
-      required this.navBarIcons,
-      required this.onTap,
-      this.navBarUnselectedIconsColor = const Color(0xff9d9fa1),
-      this.navBarSelectedIconsColor = const Color(0xff000000),
-      this.circleIconsColor = const Color(0xff9d9fa1),
-      this.margin = 16.0,
-      this.borderRadius,
-      this.navBarColor = Colors.white})
-      : super(key: key);
-  final double height = 185;
-  final double navBarHeight = 80;
+  const CircleNavigationBar({
+    Key? key,
+    this.tabController,
+    required this.navBarIcons,
+    this.navBarUnselectedIconsColor = const Color(0xff9d9fa1),
+    this.navBarSelectedIconsColor = const Color(0xff000000),
+    this.circleIconsColor = const Color(0xff9d9fa1),
+    this.borderRadius,
+    this.navBarColor = Colors.white,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +30,9 @@ class CircleNavigationBar extends StatelessWidget {
         maxWidth: WalletTheme.instance.maxWidth,
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: margin),
+        padding: EdgeInsets.symmetric(horizontal: 16.0.w),
         child: SizedBox(
-          height: navbarHeight + context.bottomPadding,
+          height: 80.h + context.bottomPadding,
           width: double.infinity,
           child: Material(
               elevation: 2,
