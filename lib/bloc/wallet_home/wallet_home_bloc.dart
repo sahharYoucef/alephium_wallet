@@ -154,6 +154,5 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
           ? ApiError(exception: Exception(kErrorMessageGenericError))
           : null,
     );
-    ;
   }
 }

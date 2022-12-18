@@ -6,7 +6,6 @@ import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
-import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';

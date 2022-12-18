@@ -1,4 +1,3 @@
-import 'package:alephium_wallet/api/utils/constants.dart';
 import 'package:alephium_wallet/api/utils/error_handler.dart';
 import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:alephium_wallet/storage/models/contact_store.dart';

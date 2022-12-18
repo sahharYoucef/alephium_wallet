@@ -115,60 +115,6 @@ class SQLiteDBHelper extends BaseDBHelper {
 
   Future<void> _onCreate(Database _db, int version) async {}
 
-  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    var data = await db.rawQuery("""
-        SELECT * FROM ${_walletTable} wallets
-        LEFT JOIN ${_addressesTable} addresses
-        ON wallets.id = addresses.wallet_id;
-      """);
-    final wallets =
-        List<Map<String, dynamic>>.from(data).combine().map((wallet) {
-      final _updatedData = {
-        "id": wallet['id'],
-        "title": wallet['title'],
-        "passphrase": wallet['passphrase'],
-        "blockchain": wallet['blockchain'],
-        "mnemonic": wallet['mnemonic'],
-        "seed": wallet['seed'],
-        "mainAddress": wallet['mainAddress'],
-        "type": WalletType.normal.name,
-        if (wallet["addresses"] != null)
-          "addresses": <Map<String, dynamic>>[
-            ...wallet["addresses"]
-                .map((address) => {
-                      "address": wallet['address'],
-                      "addressTitle": wallet['address_title'],
-                      "addressColor": wallet['address_color'],
-                      "publicKey": wallet['publicKey'],
-                      "privateKey": wallet['privateKey'],
-                      "addressIndex": wallet['address_index'],
-                      "addressGroup": wallet['group_index'],
-                      "warning": wallet['warning'],
-                      "walletId": wallet['wallet_id'],
-                    })
-                .toList()
-          ]
-      };
-      return WalletStore.fromDb(_updatedData);
-    }).toList();
-    await _dropTables(db);
-    await _createTables(db);
-    for (final wallet in wallets) {
-      for (final address in wallet.addresses) {
-        var value = await db.query(_addressesTable,
-            where: "address = ?", whereArgs: [address.address]);
-        if (value.isNotEmpty) {
-          throw Exception("address Already Exists");
-        }
-      }
-      var batch = db.batch();
-      batch.insert(_walletTable, wallet.toDb());
-      for (final address in wallet.addresses)
-        batch.insert(_addressesTable, address.toDb());
-      await batch.commit();
-    }
-  }
-
   @override
   init() async {
     _database = Completer<Database>();

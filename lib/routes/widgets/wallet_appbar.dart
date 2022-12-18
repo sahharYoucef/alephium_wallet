@@ -9,7 +9,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class WalletAppBar extends StatefulWidget {
+class WalletAppBar extends StatelessWidget {
   final Widget? action;
   final Text? label;
   final bool withLoadingIndicator;
@@ -26,36 +26,8 @@ class WalletAppBar extends StatefulWidget {
     this.leading,
     this.elevation = 1,
     Color? color,
-  }) : super(key: key) {
-    this.color = color ?? WalletTheme.instance.primary;
-  }
-
-  @override
-  State<WalletAppBar> createState() => _WalletAppBarState();
-}
-
-class _WalletAppBarState extends State<WalletAppBar> {
-  late Color appBarColor;
-  late double elevation;
-
-  @override
-  void initState() {
-    appBarColor = widget.color;
-    elevation = widget.elevation;
-    super.initState();
-  }
-
-  @override
-  void didUpdateWidget(covariant WalletAppBar oldWidget) {
-    //   if (widget.controller != null) {
-    //     appBarColor = Color.lerp(widget.color, WalletTheme.instance.primary,
-    //         (widget.controller!.offset / 50).clamp(0, 1))!;
-    //   } else {
-    appBarColor = widget.color;
-    //   }
-    setState(() {});
-    super.didUpdateWidget(oldWidget);
-  }
+  })  : this.color = color ?? WalletTheme.instance.primary,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -73,12 +45,12 @@ class _WalletAppBarState extends State<WalletAppBar> {
             children: [
               Row(
                 children: [
-                  if (widget.leading != null)
+                  if (leading != null)
                     ConstrainedBox(
                         constraints: BoxConstraints(
                           maxWidth: context.width - 80,
                         ),
-                        child: widget.leading!)
+                        child: leading!)
                   else
                     ModalRoute.of(context)!.canPop
                         ? AppBarIconButton(
@@ -98,10 +70,10 @@ class _WalletAppBarState extends State<WalletAppBar> {
                       padding: EdgeInsets.symmetric(horizontal: 8.0.w),
                       child: Align(
                         alignment: Alignment.center,
-                        child: widget.label != null
+                        child: label != null
                             ? AutoSizeText(
-                                widget.label!.data!,
-                                style: widget.label!.style,
+                                label!.data!,
+                                style: label!.style,
                                 maxLines: 1,
                               )
                             : const SizedBox(),
@@ -110,12 +82,12 @@ class _WalletAppBarState extends State<WalletAppBar> {
                   ),
                   Padding(
                     padding: EdgeInsets.all(4.0.h),
-                    child: widget.action == null
+                    child: action == null
                         ? SizedBox(
                             height: 50.h,
                             width: 50.h,
                           )
-                        : widget.action,
+                        : action,
                   ),
                 ],
               ),
@@ -124,18 +96,17 @@ class _WalletAppBarState extends State<WalletAppBar> {
         ),
       ),
     );
-    final Widget child = Material(
-      shape: const AppBarShape(),
-      elevation: elevation,
-      color: appBarColor,
-      shadowColor: WalletTheme.instance.gradientOne,
-      child: safeArea,
-    );
     return Align(
       alignment: Alignment.topCenter,
       child: Hero(
         tag: "app-bar",
-        child: child,
+        child: Material(
+          shape: const AppBarShape(),
+          elevation: elevation,
+          color: color,
+          shadowColor: WalletTheme.instance.gradientOne,
+          child: safeArea,
+        ),
       ),
     );
   }

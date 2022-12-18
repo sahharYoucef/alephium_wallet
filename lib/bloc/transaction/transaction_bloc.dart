@@ -1,5 +1,4 @@
 import 'package:alephium_dart/alephium_dart.dart';
-import 'package:alephium_wallet/api/utils/constants.dart';
 import 'package:alephium_wallet/api/utils/error_handler.dart';
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/main.dart';
