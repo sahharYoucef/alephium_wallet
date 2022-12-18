@@ -1,4 +1,5 @@
 import 'package:alephium_wallet/bloc/transaction/transaction_bloc.dart';
+import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -23,7 +24,7 @@ class AvailableBalanceTile extends StatelessWidget {
                   child: Text(
                     "${'availableBalance'.tr()} : ${bloc.balance} ℵ",
                     style: Theme.of(context).textTheme.bodySmall,
-                  ),
+                  ).obscure("ℵ"),
                 )
               : const SizedBox.shrink(),
         );
