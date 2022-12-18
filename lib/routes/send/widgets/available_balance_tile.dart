@@ -21,10 +21,18 @@ class AvailableBalanceTile extends StatelessWidget {
           child: bloc.balance != null
               ? Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Text(
-                    "${'availableBalance'.tr()} : ${bloc.balance} ℵ",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ).obscure("ℵ"),
+                  child: Row(
+                    children: [
+                      Text(
+                        "${'availableBalance'.tr()} : ",
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      Text(
+                        "${bloc.balance} ℵ",
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ).obscure("ℵ"),
+                    ],
+                  ),
                 )
               : const SizedBox.shrink(),
         );
