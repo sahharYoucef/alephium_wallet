@@ -7,7 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../bloc/settings/settings_bloc.dart';
 
 class WalletAppBar extends StatelessWidget {
   final Widget? action;
@@ -15,7 +18,6 @@ class WalletAppBar extends StatelessWidget {
   final bool withLoadingIndicator;
   final ScrollController? controller;
   final Widget? leading;
-  late final Color color;
   final double elevation;
   WalletAppBar({
     Key? key,
@@ -25,12 +27,11 @@ class WalletAppBar extends StatelessWidget {
     this.withLoadingIndicator = false,
     this.leading,
     this.elevation = 1,
-    Color? color,
-  })  : this.color = color ?? WalletTheme.instance.primary,
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    context.watch<SettingsBloc>();
     var safeArea = SafeArea(
       bottom: false,
       child: Container(
@@ -103,7 +104,7 @@ class WalletAppBar extends StatelessWidget {
         child: Material(
           shape: const AppBarShape(),
           elevation: elevation,
-          color: color,
+          color: WalletTheme.instance.primary,
           shadowColor: WalletTheme.instance.gradientOne,
           child: safeArea,
         ),

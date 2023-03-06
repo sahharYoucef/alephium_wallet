@@ -20,7 +20,7 @@ class ThemeSwitch extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         isExpanded: true,
         onChanged: (value) {
-          BlocProvider.of<SettingsBloc>(context).add(ChangeAppTheme(value!));
+          context.read<SettingsBloc>().add(ChangeAppTheme(value!));
         },
         decoration: InputDecoration(
           label: Text(
