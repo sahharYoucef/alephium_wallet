@@ -22,7 +22,7 @@ class LocalAuthSwitch extends StatelessWidget {
               context.showSnackBar(state.error, level: Level.error);
             }
           },
-          bloc: context.watch<SettingsBloc>(),
+          bloc: context.read<SettingsBloc>(),
           buildWhen: (previous, current) => current is LocalAuthToSendState,
           builder: (context, state) {
             return Switch(

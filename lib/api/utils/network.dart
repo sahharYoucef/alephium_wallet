@@ -3,17 +3,17 @@ import 'package:alephium_wallet/storage/app_storage.dart';
 class Network {
   factory Network.mainnet() {
     return Network._(
-      'https://wallet-v15.mainnet.alephium.org',
-      'https://backend-v19.mainnet.alephium.org',
+      'https://wallet-v16.mainnet.alephium.org',
+      'https://backend-v112.mainnet.alephium.org',
       'https://explorer.alephium.org/#',
       NetworkType.mainnet,
     );
   }
   factory Network.testnet() {
     return Network._(
-      'https://wallet-v15.testnet.alephium.org',
-      'https://backend-v19.testnet.alephium.org',
-      'https://testnet.alephium.org',
+      'https://wallet-v16.testnet.alephium.org',
+      'https://backend-v112.testnet.alephium.org',
+      'https://explorer.testnet.alephium.org',
       NetworkType.testnet,
     );
   }

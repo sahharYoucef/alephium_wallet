@@ -1,10 +1,11 @@
+import 'package:alephium_wallet/bloc/settings/settings_bloc.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CircleNavigationBar extends StatelessWidget {
-  final Color navBarColor;
   final List<Widget> navBarIcons;
   final Color navBarUnselectedIconsColor;
   final Color navBarSelectedIconsColor;
@@ -20,11 +21,11 @@ class CircleNavigationBar extends StatelessWidget {
     this.navBarSelectedIconsColor = const Color(0xff000000),
     this.circleIconsColor = const Color(0xff9d9fa1),
     this.borderRadius,
-    this.navBarColor = Colors.white,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    context.watch<SettingsBloc>();
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: WalletTheme.instance.maxWidth,
@@ -34,10 +35,10 @@ class CircleNavigationBar extends StatelessWidget {
         child: SizedBox(
           height: 80.h + context.bottomPadding,
           width: double.infinity,
-          child: Material(
+          child: PhysicalModel(
               elevation: 2,
               shadowColor: WalletTheme.instance.gradientOne,
-              color: navBarColor,
+              color: WalletTheme.instance.primary,
               borderRadius: borderRadius,
               child: Padding(
                 padding: EdgeInsets.only(bottom: context.bottomPadding),

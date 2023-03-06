@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:alephium_wallet/bloc/contacts/contacts_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/routes/contacts/contacts_page.dart';
@@ -72,8 +74,7 @@ class _HomePageState extends State<HomePage>
       context.showSnackBar("Press back again to exit");
       return false;
     }
-    await SystemChannels.platform.invokeMethod("SystemNavigator.pop");
-    return true;
+    exit(0);
   }
 
   @override
@@ -331,7 +332,6 @@ class _HomePageState extends State<HomePage>
                   child: CircleNavigationBar(
                     tabController: _tabController,
                     navBarSelectedIconsColor: WalletTheme.instance.textColor,
-                    navBarColor: WalletTheme.instance.primary,
                     circleIconsColor: WalletTheme.instance.secondary,
                     navBarIcons: [
                       IconButton(
