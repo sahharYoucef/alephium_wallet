@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/routes/settings/widgets/advanced_switch.dart';
 import 'package:alephium_wallet/routes/settings/widgets/local_auth_switch.dart';
 import 'package:alephium_wallet/routes/settings/widgets/network_drop_down.dart';
 import 'package:alephium_wallet/routes/settings/widgets/visibility_switch.dart';
@@ -183,6 +184,11 @@ class SettingsPage extends StatelessWidget {
                   height: 10,
                 ),
                 NetworkDropDown(),
+                const Divider(),
+                const SizedBox(
+                  height: 10,
+                ),
+                AdvancedSwitch(),
               ],
             ),
           ),

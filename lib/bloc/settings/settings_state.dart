@@ -21,3 +21,9 @@ class LocalAuthToSendState extends SettingsState {
 
   LocalAuthToSendState(this.value);
 }
+
+class SwitchAdvancedModeState extends SettingsState {
+  final bool value;
+
+  SwitchAdvancedModeState(this.value);
+}

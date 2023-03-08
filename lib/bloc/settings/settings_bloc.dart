@@ -34,6 +34,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         } catch (e, trace) {
           emit(SettingsError(ApiError(exception: e, trace: trace).message));
         }
+      } else if (event is SwitchAdvancedMode) {
+        AppStorage.instance.advanced = event.value;
+        emit(SwitchAdvancedModeState(event.value));
       }
     });
   }

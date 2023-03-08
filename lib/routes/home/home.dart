@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:alephium_wallet/bloc/contacts/contacts_bloc.dart';
+import 'package:alephium_wallet/bloc/settings/settings_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/routes/contacts/contacts_page.dart';
 import 'package:alephium_wallet/routes/contacts/widgets/add_contact_dialog.dart';
@@ -138,78 +139,93 @@ class _HomePageState extends State<HomePage>
                               },
                               child: CustomScrollView(
                                 slivers: [
-                                  SliverToBoxAdapter(
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 16.w, vertical: 16.h),
-                                      child: Material(
-                                        color: WalletTheme.instance.primary,
-                                        elevation: 1,
-                                        borderRadius: BorderRadius.circular(16),
+                                  BlocBuilder<SettingsBloc, SettingsState>(
+                                    buildWhen: (previous, current) {
+                                      return current is SwitchAdvancedModeState;
+                                    },
+                                    builder: (context, state) {
+                                      if (!AppStorage.instance.advanced)
+                                        return const SliverToBoxAdapter();
+                                      return SliverToBoxAdapter(
                                         child: Padding(
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 16.w, vertical: 16.h),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Expanded(
-                                                child: AppBarIconButton(
-                                                  tooltip: "QRscanner".tr(),
-                                                  label: "QRscanner".tr(),
-                                                  icon: Icon(
-                                                    CupertinoIcons
-                                                        .qrcode_viewfinder,
-                                                  ),
-                                                  onPressed: () async {
-                                                    var data = await showQRView(
-                                                      context,
-                                                      walletHomeBloc:
-                                                          _walletHomeBloc,
-                                                    );
-                                                    if (data != null) {
-                                                      Navigator.pushNamed(
-                                                          context, Routes.send,
-                                                          arguments: {
-                                                            "wallet":
-                                                                data["wallet"],
-                                                            "address":
-                                                                data["wallet"]
+                                          child: Material(
+                                            color: WalletTheme.instance.primary,
+                                            elevation: 1,
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 16.w,
+                                                  vertical: 16.h),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  Expanded(
+                                                    child: AppBarIconButton(
+                                                      tooltip: "QRscanner".tr(),
+                                                      label: "QRscanner".tr(),
+                                                      icon: Icon(
+                                                        CupertinoIcons
+                                                            .qrcode_viewfinder,
+                                                      ),
+                                                      onPressed: () async {
+                                                        var data =
+                                                            await showQRView(
+                                                          context,
+                                                          walletHomeBloc:
+                                                              _walletHomeBloc,
+                                                        );
+                                                        if (data != null) {
+                                                          Navigator.pushNamed(
+                                                              context,
+                                                              Routes.send,
+                                                              arguments: {
+                                                                "wallet": data[
+                                                                    "wallet"],
+                                                                "address": data[
+                                                                        "wallet"]
                                                                     .addresses
                                                                     .first,
-                                                            "initial-data":
-                                                                data,
-                                                          });
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 8.w,
-                                              ),
-                                              Expanded(
-                                                child: AppBarIconButton(
-                                                  tooltip: "signer".tr(),
-                                                  label: "signer".tr(),
-                                                  icon: Icon(
-                                                    CupertinoIcons.signature,
+                                                                "initial-data":
+                                                                    data,
+                                                              });
+                                                        }
+                                                      },
+                                                    ),
                                                   ),
-                                                  onPressed: () async {
-                                                    Navigator.pushNamed(
-                                                      context,
-                                                      Routes.signMultisigTx,
-                                                    );
-                                                  },
-                                                ),
+                                                  SizedBox(
+                                                    width: 8.w,
+                                                  ),
+                                                  Expanded(
+                                                    child: AppBarIconButton(
+                                                      tooltip: "signer".tr(),
+                                                      label: "signer".tr(),
+                                                      icon: Icon(
+                                                        CupertinoIcons
+                                                            .signature,
+                                                      ),
+                                                      onPressed: () async {
+                                                        Navigator.pushNamed(
+                                                          context,
+                                                          Routes.signMultisigTx,
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
+                                      );
+                                    },
                                   ),
                                   BlocBuilder<WalletHomeBloc, WalletHomeState>(
                                     bloc: _walletHomeBloc,

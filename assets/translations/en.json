@@ -7,6 +7,7 @@
   "mainAddress": "Main Address",
   "showMoreAddresses": "show more addresses",
   "discreetMode": "Discreet mode",
+  "advancedMode": "Advanced mode",
   "walletAddresses": "Wallet Addresses",
   "transactions": "Transactions",
   "transaction": "Transaction",

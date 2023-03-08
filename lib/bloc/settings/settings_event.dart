@@ -15,3 +15,9 @@ class LocalAuthToSend extends SettingsEvent {
 
   LocalAuthToSend(this.value);
 }
+
+class SwitchAdvancedMode extends SettingsEvent {
+  final bool value;
+
+  SwitchAdvancedMode(this.value);
+}

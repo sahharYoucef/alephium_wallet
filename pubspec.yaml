@@ -43,7 +43,9 @@ dependencies:
   path_provider: ^2.0.11
   uuid: ^3.0.6
   alephium_dart:
-    path: ../alephium-dart
+    git:
+      url: https://github.com/sahharYoucef/alephium_dart.git
+      ref: master
   sqflite: ^2.1.0+1
   intl: ^0.17.0
   google_fonts: ^3.0.1

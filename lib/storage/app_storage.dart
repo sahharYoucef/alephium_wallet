@@ -84,6 +84,20 @@ class AppStorage {
     settings.put("visibility", value);
   }
 
+  bool get advanced {
+    var settings = Hive.box("settings");
+    var _advanced = settings.get("advanced");
+    if (_advanced == null) {
+      advanced = _advanced = false;
+    }
+    return _advanced;
+  }
+
+  set advanced(bool? value) {
+    var settings = Hive.box("settings");
+    settings.put("advanced", value);
+  }
+
   bool get firstRun {
     var settings = Hive.box("settings");
     var _firstRun = settings.get("firstRun");
