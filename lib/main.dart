@@ -7,6 +7,7 @@ import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/encryption/alephium/alephium_wallet_service.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/services/authentication_service.dart';
+import 'package:alephium_wallet/services/share_service.dart';
 import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:alephium_wallet/storage/sqflite_database/sqflite_database.dart';
@@ -93,6 +94,7 @@ Future<bool> _initApp() async {
   getIt.registerLazySingleton<AuthenticationService>(
       () => AuthenticationService());
   getIt.registerSingleton<BaseDBHelper>(SQLiteDBHelper());
+  getIt.registerLazySingleton<ShareService>(() => ShareService());
   await AppStorage.instance.initHive();
   Bloc.observer = AppBlocObserver();
   await Hive.openBox("settings");

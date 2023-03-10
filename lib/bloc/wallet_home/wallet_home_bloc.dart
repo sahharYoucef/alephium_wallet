@@ -31,7 +31,6 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
           wallets: List<WalletStore>.from(wallets),
           withLoadingIndicator: true,
         ));
-
         try {
           var _price = await apiRepository.getPrice(currency: currency);
           if (_price.hasException) {
@@ -68,6 +67,7 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
           if (_price.hasException) {
             emit(WalletHomeError(message: _price.exception?.message));
           }
+          AppStorage.instance.price = _price.data;
           wallets = (state as WalletHomeCompleted).wallets;
           emit(WalletHomeCompleted(
             wallets: List<WalletStore>.from(wallets),

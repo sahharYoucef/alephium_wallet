@@ -159,6 +159,14 @@ class SettingsPage extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
+                AdvancedSwitch(),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Divider(),
+                const SizedBox(
+                  height: 10,
+                ),
                 ThemeSwitch(),
                 const SizedBox(
                   height: 10,
@@ -184,11 +192,6 @@ class SettingsPage extends StatelessWidget {
                   height: 10,
                 ),
                 NetworkDropDown(),
-                const Divider(),
-                const SizedBox(
-                  height: 10,
-                ),
-                AdvancedSwitch(),
               ],
             ),
           ),
