@@ -88,11 +88,10 @@ class _ReceivePageState extends State<ReceivePage> {
                   embeddedImage: AssetImage(WalletTheme.instance.qrImage),
                   embeddedImageStyle: QrEmbeddedImageStyle(
                     color: Colors.white,
-                    size: Size(50, 50),
+                    size: Size(30, 30),
                   ),
                   eyeStyle: QrEyeStyle(
                     eyeShape: QrEyeShape.squareRounded,
-                    color: WalletTheme.instance.gradientOne,
                     radius: 10,
                   ),
                 ),
