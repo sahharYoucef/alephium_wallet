@@ -266,7 +266,7 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
                                             borderRadius:
                                                 BorderRadius.circular(8),
                                           ),
-                                          child: QrImage(
+                                          child: QrImageView(
                                             padding: EdgeInsets.all(8.w),
                                             data: state.signature,
                                             backgroundColor: Colors.transparent,

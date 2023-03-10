@@ -22,6 +22,10 @@ class WalletTheme {
 
   static ThemeMode themeMode = ThemeMode.dark;
 
+  String get qrImage {
+    return "assets/icons/splash_screen_logo_dark.png";
+  }
+
   WalletTheme() {
     if (themeMode == ThemeMode.system) {
       var brightness = SchedulerBinding.instance.window.platformBrightness;

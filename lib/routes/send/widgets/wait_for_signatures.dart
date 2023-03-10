@@ -114,7 +114,7 @@ class _WaitForOtherSignaturesState extends State<WaitForOtherSignatures> {
                               color: WalletTheme.instance.primary,
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: QrImage(
+                            child: QrImageView(
                               data: qrData,
                               backgroundColor: Colors.transparent,
                               foregroundColor: WalletTheme.instance.textColor,

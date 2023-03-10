@@ -5,6 +5,7 @@ import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart'
 import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/services/share_service.dart';
+import 'package:alephium_wallet/utils/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
@@ -79,11 +80,21 @@ class _ReceivePageState extends State<ReceivePage> {
                   color: WalletTheme.instance.primary,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: QrImage(
+                child: QrImageView(
                   data: _addressStore.receiveAmount(amount),
                   backgroundColor: Colors.transparent,
                   foregroundColor: WalletTheme.instance.textColor,
                   version: QrVersions.auto,
+                  embeddedImage: AssetImage(WalletTheme.instance.qrImage),
+                  embeddedImageStyle: QrEmbeddedImageStyle(
+                    color: Colors.white,
+                    size: Size(50, 50),
+                  ),
+                  eyeStyle: QrEyeStyle(
+                    eyeShape: QrEyeShape.squareRounded,
+                    color: WalletTheme.instance.gradientOne,
+                    radius: 10,
+                  ),
                 ),
               ),
             ),

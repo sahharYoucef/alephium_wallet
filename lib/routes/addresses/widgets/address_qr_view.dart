@@ -84,7 +84,7 @@ class _AddressQRDialogState extends State<AddressQRDialog>
                 color: WalletTheme.instance.primary,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: QrImage(
+              child: QrImageView(
                 data: _value,
                 backgroundColor: Colors.transparent,
                 foregroundColor: WalletTheme.instance.textColor,
