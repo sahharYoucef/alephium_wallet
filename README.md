@@ -70,7 +70,7 @@ samples, guidance on mobile development, and a full API reference.
 If you like the project and want to donate.
 
 **Addresses:**
- - Alephium => 1279QsTUT4uA7GqdmqRA8e3LHpnS7osDgiPeZBME35oZv
+ - Alephium => 16GkB7fMrkPtmdNAKzgDBYQJoUfJQH2CDnLVh6hSyriEk
  - ERGO => 9ecxQNdmRgjNM3SFsBeDa9R4SuTVH5ra6pYzUCchca5k2SeVDBg
 
 ## Multi signatures (Multisig)
