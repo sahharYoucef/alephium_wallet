@@ -45,6 +45,7 @@ class AppBlocObserver extends BlocObserver {
 }
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final _firstRun = await _initApp();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MultiBlocProvider(
