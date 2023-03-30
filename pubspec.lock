@@ -352,10 +352,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "06c0fe61b7f64710b8e013ff30951ee805282535"
+      resolved-ref: aeede56711665ba13218b5745228e0170f5a9c4d
       url: "https://github.com/leocavalcante/encrypt.git"
     source: git
-    version: "5.0.2"
+    version: "5.0.3"
   equatable:
     dependency: "direct main"
     description:
@@ -433,54 +433,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  flutter_keyboard_visibility:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility
-      sha256: "86b71bbaffa38e885f5c21b1182408b9be6951fd125432cf6652c636254cef2d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.4.0"
-  flutter_keyboard_visibility_linux:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility_linux
-      sha256: "6fba7cd9bb033b6ddd8c2beb4c99ad02d728f1e6e6d9b9446667398b2ac39f08"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
-  flutter_keyboard_visibility_macos:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility_macos
-      sha256: c5c49b16fff453dfdafdc16f26bdd8fb8d55812a1d50b0ce25fc8d9f2e53d086
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
-  flutter_keyboard_visibility_platform_interface:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility_platform_interface
-      sha256: e43a89845873f7be10cb3884345ceb9aebf00a659f479d1c8f4293fcb37022a4
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
-  flutter_keyboard_visibility_web:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility_web
-      sha256: d3771a2e752880c79203f8d80658401d0c998e4183edca05a149f5098ce6e3d1
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
-  flutter_keyboard_visibility_windows:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility_windows
-      sha256: fc4b0f0b6be9b93ae527f3d527fb56ee2d918cd88bbca438c478af7bcfd0ef73
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -555,14 +507,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_typeahead:
-    dependency: "direct main"
-    description:
-      name: flutter_typeahead
-      sha256: edfc51579ca3756adaa32b6849cf44af03276b93e8a8a68d8247ee243598f1b2
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.3.7"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -780,10 +724,10 @@ packages:
     dependency: "direct main"
     description:
       name: logger
-      sha256: c40f9ef51e5bffb4ce69ad2d8c8aad7bd47ec109c090521109b63a4e2bc27191
+      sha256: db2ff852ed77090ba9f62d3611e4208a3d11dfa35991a81ae724c113fcb3e3f7
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.2"
+    version: "1.3.0"
   logging:
     dependency: transitive
     description:
@@ -876,10 +820,10 @@ packages:
     dependency: "direct main"
     description:
       name: path_provider
-      sha256: "04890b994ee89bfa80bf3080bfec40d5a92c5c7a785ebb02c13084a099d2b6f9"
+      sha256: c7edf82217d4b2952b2129a61d3ad60f1075b9299e629e149a8d2e39c2e6aad4
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.13"
+    version: "2.0.14"
   path_provider_android:
     dependency: transitive
     description:
@@ -892,10 +836,10 @@ packages:
     dependency: transitive
     description:
       name: path_provider_foundation
-      sha256: "026b97a6c29da75181a37aae2eba9227f5fe13cb2838c6b975ce209328b8ab4e"
+      sha256: "12eee51abdf4d34c590f043f45073adbb45514a108bd9db4491547a2fd891059"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.3"
+    version: "2.2.0"
   path_provider_linux:
     dependency: transitive
     description:
@@ -948,10 +892,10 @@ packages:
     dependency: transitive
     description:
       name: pointycastle
-      sha256: db7306cf0249f838d1a24af52b5a5887c5bf7f31d8bb4e827d071dc0939ad346
+      sha256: ae73e842cdd27a3467a71d70cefd9b198538aab4fc7dde1d0e8c78c96225abf0
       url: "https://pub.dev"
     source: hosted
-    version: "3.6.2"
+    version: "3.7.1"
   pool:
     dependency: transitive
     description:
@@ -1061,10 +1005,10 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences
-      sha256: ee6257848f822b8481691f20c3e6d2bfee2e9eccb2a3d249907fcfb198c55b41
+      sha256: "78528fd87d0d08ffd3e69551173c026e8eacc7b7079c82eb6a77413957b7e394"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.18"
+    version: "2.0.20"
   shared_preferences_android:
     dependency: transitive
     description:
@@ -1162,18 +1106,18 @@ packages:
     dependency: "direct main"
     description:
       name: sqflite
-      sha256: "851d5040552cf911f4cabda08d003eca76b27da3ed0002978272e27c8fbf8ecc"
+      sha256: "500d6fec583d2c021f2d25a056d96654f910662c64f836cd2063167b8f1fa758"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.5"
+    version: "2.2.6"
   sqflite_common:
     dependency: transitive
     description:
       name: sqflite_common
-      sha256: bfd6973aaeeb93475bc0d875ac9aefddf7965ef22ce09790eb963992ffc5183f
+      sha256: "963dad8c4aa2f814ce7d2d5b1da2f36f31bd1a439d8f27e3dc189bb9d26bc684"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.2+2"
+    version: "2.4.3"
   stack_trace:
     dependency: transitive
     description:
