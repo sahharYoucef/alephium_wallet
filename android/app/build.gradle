@@ -48,7 +48,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.sahhar.alephium_wallet"
+        applicationId "com.sahhar_wallet.alephium"
         minSdkVersion 20
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()

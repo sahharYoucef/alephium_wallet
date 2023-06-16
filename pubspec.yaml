@@ -106,10 +106,14 @@ flutter:
     - assets/translations/
 
 flutter_native_splash:
+  image: assets/icons/splash_screen_logo.png
   color: "#EDEDED"
-  image: assets/icons/splash_screen_logo_dark.png
+  image_dark: assets/icons/splash_screen_logo.png
   color_dark: "#171717"
-  image_dark: assets/icons/splash_screen_logo_light.png
+  
   android_12:
+    image: assets/icons/splash_screen_logo.png
+    color: "#EDEDED"
+    image_dark: assets/icons/splash_screen_logo.png
+    color_dark: "#171717"
   web: false
-  fullscreen: true

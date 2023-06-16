@@ -20,7 +20,11 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.only(top: 32, right: 16, left: 16, bottom: 100),
+      padding: EdgeInsets.only(
+          top: 32,
+          right: 16,
+          left: 16,
+          bottom: 100 + MediaQuery.of(context).padding.bottom),
       children: [
         Material(
           elevation: 2,

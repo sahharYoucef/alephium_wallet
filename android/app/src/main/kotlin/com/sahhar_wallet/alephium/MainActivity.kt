@@ -1,4 +1,4 @@
-package com.sahhar.alephium_wallet
+package com.sahhar_wallet.alephium
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 
