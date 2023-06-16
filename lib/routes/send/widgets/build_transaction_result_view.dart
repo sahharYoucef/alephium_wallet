@@ -1,6 +1,7 @@
 import 'package:alephium_wallet/bloc/transaction/transaction_bloc.dart';
 import 'package:alephium_wallet/routes/send/widgets/check_tx_result.dart';
 import 'package:alephium_wallet/routes/send/widgets/gas_advanced_options.dart';
+import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,7 +36,7 @@ class BuildTransactionResultView extends StatelessWidget {
               CheckTransactionResult(
                 bloc: bloc,
               )
-            else ...[
+            else if (AppStorage.instance.advanced) ...[
               Divider(
                 height: 1,
               ),

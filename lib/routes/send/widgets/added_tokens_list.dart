@@ -36,11 +36,22 @@ class AddedTokensList extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  AddressText(
-                                    address: "${token.id}",
-                                  ),
+                                  if (token.symbol != null)
+                                    Text(
+                                      "${token.symbol}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall!
+                                          .copyWith(
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                    )
+                                  else
+                                    AddressText(
+                                      address: "${token.id}",
+                                    ),
                                   Text(
-                                    "${token.amount}",
+                                    "${token.formattedAmount}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineSmall!

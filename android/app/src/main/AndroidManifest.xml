@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sahhar_wallet.alephium">
+    package="com.sahhar.sahhar_wallet">
     <application android:label="Sahhar Wallet - Alephium" android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity android:name=".MainActivity" android:exported="true"

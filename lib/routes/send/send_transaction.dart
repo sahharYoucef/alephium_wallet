@@ -112,7 +112,7 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                     barrierDismissible: false,
                     context: context,
                     builder: (context) => TransactionSuccessDialog(
-                          amount: _bloc.amount!.toString(),
+                          amount: _bloc.amount?.toString(),
                           transaction: state.transactions.first,
                         ));
                 Navigator.pop(context);
@@ -205,7 +205,10 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                   SizedBox(height: 8.h),
                                   AmountTextField(
                                     bloc: _bloc,
-                                    validator: amountValidator,
+                                    validator: (value) {
+                                      return amountValidator(value,
+                                          tokens: _bloc.tokens);
+                                    },
                                     initialValue: _bloc.amount?.toString(),
                                   ),
                                   SizedBox(height: 8.h),
@@ -216,51 +219,51 @@ class _SendTransactionPageState extends State<SendTransactionPage>
                                     bloc: _bloc,
                                   ),
                                   SizedBox(height: 8.h),
+                                  BuildTransactionResultView(
+                                    bloc: _bloc,
+                                    gasAmountValidator: gasAmountValidator,
+                                    gasPriceValidator: gasPriceValidator,
+                                  ),
+                                  SizedBox(height: 100.h),
                                 ])),
                               ),
-                              SliverFillRemaining(
-                                hasScrollBody: false,
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 16.w),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      BuildTransactionResultView(
-                                        bloc: _bloc,
-                                        gasAmountValidator: gasAmountValidator,
-                                        gasPriceValidator: gasPriceValidator,
-                                      ),
-                                      const Spacer(),
-                                      SizedBox(
-                                        height: 8.h,
-                                      ),
-                                      SafeArea(
-                                        minimum: EdgeInsets.only(bottom: 16.h),
-                                        bottom: true,
-                                        top: false,
-                                        child: IntrinsicHeight(
-                                          child: Row(
-                                            children: [
-                                              AddTokenButton(
-                                                bloc: _bloc,
-                                              ),
-                                              Expanded(
-                                                  flex: 1,
-                                                  child: SendCheckButton(
-                                                    bloc: _bloc,
-                                                    formKey: _formKey,
-                                                  )),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
                             ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        SafeArea(
+                          minimum: EdgeInsets.only(bottom: 16.h),
+                          bottom: true,
+                          top: false,
+                          child: IntrinsicHeight(
+                            child: Row(
+                              children: [
+                                AddTokenButton(
+                                  bloc: _bloc,
+                                ),
+                                Expanded(
+                                    flex: 1,
+                                    child: SendCheckButton(
+                                      bloc: _bloc,
+                                      formKey: _formKey,
+                                    )),
+                              ],
+                            ),
                           ),
                         ),
                       ],

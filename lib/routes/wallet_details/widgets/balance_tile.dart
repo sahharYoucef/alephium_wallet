@@ -1,9 +1,14 @@
+import 'package:alephium_wallet/routes/home/widgets/token_icon.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
+
+import '../../../utils/format.dart';
+import '../../send/widgets/token_details.dart';
 
 class BalanceTile extends StatelessWidget {
   final WalletStore wallet;
@@ -96,25 +101,42 @@ class BalanceTile extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const Divider(),
-                ...wallet.tokensBalances.map((token) => Padding(
+                ...wallet.tokensBalances.mapIndexed((index, token) => Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20.0,
                         vertical: 4,
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          AddressText(
-                            address: "${token.id}",
+                          TokenIcon(tokenStore: token),
+                          const SizedBox(
+                            width: 10,
                           ),
-                          Text(
-                            "${token.amount}",
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineSmall!
-                                .copyWith(
-                                  fontWeight: FontWeight.w700,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                AddressText(
+                                  onTap: () {
+                                    TokenDetails.show(context,
+                                        tokenStore: token);
+                                  },
+                                  address:
+                                      "${token.name ?? token.symbol ?? 'Token ${index + 1}'.tr()}",
                                 ),
+                                Text(
+                                  "${Format.humanReadableNumber(token.formattedAmount)}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall!
+                                      .copyWith(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),

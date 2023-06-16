@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:alephium_dart/alephium_dart.dart';
+import 'package:alephium_wallet/api/models/token_metadata.dart';
 import 'package:alephium_wallet/api/utils/constants.dart';
 import 'package:alephium_wallet/api/utils/error_handler.dart';
 import 'package:bloc/bloc.dart';
@@ -7,6 +11,7 @@ import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:equatable/equatable.dart';
+import 'package:collection/collection.dart';
 
 import '../../api/utils/either.dart';
 import '../../storage/models/address_store.dart';
@@ -16,6 +21,8 @@ part 'wallet_home_state.dart';
 
 class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
   List<WalletStore> wallets = [];
+  static List<TokenMetadata> tokens = [];
+
   double? price;
   final BaseApiRepository apiRepository;
   WalletHomeBloc(this.apiRepository) : super(WalletHomeInitial()) {
@@ -26,17 +33,30 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
         wallets = await getIt.get<BaseDBHelper>().getWallets(
               network: apiRepository.network,
             );
+        tokens = await getIt.get<BaseDBHelper>().getTokensMetaData();
 
         emit(WalletHomeCompleted(
           wallets: List<WalletStore>.from(wallets),
           withLoadingIndicator: true,
         ));
         try {
+          final tokensData = await apiRepository.getTokensMetadata();
+          if (tokensData.hasData) {
+            final tokensToUpdate = tokensData.data!.tokens!
+                .where((element) => !tokens.contains(element));
+            if (tokensToUpdate.isNotEmpty) {
+              await getIt
+                  .get<BaseDBHelper>()
+                  .insertTokensMetaData(tokensToUpdate.toList());
+              tokens = await getIt.get<BaseDBHelper>().getTokensMetaData();
+            }
+          }
           var _price = await apiRepository.getPrice(currency: currency);
           if (_price.hasException) {
             emit(WalletHomeError(message: _price.exception?.message));
+          } else if (_price.hasData) {
+            AppStorage.instance.price = _price.data;
           }
-          AppStorage.instance.price = _price.data;
           final updatedAddresses = await _updateAddresses();
           if (updatedAddresses.data!.isNotEmpty) {
             await getIt
@@ -51,13 +71,80 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
           wallets = await getIt.get<BaseDBHelper>().getWallets(
                 network: apiRepository.network,
               );
+          List<String> tokensIds = [];
+          for (var wallet in wallets) {
+            for (var token in wallet.tokensBalances) {
+              if (!tokensIds.contains(token.id)) {
+                tokensIds.add(token.id!);
+              }
+            }
+          }
+          final List<TokenMetadata> tokensToAdd = [];
+          for (var token in tokensIds) {
+            final isExist =
+                tokens.firstWhereOrNull((element) => element.id == token);
+            final calls = fetchStdTokenMetaDate(token);
+            final data = await apiRepository.postContractsMultiCallContract(
+                calls: MultipleCallContract(
+                    calls: calls
+                        .map((e) => CallContract(
+                              group: e['group'],
+                              address: e['address'],
+                              methodIndex: e['methodIndex'],
+                            ))
+                        .toList()));
+            if (data.hasData) {
+              late TokenMetadata tokenMetadata;
+              if (isExist == null) {
+                tokenMetadata = TokenMetadata(
+                    id: token,
+                    symbol: utf8.decode(
+                        hex.decode(data.data!.results[0].returns![0].value!)),
+                    name: utf8.decode(
+                        hex.decode(data.data!.results[1].returns![0].value!)),
+                    decimals: int.tryParse(
+                        "${data.data?.results[2].returns?[0].value}"),
+                    totalSupply: BigInt.tryParse(
+                        "${data.data?.results[3].returns?[0].value}"));
+              } else {
+                tokenMetadata = isExist.copyWith(
+                  name: isExist.name == null
+                      ? utf8.decode(
+                          hex.decode(data.data!.results[1].returns![0].value!))
+                      : null,
+                  totalSupply: isExist.totalSupply == null
+                      ? BigInt.tryParse(
+                          "${data.data?.results[3].returns?[0].value}")
+                      : null,
+                  decimals: isExist.decimals == null
+                      ? int.tryParse(
+                          "${data.data?.results[2].returns?[0].value}")
+                      : null,
+                  symbol: isExist.symbol == null
+                      ? utf8.decode(
+                          hex.decode(data.data!.results[0].returns![0].value!))
+                      : null,
+                );
+              }
+              tokensToAdd.add(tokenMetadata);
+            }
+          }
+          if (tokensToAdd.isNotEmpty) {
+            await getIt
+                .get<BaseDBHelper>()
+                .insertTokensMetaData(tokensToAdd.toList());
+          }
+          tokens = await getIt.get<BaseDBHelper>().getTokensMetaData();
           emit(WalletHomeCompleted(
             wallets: List<WalletStore>.from(wallets),
             withLoadingIndicator: false,
           ));
         } catch (e, trace) {
           emit(WalletHomeError(
-              message: ApiError(exception: e, trace: trace).message));
+              message:
+                  ApiError(exception: Exception(e.toString()), trace: trace)
+                      .message));
+          rethrow;
         }
       } else if (event is WalletHomeRefreshData) {
         if (state is WalletHomeCompleted &&
@@ -67,7 +154,9 @@ class WalletHomeBloc extends Bloc<WalletHomeEvent, WalletHomeState> {
           if (_price.hasException) {
             emit(WalletHomeError(message: _price.exception?.message));
           }
+
           AppStorage.instance.price = _price.data;
+
           wallets = (state as WalletHomeCompleted).wallets;
           emit(WalletHomeCompleted(
             wallets: List<WalletStore>.from(wallets),

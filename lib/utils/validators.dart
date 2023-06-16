@@ -14,7 +14,7 @@ mixin InputValidators {
     if (amountNumber == null) {
       return "Please enter a valid amount!";
     }
-    var balance = token.amount?.toDouble() ?? 0;
+    var balance = token.formattedAmount;
     if (amountNumber == 0) {
       return "amountIsZero".tr(args: ["0"]);
     }
@@ -41,7 +41,8 @@ mixin InputValidators {
     return null;
   }
 
-  String? amountValidator(String? value) {
+  String? amountValidator(String? value, {List<TokenStore>? tokens}) {
+    bool withTokens = tokens != null && tokens.isNotEmpty;
     var amountNumber = double.tryParse(value!);
     var balance = wallet?.addresses
             .firstWhereOrNull((element) => element == bloc?.fromAddress)
@@ -50,16 +51,18 @@ mixin InputValidators {
             ?.toDouble() ??
         0;
     balance = balance / 10e17;
-    if (amountNumber == null) {
-      return "invalidAmount".tr();
-    }
-    if (balance == 0) {
-      return "balanceIsZero".tr(args: [balance.toString()]);
+    if (!withTokens) {
+      if (amountNumber == null) {
+        return "invalidAmount".tr();
+      }
+      if (balance == 0) {
+        return "balanceIsZero".tr(args: [balance.toString()]);
+      }
     }
     if (amountNumber == 0) {
       return "amountIsZero".tr(args: ["0"]);
     }
-    if (amountNumber > balance) {
+    if (amountNumber != null && amountNumber > balance) {
       return "amountExceeded".tr(args: [balance.toString()]);
     }
     return null;

@@ -74,14 +74,31 @@ class TransactionReferences extends StatelessWidget {
                                   AddressText(
                                     address: "${token.id}",
                                   ),
-                                  Text(
-                                    "${token.amount}",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall!
-                                        .copyWith(
-                                          fontWeight: FontWeight.w700,
+                                  Row(
+                                    children: [
+                                      if (token.symbol != null ||
+                                          token.name != null)
+                                        Expanded(
+                                          child: Text(
+                                            "${token.name ?? token.symbol}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineSmall!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                          ),
                                         ),
+                                      Text(
+                                        "${token.formattedAmount}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineSmall!
+                                            .copyWith(
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ))

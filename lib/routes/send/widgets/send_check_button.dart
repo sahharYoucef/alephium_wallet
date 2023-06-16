@@ -39,9 +39,7 @@ class SendCheckButton extends StatelessWidget {
                 ? () {
                     var isValid =
                         formKey.currentState?.validate(shake: true) ?? false;
-                    if (!isValid) {
-                      return;
-                    }
+                    if (!isValid) return;
                     if (transaction == null) {
                       bloc.add(
                         CheckTransactionEvent(
@@ -49,15 +47,16 @@ class SendCheckButton extends StatelessWidget {
                         ),
                       );
                     } else {
-                      if (wallet.type == WalletType.normal)
+                      if (wallet.type == WalletType.normal) {
                         bloc.add(SignAndSendTransaction(
                           privateKey: bloc.fromAddress!.privateKey!,
                           transactionID: transaction!.txId!,
                           unsignedTx: transaction!.unsignedTx!,
                         ));
-                      else
+                      } else {
                         bloc.add(
                             CheckSignMultisigTransaction(bloc.fromAddress));
+                      }
                     }
                   }
                 : null,

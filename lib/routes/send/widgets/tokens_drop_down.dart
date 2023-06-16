@@ -4,6 +4,8 @@ import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 
+import '../../home/widgets/token_icon.dart';
+
 class TokensDropDown extends StatefulWidget {
   final List<TokenStore> tokens;
   final void Function(String?)? onChanged;
@@ -33,6 +35,7 @@ class _TokensDropDownState extends State<TokensDropDown> {
                 child: Text(
               "selectToken".tr(),
               overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodyMedium,
             )),
           ],
         ),
@@ -54,12 +57,31 @@ class _TokensDropDownState extends State<TokensDropDown> {
               .map(
                 (value) => DropdownMenuItem<String>(
                   value: value.id,
-                  child: Text(
-                    value.id.toString(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(overflow: TextOverflow.ellipsis),
+                  child: Row(
+                    children: [
+                      TokenIcon(
+                        tokenStore: value,
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Expanded(
+                        child: Text(
+                          value.name ?? value.symbol ?? value.id ?? "",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(overflow: TextOverflow.ellipsis),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        value.formattedAmount.toString(),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
                   ),
                 ),
               )

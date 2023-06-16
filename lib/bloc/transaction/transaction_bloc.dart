@@ -100,8 +100,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         ));
       } else if (event is AddTokenTransactionEvent) {
         final index = tokens.indexWhere((element) => element.id == event.id);
+        final tokenAmount = multiply(event.amount, event.decimals);
         final token =
-            TokenStore(id: event.id, amount: BigInt.tryParse(event.amount));
+            TokenStore(id: event.id, amount: BigInt.tryParse(tokenAmount));
         if (index == -1)
           tokens.add(token);
         else
@@ -131,7 +132,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           }
           if (wallet.type == WalletType.normal) {
             var data = await apiRepository.createTransaction(
-              amount: amount?.parseToAlphValue ?? BigInt.zero,
+              amount: amount == null && tokens.isNotEmpty
+                  ? 0.001.parseToAlphValue
+                  : amount?.parseToAlphValue ?? BigInt.zero,
               fromPublicKey: fromAddress!.publicKey!,
               toAddress: toAddress!,
               gasAmount: gasAmount,

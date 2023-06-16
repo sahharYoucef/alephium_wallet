@@ -1,12 +1,16 @@
+import 'package:alephium_wallet/routes/home/widgets/token_icon.dart';
 import 'package:alephium_wallet/routes/receive/receive_route.dart';
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../utils/format.dart';
 import '../../constants.dart';
+import '../../send/widgets/token_details.dart';
 
 class WalletTile extends StatelessWidget {
   final WalletStore wallet;
@@ -33,56 +37,122 @@ class WalletTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          Text(
-                            wallet.title == null
-                                ? "alephiumWallet".tr()
-                                : wallet.title!.capitalize,
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("${wallet.balance} ℵ",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headlineMedium)
-                                    .obscure("ℵ"),
-                                if (wallet.balanceConverted != null &&
-                                    wallet.balanceConverted != "0.000") ...[
-                                  Text(
-                                    " = ",
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                  ),
-                                  Text("${wallet.balanceConverted}",
+                                Text(
+                                  wallet.title == null
+                                      ? "alephiumWallet".tr()
+                                      : wallet.title!.capitalize,
+                                  style:
+                                      Theme.of(context).textTheme.headlineSmall,
+                                ),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Text("${wallet.balance} ℵ",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headlineMedium)
+                                          .obscure("ℵ"),
+                                      if (wallet.balanceConverted != null &&
+                                          wallet.balanceConverted !=
+                                              "0.000") ...[
+                                        Text(
+                                          " = ",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyMedium)
-                                      .obscure(),
-                                ]
-                              ])
+                                              .bodyMedium,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                                  "${wallet.balanceConverted}",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium)
+                                              .obscure(),
+                                        ),
+                                      ],
+                                    ]),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          GradientIcon(
+                            icon: wallet.type == WalletType.normal
+                                ? Icons.account_balance_wallet_outlined
+                                : wallet.type == WalletType.multisig
+                                    ? Icons.multiple_stop_outlined
+                                    : Icons.lock,
+                            size: 40,
+                          ),
                         ],
                       ),
-                    ),
-                    const Spacer(),
-                    GradientIcon(
-                      icon: wallet.type == WalletType.normal
-                          ? Icons.account_balance_wallet_outlined
-                          : wallet.type == WalletType.multisig
-                              ? Icons.multiple_stop_outlined
-                              : Icons.lock,
-                      size: 40,
-                    ),
-                  ],
+                      const Divider(),
+                      ...wallet.tokensBalances
+                          .mapIndexed((index, e) => Container(
+                                padding: const EdgeInsets.only(bottom: 6),
+                                width: double.maxFinite,
+                                child: InkWell(
+                                  onTap: () =>
+                                      TokenDetails.show(context, tokenStore: e),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Text("\u{2022}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineMedium),
+                                        SizedBox(
+                                          width: 4,
+                                        ),
+                                        Text("${Format.humanReadableNumber(e.formattedAmount)}",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headlineMedium)
+                                            .obscure(),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            e.symbol ?? "",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineMedium,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ).obscure(),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        TokenIcon(
+                                          tokenStore: e,
+                                        ),
+                                      ]),
+                                ),
+                              ))
+                          .toList()
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 10.h,

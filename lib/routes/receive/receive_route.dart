@@ -5,7 +5,6 @@ import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart'
 import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/services/share_service.dart';
-import 'package:alephium_wallet/utils/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';

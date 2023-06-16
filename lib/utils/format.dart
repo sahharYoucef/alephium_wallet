@@ -2,10 +2,25 @@ import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:intl/intl.dart';
 
 abstract class Format {
+  static final _compactCurrency = NumberFormat.compactCurrency(
+    decimalDigits: 3,
+    symbol:
+        '', // if you want to add currency symbol then pass that in this else leave it empty.
+  );
   static var _format = NumberFormat(
     "##0.0##",
     "en_US",
   );
+
+  static String humanReadableNumber(dynamic value) {
+    if (value is BigInt) {
+      value = value.toDouble();
+    }
+    if (value is String) {
+      value = double.tryParse("${value}") ?? 0;
+    }
+    return _compactCurrency.format(value);
+  }
 
   static String formatNumber(dynamic value) {
     if (value is String) {

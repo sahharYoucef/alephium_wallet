@@ -237,7 +237,7 @@ class WalletDetailsBloc extends Bloc<WalletDetailsEvent, WalletDetailsState> {
     _transactions.sort(((a, b) {
       return -a.timeStamp.compareTo(b.timeStamp);
     }));
-    return _transactions;
+    return _transactions.toSet().toList();
   }
 
   Future<Either<List<TransactionStore>>> get _updateTransactions async {

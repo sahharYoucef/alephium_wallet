@@ -6,6 +6,7 @@ import 'package:alephium_wallet/storage/models/contact_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../api/models/token_metadata.dart';
 import '../models/address_store.dart';
 import '../models/wallet_store.dart';
 
@@ -14,6 +15,7 @@ final String _transactionTable = "transactions";
 final String _addressesTable = "addresses";
 final String _balancesTable = "balances";
 final String _contactsTable = "contacts";
+final String _tokenMetaDataTable = "tokenMetaData";
 
 class SQLiteDBHelper extends BaseDBHelper {
   @override
@@ -30,16 +32,17 @@ class SQLiteDBHelper extends BaseDBHelper {
 
   _dropTables(Database _db) async {
     final batch = _db.batch();
-    batch.execute('DROP TABLE IF EXISTS $_addressesTable');
-    batch.execute('DROP TABLE IF EXISTS $_transactionTable');
-    batch.execute('DROP TABLE IF EXISTS $_walletTable');
-    batch.execute('DROP TABLE IF EXISTS $_balancesTable');
-    batch.execute('DROP TABLE IF EXISTS $_contactsTable');
+    // batch.execute('DROP TABLE IF EXISTS $_addressesTable');
+    // batch.execute('DROP TABLE IF EXISTS $_transactionTable');
+    // batch.execute('DROP TABLE IF EXISTS $_walletTable');
+    // batch.execute('DROP TABLE IF EXISTS $_balancesTable');
+    // batch.execute('DROP TABLE IF EXISTS $_contactsTable');
+    // batch.execute('DROP TABLE IF EXISTS $_tokenMetaDataTable');
     await batch.commit();
   }
 
   _createTables(Database db) async {
-    // await _dropTables(db);
+    await _dropTables(db);
     await db.execute("PRAGMA foreign_keys = ON");
     final batch = db.batch();
     batch.execute("""
@@ -106,6 +109,18 @@ class SQLiteDBHelper extends BaseDBHelper {
           address TEXT NOT NULL
       )
       """);
+    batch.execute("""
+      CREATE TABLE IF NOT EXISTS $_tokenMetaDataTable (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          tokenId TEXT NOT NULL UNIQUE,
+          symbol TEXT NOT NULL,
+          name TEXT,
+          decimals TEXT,
+          logoURI TEXT,
+          description TEXT,
+          totalSupply TEXT
+      )
+      """);
     await batch.commit();
   }
 
@@ -126,6 +141,27 @@ class SQLiteDBHelper extends BaseDBHelper {
       version: 4,
     );
     _database.complete(_db);
+  }
+
+  @override
+  Future<void> insertTokensMetaData(List<TokenMetadata> tokenMetadata) async {
+    var _db = await _database.future;
+    var batch = _db.batch();
+    for (final token in tokenMetadata) {
+      batch.insert(
+        _tokenMetaDataTable,
+        token.toDB(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+    await batch.commit();
+  }
+
+  @override
+  Future<List<TokenMetadata>> getTokensMetaData() async {
+    var _db = await _database.future;
+    var data = await _db.query(_tokenMetaDataTable);
+    return data.map((e) => TokenMetadata.fromDB(e)).toList();
   }
 
   @override

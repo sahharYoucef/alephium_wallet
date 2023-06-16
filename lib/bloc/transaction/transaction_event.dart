@@ -35,9 +35,11 @@ class TransactionValuesChangedEvent extends TransactionEvent {
 class AddTokenTransactionEvent extends TransactionEvent {
   final String id;
   final String amount;
+  final int decimals;
   const AddTokenTransactionEvent(
     this.id,
     this.amount,
+    this.decimals,
   );
 
   @override

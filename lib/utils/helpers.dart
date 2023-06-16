@@ -247,3 +247,56 @@ Future<Map<String, dynamic>?> showQRView(
     },
   );
 }
+
+// String generateAvatarImage({
+//   required String name,
+//   required String background,
+//   required String color,
+// }) {
+//   // get alphanumeric initials (to avoid issues with being outside range of btoa)
+//   final initials = getInitials(name: name, alphanumeric: true);
+
+//   // generate 64x64 svg with initials in the center (horizontal and vertical) with font color and background color and font family Helvetica (plus fallbacks)
+//   final svg =
+//       """<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+//     <rect width="64" height="64" fill="${background}" />
+//     <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-size="28" font-family="Helvetica, Arial, sans-serif" fill="${color}">${initials}</text>
+//     </svg>""";
+//   return "data:image/svg+xml;base64,${svg}";
+// }
+
+// String getInitials({required String name, bool alphanumeric = false}) {
+//   final regExp = RegExp(r"/[^0-9a-z ]/");
+//   final filtered = alphanumeric ? name.replaceAll(regExp, "") : name;
+//   final uppercase = filtered.toUpperCase();
+//   final uppercaseElements = uppercase.split(" ");
+
+//   if (uppercaseElements.length == 1) {
+//     return uppercaseElements[0].substring(0, 2);
+//   }
+//   final initials = uppercaseElements.map((n) => n[0]).toList();
+//   return [initials[0], initials[initials.length - 1]].join("");
+// }
+
+// String getColor ({required String name})  {
+//   final hash = id(name).substring(-2);
+//   final index = int.parse(hash, radix : 16) % argentColorsArray.length;
+//   return argentColorsArray[index];
+// }
+
+// String id(String text) {
+//     final data =  KeccakDigest(256).process(ascii.encode(text));
+//     return utf8.decode(data);
+// }
+
+// const argentColorsArray = [
+//   "02BBA8",
+//   "29C5FF",
+//   "0078A4",
+//   "FFBF3D",
+//   "FFA85C",
+//   "FF875B",
+//   "FF675C",
+//   "FF5C72",
+// ]
+

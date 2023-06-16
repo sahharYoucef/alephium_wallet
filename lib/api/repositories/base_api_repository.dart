@@ -6,6 +6,7 @@ import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/token_store.dart';
 
 import '../../storage/models/transaction_store.dart';
+import '../models/tokens.dart';
 import '../utils/either.dart';
 
 abstract class BaseApiRepository {
@@ -16,6 +17,8 @@ abstract class BaseApiRepository {
   BaseApiRepository(this.network);
 
   Future<Either<double>> getPrice({String coin, String currency = "usd"});
+
+  Future<Either<Tokens>> getTokensMetadata();
 
   Future<Either<NodeVersion>> getNodeVersion();
 
@@ -73,4 +76,7 @@ abstract class BaseApiRepository {
   FutureOr<Either<DecodeUnsignedTxResult>> decodeTransaction({
     required String unsignedTx,
   });
+
+  FutureOr<Either<MultipleCallContractResult>> postContractsMultiCallContract(
+      {required MultipleCallContract calls});
 }

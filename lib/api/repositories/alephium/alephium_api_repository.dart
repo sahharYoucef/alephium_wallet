@@ -15,6 +15,8 @@ import 'package:alephium_wallet/api/utils/error_handler.dart';
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/api/repositories/alephium/utils/interceptor.dart';
 
+import '../../models/tokens.dart';
+
 part "utils/repository_mixin.dart";
 
 class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
@@ -24,6 +26,7 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
   late CoingeckoClient _coingeckoClient;
   late InfosClient _infosClient;
   late MultisigClient _multisigClient;
+  late ContractClient _contractClient;
   late Dio _dio;
 
   NetworkType network;
@@ -31,7 +34,7 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
   AlephiumApiRepository(this.network) : super(network) {
     _dio = Dio(
       BaseOptions(
-        connectTimeout: 10 * 1000,
+        connectTimeout: 30 * 1000,
         receiveTimeout: 30 * 1000,
       ),
     );
@@ -44,6 +47,7 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
     _coingeckoClient = CoingeckoClient(_dio);
     _infosClient = InfosClient(_dio);
     _multisigClient = MultisigClient(_dio, baseUrl: network.data.nodeHost);
+    _contractClient = ContractClient(_dio, baseUrl: network.data.nodeHost);
   }
 
   set changeNetwork(NetworkType network) {
@@ -69,6 +73,18 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
       return Either<BuildMultisigAddressResult>(data: data);
     } on Exception catch (e, trace) {
       return Either<BuildMultisigAddressResult>(
+          error: ApiError(exception: e, trace: trace));
+    }
+  }
+
+  @override
+  Future<Either<MultipleCallContractResult>> postContractsMultiCallContract(
+      {required MultipleCallContract calls}) async {
+    try {
+      final data = await _contractClient.postContractsMultiCallContract(calls);
+      return Either<MultipleCallContractResult>(data: data);
+    } on Exception catch (e, trace) {
+      return Either<MultipleCallContractResult>(
           error: ApiError(exception: e, trace: trace));
     }
   }
@@ -152,6 +168,18 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
       return Either<double>(data: price);
     } on Exception catch (e, trace) {
       return Either<double>(error: ApiError(exception: e, trace: trace));
+    }
+  }
+
+  @override
+  Future<Either<Tokens>> getTokensMetadata() async {
+    try {
+      final data = await _coingeckoClient.getTokens(
+        network: network.name,
+      );
+      return Either<Tokens>(data: data);
+    } on Exception catch (e, trace) {
+      return Either<Tokens>(error: ApiError(exception: e, trace: trace));
     }
   }
 

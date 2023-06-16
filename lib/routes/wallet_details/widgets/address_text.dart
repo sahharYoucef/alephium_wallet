@@ -1,5 +1,4 @@
 import 'package:alephium_wallet/utils/helpers.dart';
-import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -9,9 +8,11 @@ class AddressText extends StatefulWidget {
   final TextStyle? style;
   final String? value;
   final TextAlign align;
+  final Function? onTap;
   AddressText({
     Key? key,
     required this.address,
+    this.onTap,
     this.style,
     this.value,
     this.align = TextAlign.start,
@@ -38,15 +39,6 @@ class _AddressTextState extends State<AddressText> {
     style = widget.style ??
         Theme.of(context).textTheme.bodyMedium!.copyWith(
               fontWeight: FontWeight.w600,
-              foreground: Paint()
-                ..shader = LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    WalletTheme.instance.textColor,
-                    WalletTheme.instance.gradientTwo,
-                  ],
-                ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
             );
     super.didChangeDependencies();
   }
@@ -55,6 +47,10 @@ class _AddressTextState extends State<AddressText> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        if (widget.onTap != null) {
+          widget.onTap!();
+          return;
+        }
         setState(() {
           if (overflow == TextOverflow.ellipsis)
             overflow = TextOverflow.visible;

@@ -3,12 +3,12 @@ import 'package:alephium_wallet/storage/models/address_store.dart';
 import 'package:alephium_wallet/storage/models/contact_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
-import 'package:flutter/material.dart';
+
+import '../api/models/token_metadata.dart';
 
 abstract class BaseDBHelper {
   Map<NetworkType, Map<String, List<TransactionStore>>> get txCaches;
 
-  @mustCallSuper
   BaseDBHelper() {
     init();
   }
@@ -45,4 +45,8 @@ abstract class BaseDBHelper {
 
   Future<List<TransactionStore>> getTransactions(
       String walletID, NetworkType network);
+
+  Future<void> insertTokensMetaData(List<TokenMetadata> tokenMetadata);
+
+  Future<List<TokenMetadata>> getTokensMetaData();
 }

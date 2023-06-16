@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/routes/home/widgets/token_icon.dart';
 import 'package:alephium_wallet/routes/transaction_details/widgets/transaction_reference.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/address_text.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
@@ -12,6 +13,9 @@ import 'package:alephium_wallet/api/repositories/alephium/alephium_api_repositor
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/main.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../utils/format.dart';
+import '../send/widgets/token_details.dart';
 
 class TransactionDetails extends StatelessWidget {
   final TransactionStore transaction;
@@ -123,6 +127,45 @@ class TransactionDetails extends StatelessWidget {
                               ).obscure("ℵ"),
                             ],
                           ),
+                          if (transaction.tokens.isNotEmpty) ...[
+                            const Divider(),
+                            for (final token in transaction.tokens)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 2),
+                                child: Row(
+                                  children: [
+                                    TokenIcon(tokenStore: token),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    GestureDetector(
+                                      onLongPress: () {
+                                        TokenDetails.show(context,
+                                            tokenStore: token);
+                                      },
+                                      child: Text(
+                                        "${token.name ?? token.symbol ?? 'unknownToken'.tr()}"
+                                            .tr(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      "${Format.humanReadableNumber(token.formattedAmount)}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall!
+                                          .copyWith(
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                    ).obscure(),
+                                  ],
+                                ),
+                              ),
+                          ],
                           const Divider(),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

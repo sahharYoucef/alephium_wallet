@@ -1,3 +1,4 @@
+import 'package:alephium_wallet/api/models/tokens.dart';
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/utils/format.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,21 @@ class AppStorage {
       _currency = currency = "usd";
     }
     return _currency as String;
+  }
+
+  set tokensMetadata(Tokens value) {
+    var settings = Hive.box("settings");
+    settings.put("tokensMetadata", value.toJson());
+  }
+
+  Tokens get tokensMetadata {
+    var settings = Hive.box("settings");
+    var _tokensMetadata = settings.get("tokensMetadata");
+    if (_tokensMetadata == null || _tokensMetadata is! Map<String, dynamic>) {
+      tokensMetadata = Tokens(tokens: []);
+      _tokensMetadata = tokensMetadata.toJson();
+    }
+    return Tokens.fromJson(_tokensMetadata);
   }
 
   set currency(String value) {

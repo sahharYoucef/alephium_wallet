@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../utils/format.dart';
+
 class TransactionSuccessDialog extends StatelessWidget {
   final TransactionStore transaction;
-  final String amount;
+  final String? amount;
   const TransactionSuccessDialog(
-      {Key? key, required this.transaction, required this.amount})
+      {Key? key, required this.transaction, this.amount})
       : super(key: key);
 
   @override
@@ -40,23 +42,47 @@ class TransactionSuccessDialog extends StatelessWidget {
                 AddressText(
                   address: "${transaction.transactionID}",
                 ),
-                const Divider(),
-                Row(
-                  children: [
-                    Text(
-                      "amount".tr(),
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    Spacer(),
-                    Text(
-                      "${amount}",
-                      style:
-                          Theme.of(context).textTheme.headlineSmall!.copyWith(
+                if (amount != null) ...[
+                  const Divider(),
+                  Row(
+                    children: [
+                      Text(
+                        "amount".tr(),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      Spacer(),
+                      Text(
+                        "${amount}",
+                        style:
+                            Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                      ),
+                    ],
+                  ),
+                ],
+                if (transaction.tokens.isNotEmpty) ...[
+                  const Divider(),
+                  for (final token in transaction.tokens)
+                    Row(
+                      children: [
+                        Text(
+                          "${token.name ?? 'Unknown Token'.tr()}".tr(),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        Spacer(),
+                        Text(
+                          "${Format.humanReadableNumber(token.formattedAmount)}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall!
+                              .copyWith(
                                 fontWeight: FontWeight.w700,
                               ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                ],
                 const Divider(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,6 +131,19 @@ class TransactionSuccessDialog extends StatelessWidget {
                                     fontWeight: FontWeight.w700,
                                   ),
                             ),
+                            if (ref.tokens != null)
+                              ...ref.tokens!.map(
+                                (token) => Text(
+                                  "${Format.humanReadableNumber(token.formattedAmount)} ${token.symbol ?? 'Unknown Token'.tr()}"
+                                      .tr(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall!
+                                      .copyWith(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                ),
+                              ),
                           ],
                         ),
                       ),

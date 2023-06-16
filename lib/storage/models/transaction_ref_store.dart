@@ -45,7 +45,7 @@ class TransactionRefStore {
   factory TransactionRefStore.fromDb(Map<String, dynamic> data) {
     final _address = data["address"] as String;
     final _unlockScript = data["unlockScript"];
-    final _amount = BigInt.tryParse(data["amount"]);
+    final _amount = BigInt.tryParse(data["amount"] ?? "0");
     final _hash = data["hash"];
     final _type = data["type"];
     final _spent = data["spent"];

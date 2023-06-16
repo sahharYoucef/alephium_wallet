@@ -97,15 +97,12 @@ class _AddTokenDialogState extends State<AddTokenDialog> with InputValidators {
                   child: Text(
                     _id == null && token == null
                         ? ""
-                        : "${'availableBalance'.tr()} : ${token!.amount}",
+                        : "${'availableBalance'.tr()} : ${token!.formattedAmount}",
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 SizedBox(
-                  height: 60,
                   child: Row(
                     children: [
                       Expanded(
@@ -115,7 +112,10 @@ class _AddTokenDialogState extends State<AddTokenDialog> with InputValidators {
                                     if (_amountKey.currentState?.validate() ??
                                         false) {
                                       widget.bloc.add(AddTokenTransactionEvent(
-                                          _id!, _amount!));
+                                        _id!,
+                                        _amount!,
+                                        token.decimals,
+                                      ));
                                       Navigator.pop(context);
                                     }
                                   }

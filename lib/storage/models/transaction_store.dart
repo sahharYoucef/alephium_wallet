@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:alephium_wallet/api/utils/network.dart';
+import 'package:alephium_wallet/storage/models/token_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_ref_store.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
@@ -148,6 +149,59 @@ class TransactionStore extends Equatable {
     }
     final _amount = (value / 10e17).toStringAsFixed(3);
     return "$_amount ℵ";
+  }
+
+  List<TokenStore> get tokens {
+    List<TokenStore> tokens = [];
+    if (inputAddresses.contains(address)) {
+      var _inAddresses =
+          refsIn.where((element) => element.address == address).toList();
+      var _outAddresses =
+          refsOut.where((element) => element.address == address).toList();
+      for (var ref in _inAddresses) {
+        if (ref.tokens != null) {
+          for (final token in ref.tokens!) {
+            if (tokens.contains(token)) {
+              final index = tokens.indexWhere((element) => element == token);
+              tokens[index] = tokens[index]
+                  .copyWith(amount: tokens[index].amount! + token.amount!);
+            } else {
+              tokens.add(token);
+            }
+          }
+        }
+      }
+      for (var ref in _outAddresses) {
+        if (ref.tokens != null) {
+          for (final token in ref.tokens!) {
+            if (tokens.contains(token)) {
+              final index = tokens.indexWhere((element) => element == token);
+              tokens[index] = tokens[index]
+                  .copyWith(amount: tokens[index].amount! - token.amount!);
+            } else {
+              tokens.add(token);
+            }
+          }
+        }
+      }
+    } else {
+      var _outAddresses =
+          refsOut.where((element) => element.address == address).toList();
+      for (var ref in _outAddresses) {
+        if (ref.tokens != null) {
+          for (final token in ref.tokens!) {
+            if (tokens.contains(token)) {
+              var index = tokens.indexWhere((element) => element == token);
+              tokens[index] = tokens[index]
+                  .copyWith(amount: tokens[index].amount! + token.amount!);
+            } else {
+              tokens.add(token);
+            }
+          }
+        }
+      }
+    }
+    return tokens;
   }
 
   List<String> get inputAddresses {

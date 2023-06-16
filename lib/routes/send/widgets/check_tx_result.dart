@@ -1,9 +1,13 @@
 import 'package:alephium_wallet/bloc/transaction/transaction_bloc.dart';
+import 'package:alephium_wallet/routes/send/widgets/token_details.dart';
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+
+import '../../../utils/format.dart';
 
 class CheckTransactionResult extends StatelessWidget {
   final TransactionBloc bloc;
@@ -62,23 +66,51 @@ class CheckTransactionResult extends StatelessWidget {
                 const SizedBox(
                   height: 4,
                 ),
-                RichText(
-                    text: TextSpan(children: [
-                  TextSpan(
-                    text: "${'amountToSend'.tr()} : ",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  TextSpan(
-                    text: "${bloc.formattedAmount}",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ])),
+                if (bloc.amount != null)
+                  RichText(
+                      text: TextSpan(children: [
+                    TextSpan(
+                      text: "${'amountToSend'.tr()} : ",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text: "${bloc.formattedAmount}",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ])),
                 const SizedBox(
                   height: 4,
                 ),
+                if (bloc.tokens.isNotEmpty)
+                  ...bloc.tokens
+                      .map((e) => [
+                            RichText(
+                                text: TextSpan(children: [
+                              TextSpan(
+                                recognizer: LongPressGestureRecognizer()
+                                  ..onLongPress = () {
+                                    TokenDetails.show(context, tokenStore: e);
+                                  },
+                                text: "${e.name ?? 'Unknown Token'.tr()} : ",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(
+                                text:
+                                    "${Format.humanReadableNumber(e.formattedAmount)}",
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ])),
+                            const SizedBox(
+                              height: 4,
+                            ),
+                          ])
+                      .reduce((value, element) => value..addAll(element)),
               ],
             ),
           ),

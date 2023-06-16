@@ -8,6 +8,8 @@ import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 
+import '../../../utils/format.dart';
+import '../../send/widgets/token_details.dart';
 import 'address_text.dart';
 
 class TransactionTile extends StatelessWidget {
@@ -101,49 +103,49 @@ class TransactionTile extends StatelessWidget {
                             children: [
                               Row(
                                 children: [
-                                  Text('amount'.tr(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(
-                                            color: WalletTheme
-                                                .instance.textColor
-                                                .withOpacity(.6),
-                                          )),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4, vertical: 0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: WalletTheme.instance.background,
+                                  if (transaction.amount != "0.000 ℵ") ...[
+                                    Text('amount'.tr(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                              color: WalletTheme
+                                                  .instance.textColor
+                                                  .withOpacity(.6),
+                                            )),
+                                    const SizedBox(
+                                      width: 10,
                                     ),
-                                    child: Text(
-                                      '${transaction.amount}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(
-                                              fontWeight: FontWeight.w600),
-                                    ).obscure("ℵ"),
-                                  ),
-                                  Spacer(),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(6),
+                                        color: WalletTheme.instance.background,
+                                      ),
+                                      child: Text(
+                                        '${transaction.amount}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                                fontWeight: FontWeight.w600),
+                                      ).obscure("ℵ"),
+                                    ),
+                                    Spacer(),
+                                  ],
                                   if (type == TransactionType.withdraw) ...[
-                                    Expanded(
-                                      child: Text('fee'.tr(),
-                                          maxLines: 1,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(
-                                                color: WalletTheme
-                                                    .instance.textColor
-                                                    .withOpacity(.6),
-                                                overflow: TextOverflow.ellipsis,
-                                              )),
-                                    ),
+                                    Text('fee'.tr(),
+                                        maxLines: 1,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                              color: WalletTheme
+                                                  .instance.textColor
+                                                  .withOpacity(.6),
+                                              overflow: TextOverflow.ellipsis,
+                                            )),
                                     const SizedBox(
                                       width: 10,
                                     ),
@@ -169,6 +171,59 @@ class TransactionTile extends StatelessWidget {
                               const SizedBox(
                                 height: 10,
                               ),
+                              if (transaction.tokens.isNotEmpty) ...[
+                                for (final token in transaction.tokens) ...[
+                                  Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          TokenDetails.show(context,
+                                              tokenStore: token);
+                                        },
+                                        child: Text(
+                                            "${token.name ?? token.symbol ?? 'Unknown Token'.tr()}"
+                                                .tr(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .copyWith(
+                                                  color: WalletTheme
+                                                      .instance.textColor
+                                                      .withOpacity(.6),
+                                                )),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4, vertical: 0),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(6),
+                                          color:
+                                              WalletTheme.instance.background,
+                                        ),
+                                        child: Text(
+                                          '${Format.humanReadableNumber(token.formattedAmount)}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w600),
+                                        ).obscure(),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                ]
+                              ],
+                              if (transaction.tokens.isEmpty)
+                                const SizedBox(
+                                  height: 10,
+                                ),
                               AddressText(
                                 address: '${transaction.address}',
                               ),
