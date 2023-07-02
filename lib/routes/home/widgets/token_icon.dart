@@ -1,5 +1,6 @@
 import 'package:alephium_dart/alephium_dart.dart';
 import 'package:alephium_wallet/storage/models/token_store.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class TokenIcon extends StatelessWidget {
@@ -15,31 +16,31 @@ class TokenIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final symbol = tokenStore.symbol!.substring(0, 2);
+    final errorHolder = Container(
+      height: size,
+      width: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: HexColor.fromHex(getColor(tokenStore.metaData?.name)),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        symbol,
+        style: textStyle ??
+            Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: size / 2),
+      ),
+    );
     if (tokenStore.logo != null) {
-      return Image(
+      return CachedNetworkImage(
+        cacheManager: DefaultCahe,
         height: size,
         width: size,
-        image: NetworkImage(tokenStore.logo!),
+        imageUrl: tokenStore.logo!,
+        errorWidget: (context, url, error) => errorHolder,
       );
     } else if (tokenStore.symbol != null) {
-      final symbol = tokenStore.symbol!.substring(0, 2);
-      return Container(
-        height: size,
-        width: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: HexColor.fromHex(getColor(tokenStore.metaData?.name)),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          symbol,
-          style: textStyle ??
-              Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(fontSize: size / 2),
-        ),
-      );
+      return errorHolder;
     } else {
       return SizedBox.shrink();
     }

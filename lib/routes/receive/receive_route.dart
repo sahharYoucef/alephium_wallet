@@ -62,6 +62,7 @@ class _ReceivePageState extends State<ReceivePage> {
             addresses: widget.wallet.addresses,
             label: "address".tr(),
             initialAddress: _addressStore,
+            showAmount: false,
             onChanged: (value) {
               if (value != null) _addressStore = value;
               setState(() {});
@@ -125,31 +126,31 @@ class _ReceivePageState extends State<ReceivePage> {
                   )),
             ],
           ),
-          SizedBox(
-            height: 6.h,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: ReceiveAmountField(
-                  onChanged: (_value) {
-                    amount = _value;
-                    setState(() {});
-                  },
-                ),
-              ),
-              SizedBox(
-                width: 6.w,
-              ),
-              AppBarIconButton(
-                  icon: Icon(CupertinoIcons.share),
-                  onPressed: () {
-                    getIt.get<ShareService>().shareImage(key);
-                  })
-            ],
-          ),
+          // SizedBox(
+          //   height: 6.h,
+          // ),
+          // Row(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   mainAxisSize: MainAxisSize.max,
+          //   children: [
+          //     Expanded(
+          //       child: ReceiveAmountField(
+          //         onChanged: (_value) {
+          //           amount = _value;
+          //           setState(() {});
+          //         },
+          //       ),
+          //     ),
+          //     SizedBox(
+          //       width: 6.w,
+          //     ),
+          //     AppBarIconButton(
+          //         icon: Icon(CupertinoIcons.share),
+          //         onPressed: () {
+          //           getIt.get<ShareService>().shareImage(key);
+          //         })
+          //   ],
+          // ),
         ],
       ),
     );

@@ -11,12 +11,14 @@ class AddressFromDropDownMenu extends StatefulWidget {
   final List<AddressStore>? addresses;
   final String label;
   final AddressStore? initialAddress;
+  final bool showAmount;
   AddressFromDropDownMenu({
     Key? key,
     this.addresses = const <AddressStore>[],
     required this.label,
     this.initialAddress,
     this.onChanged,
+    this.showAmount = true,
   }) : super(key: key);
 
   @override
@@ -84,13 +86,15 @@ class _AddressFromDropDownMenuState extends State<AddressFromDropDownMenu> {
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        address.formattedBalance,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ).obscure(),
+                      if (widget.showAmount) ...[
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          address.formattedBalance,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ).obscure(),
+                      ]
                     ],
                   ),
                 ))
