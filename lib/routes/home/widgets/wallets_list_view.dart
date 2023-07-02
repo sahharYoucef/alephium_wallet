@@ -14,7 +14,7 @@ class WalletListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverPadding(
       padding: EdgeInsets.only(
-        bottom: 70 + context.bottomPadding,
+        bottom: 100 + context.bottomPadding,
       ),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(

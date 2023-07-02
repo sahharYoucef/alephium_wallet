@@ -6,11 +6,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:alephium_wallet/routes/settings/widgets/currency_drop_down.dart';
 import 'package:alephium_wallet/routes/settings/widgets/language_drop_down.dart';
 import 'package:alephium_wallet/routes/settings/widgets/theme_drop_down.dart';
-import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../utils/constants.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({
@@ -34,7 +36,7 @@ class SettingsPage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                AlephiumIcon(),
+                SvgPicture.asset(WalletIcons.alephiumIcon),
                 const SizedBox(
                   height: 10,
                 ),

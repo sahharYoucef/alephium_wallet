@@ -16,21 +16,29 @@ class TokenIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final symbol = tokenStore.symbol!.substring(0, 2);
-    final errorHolder = Container(
-      height: size,
-      width: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: HexColor.fromHex(getColor(tokenStore.metaData?.name)),
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        symbol,
-        style: textStyle ??
-            Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: size / 2),
-      ),
-    );
+    late Widget errorHolder;
+    if (!tokenStore.isNft) {
+      final symbol = tokenStore.symbol!.substring(0, 2);
+      errorHolder = Container(
+        height: size,
+        width: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: HexColor.fromHex(getColor(tokenStore.metaData?.name)),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          symbol,
+          style: textStyle ??
+              Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(fontSize: size / 2),
+        ),
+      );
+    } else {
+      errorHolder = SizedBox();
+    }
     if (tokenStore.logo != null) {
       return CachedNetworkImage(
         height: size,
