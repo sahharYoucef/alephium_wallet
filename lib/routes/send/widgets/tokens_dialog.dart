@@ -8,6 +8,7 @@ import 'package:alephium_wallet/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/services.dart';
 
 class AddTokenDialog extends StatefulWidget {
   final List<TokenStore> tokens;
@@ -73,34 +74,40 @@ class _AddTokenDialogState extends State<AddTokenDialog> with InputValidators {
                 const SizedBox(
                   height: 6,
                 ),
-                ShakeTextFormField(
-                    enabled: _id != null && token != null,
-                    key: _amountKey,
-                    inputFormatters: [AmountFormatter()],
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    validator: (value) {
-                      return tokenAmountValidator(token!, value);
-                    },
-                    onChanged: (value) {
-                      _amount = value;
-                      _amountKey.currentState?.validate();
-                    },
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.number,
-                    autocorrect: false,
-                    decoration: InputDecoration(
-                      labelText: "amount".tr(),
-                    )),
+                if (_id != null && token != null && !token.isNft)
+                  ShakeTextFormField(
+                      enabled: true,
+                      key: _amountKey,
+                      inputFormatters: [
+                        AmountFormatter(
+                          decimals: token.decimals,
+                        )
+                      ],
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      validator: (value) {
+                        if (token.isNft) return null;
+                        return tokenAmountValidator(token, value);
+                      },
+                      onChanged: (value) {
+                        _amount = value;
+                        _amountKey.currentState?.validate();
+                      },
+                      textInputAction: TextInputAction.next,
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      autocorrect: false,
+                      decoration: InputDecoration(
+                        labelText: "amount".tr(),
+                      )),
                 const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Text(
-                    _id == null && token == null
-                        ? ""
-                        : "${'availableBalance'.tr()} : ${token!.formattedAmount}",
-                    style: Theme.of(context).textTheme.bodySmall,
+                if (_id != null && token != null && !token.isNft)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Text(
+                      "${'availableBalance'.tr()} : ${token.formattedAmount}",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ),
-                ),
                 const SizedBox(height: 8),
                 SizedBox(
                   child: Row(
@@ -109,11 +116,11 @@ class _AddTokenDialogState extends State<AddTokenDialog> with InputValidators {
                         child: OutlinedButton(
                             onPressed: token != null
                                 ? () {
-                                    if (_amountKey.currentState?.validate() ??
-                                        false) {
+                                    if ((_amountKey.currentState?.validate() ??
+                                        false || token.isNft)) {
                                       widget.bloc.add(AddTokenTransactionEvent(
                                         _id!,
-                                        _amount!,
+                                        token.isNft ? "1" : _amount!,
                                         token.decimals,
                                       ));
                                       Navigator.pop(context);

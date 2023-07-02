@@ -79,4 +79,7 @@ abstract class BaseApiRepository {
 
   FutureOr<Either<MultipleCallContractResult>> postContractsMultiCallContract(
       {required MultipleCallContract calls});
+
+  FutureOr<Either<ContractState>> getContractsAddressState(
+      {required String address, num group = 0});
 }

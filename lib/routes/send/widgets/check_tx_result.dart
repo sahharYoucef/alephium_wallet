@@ -1,11 +1,10 @@
 import 'package:alephium_wallet/bloc/transaction/transaction_bloc.dart';
-import 'package:alephium_wallet/routes/send/widgets/token_details.dart';
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../utils/format.dart';
 
@@ -16,107 +15,99 @@ class CheckTransactionResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       decoration: BoxDecoration(
-        color: WalletTheme.instance.primary,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
+        color: WalletTheme.instance.secondary,
+        border: Border.all(
+          color: WalletTheme.instance.primary,
+          width: 2,
+        ),
       ),
       child: Stack(
         children: [
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 20,
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(
+                  "${'toAddress'.tr().capitalize} : ",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
-                RichText(
-                    text: TextSpan(children: [
-                  TextSpan(
-                    text: "${'toAddress'.tr().capitalize} : ",
+                Text(
+                  "${bloc.toAddress}",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ]),
+              SizedBox(
+                height: 2,
+              ),
+              Row(children: [
+                Text(
+                  "${'expectedFees'.tr()}",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                Spacer(),
+                Text(
+                  "${bloc.expectedFees}",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ]),
+              SizedBox(
+                height: 2,
+              ),
+              if (bloc.amount != null)
+                Row(children: [
+                  Text(
+                    "${'amountToSend'.tr()}",
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  TextSpan(
-                    text: "${bloc.toAddress}",
+                  Spacer(),
+                  Text(
+                    "${bloc.formattedAmount}",
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                ])),
-                const SizedBox(
-                  height: 4,
-                ),
-                RichText(
-                    text: TextSpan(children: [
-                  TextSpan(
-                    text: "${'expectedFees'.tr()} : ",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  TextSpan(
-                    text: "${bloc.expectedFees}",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ])),
-                const SizedBox(
-                  height: 4,
-                ),
-                if (bloc.amount != null)
-                  RichText(
-                      text: TextSpan(children: [
-                    TextSpan(
-                      text: "${'amountToSend'.tr()} : ",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(
-                      text: "${bloc.formattedAmount}",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ])),
-                const SizedBox(
-                  height: 4,
-                ),
-                if (bloc.tokens.isNotEmpty)
-                  ...bloc.tokens
-                      .map((e) => [
-                            RichText(
-                                text: TextSpan(children: [
-                              TextSpan(
-                                recognizer: LongPressGestureRecognizer()
-                                  ..onLongPress = () {
-                                    TokenDetails.show(context, tokenStore: e);
-                                  },
-                                text: "${e.name ?? 'Unknown Token'.tr()} : ",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text:
-                                    "${Format.humanReadableNumber(e.formattedAmount)}",
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ])),
-                            const SizedBox(
-                              height: 4,
+                ]),
+              SizedBox(
+                height: 2,
+              ),
+              if (bloc.tokens.isNotEmpty)
+                ...bloc.tokens
+                    .map((e) => [
+                          Row(children: [
+                            Text(
+                              "${e.name ?? 'Unknown Token'.tr()}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                             ),
-                          ])
-                      .reduce((value, element) => value..addAll(element)),
-              ],
-            ),
+                            Spacer(),
+                            Text(
+                              "${Format.humanReadableNumber(e.formattedAmount)}",
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ]),
+                          const SizedBox(
+                            height: 2,
+                          ),
+                        ])
+                    .reduce((value, element) => value..addAll(element)),
+            ],
           ),
           Positioned(
-              top: 0,
-              right: 0,
+              top: -16.h,
+              right: -16.w,
               child: IconButton(
                 iconSize: 20,
                 icon: GradientIcon(

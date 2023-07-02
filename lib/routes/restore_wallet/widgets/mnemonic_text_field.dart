@@ -29,7 +29,17 @@ class MnemonicTextFieldState extends State<MnemonicTextField> {
     _controller = TextEditingController()
       ..addListener(() {
         if (_controller.value.text.contains(" ")) {
-          _addNewWord();
+          final _words = _controller.value.text.split(" ");
+          if (_words.length == 1) {
+            _addNewWord();
+          } else {
+            _words.forEach((element) {
+              if (words.length >= 24) return;
+              if (element.isNotEmpty) words.add(element);
+            });
+            _controller.clear();
+            setState(() {});
+          }
         }
       });
     super.initState();

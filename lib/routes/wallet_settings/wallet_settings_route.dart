@@ -121,19 +121,16 @@ class _WalletSettingState extends State<WalletSetting> {
                       height: 10,
                     ),
                     Center(
-                      child: Hero(
-                        tag: "button",
-                        child: OutlinedButton(
-                          onPressed: () {
-                            _focusNode.unfocus();
-                            if (_nameKey.currentState?.value != null &&
-                                _nameKey.currentState!.value!.trim().isNotEmpty)
-                              widget.detailsBloc.add(UpdateWalletName(
-                                  _nameKey.currentState!.value!));
-                          },
-                          child: Text(
-                            "apply".tr(),
-                          ),
+                      child: OutlinedButton(
+                        onPressed: () {
+                          _focusNode.unfocus();
+                          if (_nameKey.currentState?.value != null &&
+                              _nameKey.currentState!.value!.trim().isNotEmpty)
+                            widget.detailsBloc.add(UpdateWalletName(
+                                _nameKey.currentState!.value!));
+                        },
+                        child: Text(
+                          "apply".tr(),
                         ),
                       ),
                     ),

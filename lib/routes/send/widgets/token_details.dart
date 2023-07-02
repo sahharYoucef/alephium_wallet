@@ -43,12 +43,12 @@ class TokenDetails extends StatelessWidget {
                 Center(
                   child: TokenIcon(
                     tokenStore: tokenStore,
-                    size: 80,
+                    size: tokenStore.isNft ? 260 : 80,
                     textStyle: Theme.of(context).textTheme.headlineLarge,
                   ),
                 ),
                 Text(
-                  "${'Token'.tr()} id",
+                  "Id",
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(
@@ -132,12 +132,12 @@ class TokenDetails extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "amount".tr(),
+                      "decimals".tr(),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Spacer(),
                     Text(
-                      "${Format.humanReadableNumber(tokenStore.formattedAmount)}",
+                      "${tokenStore.decimals}",
                       style:
                           Theme.of(context).textTheme.headlineSmall!.copyWith(
                                 fontWeight: FontWeight.w700,
@@ -146,6 +146,25 @@ class TokenDetails extends StatelessWidget {
                   ],
                 ),
                 const Divider(),
+                if (!tokenStore.isNft) ...[
+                  Row(
+                    children: [
+                      Text(
+                        "amount".tr(),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      Spacer(),
+                      Text(
+                        "${Format.humanReadableNumber(tokenStore.formattedAmount)}",
+                        style:
+                            Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                ],
                 const SizedBox(
                   height: 8,
                 ),

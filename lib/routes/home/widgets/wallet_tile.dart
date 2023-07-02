@@ -116,18 +116,9 @@ class WalletTile extends StatelessWidget {
                                           CrossAxisAlignment.center,
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
-                                        Text("\u{2022}",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headlineMedium),
-                                        SizedBox(
-                                          width: 4,
+                                        TokenIcon(
+                                          tokenStore: e,
                                         ),
-                                        Text("${Format.humanReadableNumber(e.formattedAmount)}",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headlineMedium)
-                                            .obscure(),
                                         SizedBox(
                                           width: 10,
                                         ),
@@ -144,8 +135,21 @@ class WalletTile extends StatelessWidget {
                                         SizedBox(
                                           width: 10,
                                         ),
-                                        TokenIcon(
-                                          tokenStore: e,
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4, vertical: 0),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                            color:
+                                                WalletTheme.instance.background,
+                                          ),
+                                          child: Text(
+                                                  "${Format.humanReadableNumber(e.formattedAmount)}",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headlineMedium)
+                                              .obscure(),
                                         ),
                                       ]),
                                 ),

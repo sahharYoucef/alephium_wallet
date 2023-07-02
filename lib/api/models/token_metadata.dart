@@ -77,6 +77,7 @@ class TokenMetadata extends Equatable {
       'logoURI': logoURI,
       'description': description,
       'totalSupply': totalSupply?.toString(),
+      'type': "token",
     };
   }
 

@@ -53,14 +53,18 @@ class GasAdvancedOption extends StatelessWidget {
             ShakeTextFormField(
               style: Theme.of(context).textTheme.bodyMedium,
               key: _gasAmountKey,
-              inputFormatters: [AmountFormatter()],
+              inputFormatters: [
+                AmountFormatter(
+                  decimals: 17,
+                )
+              ],
               validator: gasAmountValidator,
               onChanged: (value) {
                 bloc.add(TransactionValuesChangedEvent(gas: value));
                 _gasAmountKey.currentState?.validate();
               },
               textInputAction: TextInputAction.next,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
                 labelText: "gasAmount".tr(),
               ),
@@ -69,14 +73,18 @@ class GasAdvancedOption extends StatelessWidget {
             ShakeTextFormField(
               key: _gasPriceKey,
               style: Theme.of(context).textTheme.bodyMedium,
-              inputFormatters: [AmountFormatter()],
+              inputFormatters: [
+                AmountFormatter(
+                  decimals: 17,
+                )
+              ],
               validator: gasPriceValidator,
               onChanged: (value) {
                 bloc.add(TransactionValuesChangedEvent(gasPrice: value));
                 _gasPriceKey.currentState?.validate();
               },
               textInputAction: TextInputAction.done,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
                 labelText: "gasPrice".tr(),
               ),

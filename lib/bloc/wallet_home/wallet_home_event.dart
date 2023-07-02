@@ -14,9 +14,10 @@ class WalletHomeLoadData extends WalletHomeEvent {
 }
 
 class WalletHomeRefreshData extends WalletHomeEvent {
-  WalletHomeRefreshData();
+  final bool withError;
+  WalletHomeRefreshData({required this.withError});
   @override
-  List<Object> get props => [DateTime.now().microsecondsSinceEpoch];
+  List<Object> get props => [withError, DateTime.now().microsecondsSinceEpoch];
 }
 
 class HomeUpdateWalletDetails extends WalletHomeEvent {

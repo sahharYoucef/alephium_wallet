@@ -2,11 +2,6 @@ import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:intl/intl.dart';
 
 abstract class Format {
-  static final _compactCurrency = NumberFormat.compactCurrency(
-    decimalDigits: 3,
-    symbol:
-        '', // if you want to add currency symbol then pass that in this else leave it empty.
-  );
   static var _format = NumberFormat(
     "##0.0##",
     "en_US",
@@ -19,7 +14,14 @@ abstract class Format {
     if (value is String) {
       value = double.tryParse("${value}") ?? 0;
     }
-    return _compactCurrency.format(value);
+    if ((value as double) == value.roundToDouble()) {
+      return NumberFormat.compactCurrency(decimalDigits: 0, symbol: "")
+          .format(value);
+    }
+    final numOfDecimals = value.toString().split(".").last.length;
+    return NumberFormat.decimalPatternDigits(
+            decimalDigits: numOfDecimals.clamp(0, 4))
+        .format(value);
   }
 
   static String formatNumber(dynamic value) {

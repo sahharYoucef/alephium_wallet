@@ -30,7 +30,9 @@ class HomeView extends StatelessWidget {
         if (bloc.state is WalletHomeLoading) {
           return;
         }
-        bloc.add(WalletHomeRefreshData());
+        bloc.add(WalletHomeRefreshData(
+          withError: true,
+        ));
       },
       child: CustomScrollView(
         slivers: [

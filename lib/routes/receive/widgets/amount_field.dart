@@ -92,9 +92,13 @@ class _ReceiveAmountFieldState extends State<ReceiveAmountField> {
       children: [
         ShakeTextFormField(
           controller: controller,
-          inputFormatters: [AmountFormatter()],
+          inputFormatters: [
+            AmountFormatter(
+              decimals: 17,
+            )
+          ],
           textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
+          keyboardType: TextInputType.numberWithOptions(decimal: true),
           autocorrect: false,
           decoration: textFieldDecoration("amount".tr()),
           style: Theme.of(context).textTheme.bodyMedium,

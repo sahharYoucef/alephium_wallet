@@ -37,7 +37,11 @@ class _AmountTextFieldState extends State<AmountTextField> {
     return ShakeTextFormField(
       controller: _amountController,
       key: _amountKey,
-      inputFormatters: [AmountFormatter()],
+      inputFormatters: [
+        AmountFormatter(
+          decimals: 17,
+        )
+      ],
       style: Theme.of(context).textTheme.bodyMedium,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: widget.validator,
@@ -48,7 +52,7 @@ class _AmountTextFieldState extends State<AmountTextField> {
       errorStyle:
           Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white),
       textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.number,
+      keyboardType: TextInputType.numberWithOptions(decimal: true),
       autocorrect: false,
       decoration: InputDecoration(
         labelText: "amount".tr(),

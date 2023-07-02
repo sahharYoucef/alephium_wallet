@@ -1,4 +1,5 @@
 import 'package:alephium_wallet/routes/constants.dart';
+import 'package:alephium_wallet/routes/home/widgets/token_icon.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_icon.dart';
 import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
@@ -180,17 +181,28 @@ class TransactionTile extends StatelessWidget {
                                           TokenDetails.show(context,
                                               tokenStore: token);
                                         },
-                                        child: Text(
-                                            "${token.name ?? token.symbol ?? 'Unknown Token'.tr()}"
-                                                .tr(),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .copyWith(
-                                                  color: WalletTheme
-                                                      .instance.textColor
-                                                      .withOpacity(.6),
-                                                )),
+                                        child: Row(
+                                          children: [
+                                            TokenIcon(
+                                              tokenStore: token,
+                                              size: 20,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                                "${token.name ?? token.symbol ?? 'Unknown Token'.tr()}"
+                                                    .tr(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .copyWith(
+                                                      color: WalletTheme
+                                                          .instance.textColor
+                                                          .withOpacity(.6),
+                                                    )),
+                                          ],
+                                        ),
                                       ),
                                       const SizedBox(
                                         width: 10,

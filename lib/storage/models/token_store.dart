@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:alephium_dart/alephium_dart.dart';
+import 'package:alephium_wallet/api/models/nft_metadata.dart';
 import 'package:alephium_wallet/api/models/token_metadata.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -15,8 +17,8 @@ class TokenStore extends Equatable {
     if (data == null) return <TokenStore>[];
     var value = String.fromCharCodes(data.cast<int>());
     var decoded = jsonDecode(value.toString()) as List<dynamic>;
-    var _tokens = decoded.map((ref) => TokenStore.fromDb(ref)).toList();
-    return _tokens;
+    final contracts = decoded.map((ref) => TokenStore.fromDb(ref)).toList();
+    return contracts.toList();
   }
 
   static Uint8List? setTokens(List<TokenStore>? data) {
@@ -43,11 +45,22 @@ class TokenStore extends Equatable {
     String? id,
     BigInt? amount,
     String? name,
+    TokenType? type,
   }) {
     return TokenStore(
       id: id ?? this.id,
       amount: amount ?? this.amount,
     );
+  }
+
+  TokenType get type {
+    if (nftMetaData != null) return TokenType.nonFungible;
+    if (metaData != null) return TokenType.fungible;
+    return TokenType.none;
+  }
+
+  bool get isNft {
+    return type == TokenType.nonFungible;
   }
 
   Map<String, dynamic> toDb() {
@@ -58,15 +71,17 @@ class TokenStore extends Equatable {
   }
 
   String? get name {
-    return metaData?.name;
+    return isNft ? nftMetaData?.name : metaData?.name;
   }
 
   String get label {
-    return metaData?.name ?? symbol ?? "Unknown";
+    return isNft
+        ? nftMetaData?.name ?? ""
+        : (metaData?.name ?? symbol ?? "Unknown");
   }
 
   String? get description {
-    return metaData?.description;
+    return isNft ? nftMetaData?.description : metaData?.description;
   }
 
   String? get totalSupply {
@@ -78,17 +93,17 @@ class TokenStore extends Equatable {
   }
 
   int get decimals {
-    return metaData?.decimals ?? 1;
+    return metaData?.decimals ?? 0;
   }
 
   double get formattedAmount {
     return amount != null
-        ? amount!.toDouble() / pow(10, metaData?.decimals ?? 1)
+        ? amount!.toDouble() / pow(10, metaData?.decimals ?? 0)
         : 0;
   }
 
   String? get logo {
-    return metaData?.logoURI;
+    return isNft ? nftMetaData?.image : metaData?.logoURI;
   }
 
   @override
@@ -99,6 +114,10 @@ class TokenStore extends Equatable {
   TokenMetadata? get metaData {
     return WalletHomeBloc.tokens
         .firstWhereOrNull((element) => element.id == id);
+  }
+
+  NftMetadata? get nftMetaData {
+    return WalletHomeBloc.nfts.firstWhereOrNull((element) => element.id == id);
   }
 
   @override

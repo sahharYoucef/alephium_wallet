@@ -1,3 +1,4 @@
+import 'package:alephium_dart/alephium_dart.dart';
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/storage/models/token_store.dart';
 
@@ -19,6 +20,18 @@ class BalanceStore {
     required this.network,
     this.tokens,
   });
+
+  List<TokenStore> get nfTokens {
+    return tokens?.where((e) => e.type == TokenType.nonFungible).toList() ?? [];
+  }
+
+  List<TokenStore> get fTokens {
+    return tokens?.where((e) => e.type == TokenType.fungible).toList() ?? [];
+  }
+
+  List<TokenStore> get otherTokens {
+    return tokens?.where((e) => e.type == TokenType.none).toList() ?? [];
+  }
 
   factory BalanceStore.fromDb(Map<String, dynamic> data) {
     final _address = data["balanceAddress"] as String;
@@ -47,7 +60,7 @@ class BalanceStore {
       "balanceHint": balanceHint,
       "balanceLocked": lockedBalance?.toString(),
       "balanceLockedHint": lockedBalanceHint,
-      "tokens": TokenStore.setTokens(tokens),
+      "tokens": TokenStore.setTokens(tokens ?? <TokenStore>[]),
       "network": network.name,
     };
   }

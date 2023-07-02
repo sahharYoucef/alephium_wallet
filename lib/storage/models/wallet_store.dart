@@ -184,22 +184,52 @@ class WalletStore extends Equatable {
   List<TokenStore> get tokensBalances {
     List<TokenStore> tokens = [];
     for (var address in _addresses) {
-      {
-        if (address.balance?.tokens != null)
-          for (var token in address.balance!.tokens!) {
-            if (!tokens.contains(token)) {
-              tokens.add(token);
-            } else {
-              late BigInt amount;
-              amount =
-                  tokens.firstWhere((element) => element == token).amount ??
-                      BigInt.zero;
-              amount += token.amount ?? BigInt.zero;
-              final index = tokens.indexWhere((element) => element == token);
-              tokens[index] = TokenStore(id: token.id, amount: amount);
-            }
+      if (address.balance?.fTokens != null)
+        for (var token in address.balance!.fTokens) {
+          if (!tokens.contains(token)) {
+            tokens.add(token);
+          } else {
+            late BigInt amount;
+            amount = tokens.firstWhere((element) => element == token).amount ??
+                BigInt.zero;
+            amount += token.amount ?? BigInt.zero;
+            final index = tokens.indexWhere((element) => element == token);
+            tokens[index] = TokenStore(id: token.id, amount: amount);
           }
-      }
+        }
+    }
+    return tokens;
+  }
+
+  List<TokenStore> get nftTokensBalances {
+    List<TokenStore> tokens = [];
+    for (var address in _addresses) {
+      if (address.balance?.nfTokens != null)
+        for (var token in address.balance!.nfTokens) {
+          if (!tokens.contains(token)) {
+            tokens.add(token);
+          } else {
+            late BigInt amount;
+            amount = tokens.firstWhere((element) => element == token).amount ??
+                BigInt.zero;
+            amount += token.amount ?? BigInt.zero;
+            final index = tokens.indexWhere((element) => element == token);
+            tokens[index] = TokenStore(id: token.id, amount: amount);
+          }
+        }
+    }
+    return tokens;
+  }
+
+  List<TokenStore> get otherTokens {
+    List<TokenStore> tokens = [];
+    for (var address in _addresses) {
+      if (address.balance?.otherTokens != null)
+        for (var token in address.balance!.otherTokens) {
+          if (!tokens.contains(token)) {
+            tokens.add(token);
+          }
+        }
     }
     return tokens;
   }

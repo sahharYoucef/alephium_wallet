@@ -3,7 +3,7 @@ import 'package:alephium_wallet/storage/app_storage.dart';
 class Network {
   factory Network.mainnet() {
     return Network._(
-      'https://wallet-v17.mainnet.alephium.org',
+      'https://wallet-v20.mainnet.alephium.org',
       'https://backend-v113.mainnet.alephium.org',
       'https://explorer.alephium.org/#',
       NetworkType.mainnet,
@@ -11,7 +11,7 @@ class Network {
   }
   factory Network.testnet() {
     return Network._(
-      'https://wallet-v17.testnet.alephium.org',
+      'https://wallet-v20.testnet.alephium.org',
       'https://backend-v113.testnet.alephium.org',
       'https://explorer.testnet.alephium.org',
       NetworkType.testnet,

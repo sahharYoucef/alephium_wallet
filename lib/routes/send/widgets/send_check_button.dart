@@ -37,6 +37,7 @@ class SendCheckButton extends StatelessWidget {
             ),
             onPressed: activateButton
                 ? () {
+                    FocusScope.of(context).unfocus();
                     var isValid =
                         formKey.currentState?.validate(shake: true) ?? false;
                     if (!isValid) return;

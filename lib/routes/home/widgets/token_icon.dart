@@ -33,7 +33,11 @@ class TokenIcon extends StatelessWidget {
         alignment: Alignment.center,
         child: Text(
           symbol,
-          style: textStyle ?? Theme.of(context).textTheme.bodySmall,
+          style: textStyle ??
+              Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(fontSize: size / 2),
         ),
       );
     } else {

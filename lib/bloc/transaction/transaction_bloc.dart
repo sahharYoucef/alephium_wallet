@@ -100,7 +100,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         ));
       } else if (event is AddTokenTransactionEvent) {
         final index = tokens.indexWhere((element) => element.id == event.id);
-        final tokenAmount = multiply(event.amount, event.decimals);
+        final tokenAmount = event.decimals == 0
+            ? event.amount
+            : multiply(event.amount, event.decimals);
         final token =
             TokenStore(id: event.id, amount: BigInt.tryParse(tokenAmount));
         if (index == -1)
@@ -357,7 +359,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   }
 }
 
-extension _Parser on double {
+extension AlephiumParser on double {
   BigInt get parseToAlphValue {
     return BigInt.from(this * 10e17);
   }

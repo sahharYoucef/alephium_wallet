@@ -6,6 +6,7 @@ import 'package:alephium_wallet/storage/models/contact_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../api/models/nft_metadata.dart';
 import '../../api/models/token_metadata.dart';
 import '../models/address_store.dart';
 import '../models/wallet_store.dart';
@@ -33,10 +34,10 @@ class SQLiteDBHelper extends BaseDBHelper {
   _dropTables(Database _db) async {
     final batch = _db.batch();
     // batch.execute('DROP TABLE IF EXISTS $_addressesTable');
-    // batch.execute('DROP TABLE IF EXISTS $_transactionTable');
+    // batch.execute('DROP TABLE IF EXISTS $_contactsTable');
     // batch.execute('DROP TABLE IF EXISTS $_walletTable');
     // batch.execute('DROP TABLE IF EXISTS $_balancesTable');
-    // batch.execute('DROP TABLE IF EXISTS $_contactsTable');
+    // batch.execute('DROP TABLE IF EXISTS $_transactionTable');
     // batch.execute('DROP TABLE IF EXISTS $_tokenMetaDataTable');
     await batch.commit();
   }
@@ -113,12 +114,15 @@ class SQLiteDBHelper extends BaseDBHelper {
       CREATE TABLE IF NOT EXISTS $_tokenMetaDataTable (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           tokenId TEXT NOT NULL UNIQUE,
-          symbol TEXT NOT NULL,
+          symbol TEXT,
           name TEXT,
           decimals TEXT,
           logoURI TEXT,
+          image TEXT,
+          type TEXT,
           description TEXT,
-          totalSupply TEXT
+          totalSupply TEXT,
+          owner TEXT
       )
       """);
     await batch.commit();
@@ -158,10 +162,33 @@ class SQLiteDBHelper extends BaseDBHelper {
   }
 
   @override
-  Future<List<TokenMetadata>> getTokensMetaData() async {
+  Future<void> insertNftMetaData(List<NftMetadata> nftMetadata) async {
+    var _db = await _database.future;
+    var batch = _db.batch();
+    for (final nft in nftMetadata) {
+      batch.insert(
+        _tokenMetaDataTable,
+        nft.toDB(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+    await batch.commit();
+  }
+
+  @override
+  Future<(List<NftMetadata>, List<TokenMetadata>)>
+      getNftAndTokensMetaData() async {
     var _db = await _database.future;
     var data = await _db.query(_tokenMetaDataTable);
-    return data.map((e) => TokenMetadata.fromDB(e)).toList();
+    final tokens = data
+        .where((element) => element['type'] == 'token')
+        .map((e) => TokenMetadata.fromDB(e))
+        .toList();
+    final nfts = data
+        .where((element) => element['type'] == 'nft')
+        .map((e) => NftMetadata.fromDb(e))
+        .toList();
+    return (nfts, tokens);
   }
 
   @override

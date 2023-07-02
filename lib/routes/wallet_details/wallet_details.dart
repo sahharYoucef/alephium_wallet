@@ -5,6 +5,7 @@ import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
 import 'package:alephium_wallet/main.dart';
+import 'package:alephium_wallet/routes/wallet_details/widgets/nft_tile.dart';
 import 'package:alephium_wallet/routes/wallet_details/widgets/sticky_header.dart';
 import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
@@ -113,6 +114,12 @@ class _WalletDetailsState extends State<WalletDetails> {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   BalanceTile(
+                                    wallet: _walletDetailsBloc.wallet,
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  NftTile(
                                     wallet: _walletDetailsBloc.wallet,
                                   ),
                                   const SizedBox(

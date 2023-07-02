@@ -4,6 +4,7 @@ import 'package:alephium_wallet/storage/models/contact_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 
+import '../api/models/nft_metadata.dart';
 import '../api/models/token_metadata.dart';
 
 abstract class BaseDBHelper {
@@ -47,6 +48,7 @@ abstract class BaseDBHelper {
       String walletID, NetworkType network);
 
   Future<void> insertTokensMetaData(List<TokenMetadata> tokenMetadata);
+  Future<void> insertNftMetaData(List<NftMetadata> nftMetadata);
 
-  Future<List<TokenMetadata>> getTokensMetaData();
+  Future<(List<NftMetadata>, List<TokenMetadata>)> getNftAndTokensMetaData();
 }

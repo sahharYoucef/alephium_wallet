@@ -30,7 +30,7 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
   late Dio _dio;
 
   NetworkType network;
-
+  final caches = {};
   AlephiumApiRepository(this.network) : super(network) {
     _dio = Dio(
       BaseOptions(
@@ -86,6 +86,23 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
     } on Exception catch (e, trace) {
       return Either<MultipleCallContractResult>(
           error: ApiError(exception: e, trace: trace));
+    }
+  }
+
+  @override
+  Future<Either<ContractState>> getContractsAddressState(
+      {required String address, num group = 0}) async {
+    try {
+      if (caches["getContractsAddressState-$address"] != null)
+        return caches["getContractsAddressState-$address"];
+      final data = await _contractClient.getContractsAddressState(
+        address,
+        group: group,
+      );
+      caches["getContractsAddressState-$address"] = data;
+      return Either<ContractState>(data: data);
+    } on Exception catch (e, trace) {
+      return Either<ContractState>(error: ApiError(exception: e, trace: trace));
     }
   }
 

@@ -82,12 +82,28 @@ Color lighten(Color c, [int percent = 10]) {
 }
 
 class AmountFormatter extends TextInputFormatter {
+  final int decimals;
+
+  AmountFormatter({this.decimals = 0});
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    var isValid =
-        double.tryParse(newValue.text) != null || newValue.text.isEmpty;
+    newValue = newValue.copyWith(
+      text: newValue.text.replaceAll(",", "."),
+    );
+    final numValue = double.tryParse(newValue.text);
+    var isValid = numValue != null || newValue.text.isEmpty;
     if (isValid) {
+      if (decimals == 0 && newValue.text.contains(".")) {
+        return oldValue;
+      }
+      final split = newValue.text.split(".");
+      if (split.length >= 2) {
+        final decimalsLength = split[1].length;
+        if (decimalsLength > decimals) {
+          return oldValue;
+        }
+      }
       return newValue;
     }
     return oldValue;

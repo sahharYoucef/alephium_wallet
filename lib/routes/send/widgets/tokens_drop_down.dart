@@ -4,6 +4,7 @@ import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 
+import '../../../utils/format.dart';
 import '../../home/widgets/token_icon.dart';
 
 class TokensDropDown extends StatefulWidget {
@@ -78,7 +79,10 @@ class _TokensDropDownState extends State<TokensDropDown> {
                         width: 8,
                       ),
                       Text(
-                        value.formattedAmount.toString(),
+                        value.isNft
+                            ? "(NFT)"
+                            : Format.humanReadableNumber(
+                                value.formattedAmount.toString()),
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],

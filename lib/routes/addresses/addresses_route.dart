@@ -2,6 +2,7 @@ import 'package:alephium_wallet/bloc/wallet_details/wallet_details_bloc.dart';
 import 'package:alephium_wallet/routes/addresses/widgets/addresses_list_view.dart';
 import 'package:alephium_wallet/routes/addresses/widgets/options_floating_button.dart';
 import 'package:alephium_wallet/routes/widgets/wallet_appbar.dart';
+import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,13 +33,14 @@ class _AddressesPageState extends State<AddressesPage> {
         return true;
       },
       child: Scaffold(
-        floatingActionButton:
-            widget.bloc != null && widget.bloc!.wallet.type == WalletType.normal
-                ? FloatingOptionsButton(
-                    isDialOpen: isDialOpen,
-                    bloc: widget.bloc!,
-                  )
-                : null,
+        floatingActionButton: AppStorage.instance.advanced &&
+                widget.bloc != null &&
+                widget.bloc!.wallet.type == WalletType.normal
+            ? FloatingOptionsButton(
+                isDialOpen: isDialOpen,
+                bloc: widget.bloc!,
+              )
+            : null,
         body: Stack(
           children: [
             if (widget.bloc == null && widget.wallet != null)
