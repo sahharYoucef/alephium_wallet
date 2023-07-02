@@ -1,31 +1,73 @@
-<svg width="100%" height="100%" viewBox="0 0 268 454" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2" class="PageSectionHero__StyledLogo-sc-1c423ep-0 jlyZFd">
-    <g transform="matrix(1,0,0,1,-1334,-4506)">
-        <g id="logo-light" transform="matrix(1.02904,0,0,1,1269.09,-0.201119)">
-            <rect x="63.112" y="4506.2" width="260.243" height="453.499" style="fill:none"></rect>
-            <clipPath id="_clip1">
-                <rect x="63.112" y="4506.2" width="260.243" height="453.499"></rect>
-            </clipPath>
-            <g clip-path="url(#_clip1)">
-                <g transform="matrix(1,0,0,1,-0.0464983,0)">
-                    <g transform="matrix(0.46324,0,0,0.476693,63.1121,4506.2)">
-                        <path d="M187.296,627.61C187.296,615.272 177.581,606.969 165.616,609.078L21.68,634.454C9.715,636.564 -0,648.293 -0,660.63L-0,932.485C-0,944.822 9.715,953.126 21.68,951.016L165.616,925.64C177.581,923.531 187.296,911.802 187.296,899.464L187.296,627.61Z" style="fill:black;fill-rule:nonzero"></path>
-                    </g>
-                    <g transform="matrix(0.46324,0,0,0.476693,63.1121,4506.2)">
-                        <path d="M561.888,18.859C561.888,6.522 552.173,-1.782 540.207,0.327L396.272,25.704C384.306,27.813 374.592,39.542 374.592,51.88L374.592,323.734C374.592,336.072 384.306,344.375 396.272,342.266L540.207,316.89C552.173,314.78 561.888,303.051 561.888,290.714L561.888,18.859Z" fill="url(#logo-accent-gradient)" style="transform: none; transform-origin: 468.24px 171.296px;" transform-origin="468.24000549316406px 171.2964973449707px"></path>
-                    </g>
-                    <g transform="matrix(0.46324,0,0,0.476693,63.1121,4506.2)">
-                        <path d="M210.743,82.363C205.186,70.124 190.266,62.023 177.446,64.283L23.229,91.472C10.408,93.732 4.512,105.503 10.069,117.742L351.145,868.949C356.702,881.188 371.622,889.29 384.442,887.029L538.659,859.841C551.479,857.581 557.376,845.809 551.819,833.57L210.743,82.363Z" style="fill:black;fill-rule:nonzero"></path>
-                    </g>
-                </g>
-            </g>
-        </g>
-    </g>
-    <defs>
-        <linearGradient id="logo-accent-gradient" x2="-0.2" y2="1">
-            <stop offset="0%" style="stop-color:#fff"></stop>
-            <stop offset="25%" style="stop-color: rgb(255, 111, 8);"></stop>
-            <stop offset="50%" style="stop-color: rgb(8, 0, 255);"></stop>
-            <stop offset="100%" style="stop-color: rgb(0, 238, 255);"></stop>
-        </linearGradient>
-    </defs>
-</svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+    width="107.5479mm"
+    height="107.5479mm"
+    viewBox="0 0 107.5479 107.5479"
+    version="1.1"
+    id="svg5"
+    xml:space="preserve"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs2"><rect
+       x="-555.3515"
+       y="-63.198481"
+       width="268.43013"
+       height="340.70205"
+       id="rect3506" /><linearGradient
+       id="linearGradient1385"><stop
+         style="stop-color:#ff5d51;stop-opacity:1;"
+         offset="0"
+         id="stop1381" /><stop
+         style="stop-color:#1200da;stop-opacity:1;"
+         offset="1"
+         id="stop1383" /></linearGradient><rect
+       x="48.348118"
+       y="243.26962"
+       width="656.28558"
+       height="654.7887"
+       id="rect236" /><linearGradient
+       xlink:href="#linearGradient1385"
+       id="linearGradient1387"
+       x1="289.08983"
+       y1="148.24757"
+       x2="355.40539"
+       y2="148.24757"
+       gradientUnits="userSpaceOnUse" /><linearGradient
+       xlink:href="#linearGradient1385"
+       id="linearGradient2736"
+       gradientUnits="userSpaceOnUse"
+       x1="355.4054"
+       y1="87.600975"
+       x2="289.08984"
+       y2="208.89417" /><linearGradient
+       xlink:href="#linearGradient1385"
+       id="linearGradient3502"
+       gradientUnits="userSpaceOnUse"
+       x1="289.08983"
+       y1="148.24757"
+       x2="355.40539"
+       y2="148.24757" /></defs><g
+     id="layer1"
+     transform="translate(-94.135994,-93.325218)"><text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text234"
+       style="font-size:40px;line-height:1.25;font-family:Inter;-inkscape-font-specification:'Inter, Normal';white-space:pre;shape-inside:url(#rect236);display:inline" /><g
+       style="clip-rule:evenodd;fill:url(#linearGradient1387);fill-opacity:1;fill-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2"
+       id="g254"
+       transform="matrix(0.87079683,0,0,0.87079683,-132.70226,16.940561)"><g
+         id="g917"
+         style="fill:url(#linearGradient3502);fill-opacity:1"><path
+           d="m 355.40539,94.267337 c 0,-4.36228 -3.4476,-7.30006 -7.7064,-6.549228 l -50.90277,8.97424 c -4.2588,0.750833 -7.70639,4.904251 -7.70639,9.266531 v 96.25898 c 0,4.37224 3.44759,7.31002 7.70639,6.55919 l 50.90277,-8.97424 c 4.2588,-0.75083 7.7064,-4.90425 7.7064,-9.27649 z"
+           style="fill:url(#linearGradient2736);fill-opacity:1;stroke-width:1.00494"
+           id="path9537" /></g></g><g
+       aria-label="א"
+       transform="matrix(1.3508163,-0.24200502,0.24200502,1.3508163,888.61995,67.627834)"
+       id="text3504"
+       style="font-size:40px;line-height:1.25;font-family:Inter;-inkscape-font-specification:'Inter, Normal';white-space:pre;shape-inside:url(#rect3506);display:inline;fill:#ffffff"><path
+         d="m -554.31156,-26.180439 0.96,-6.44 q 0.32,-2 0.92,-3.8 0.64,-1.8 1.88,-3.24 1.28,-1.48 3.44,-2.4 -1.12,-1.36 -2.4,-2.96 -1.24,-1.64 -2.36,-3.08 -1.12,-1.44 -1.76,-2.2 h 7.44 q 0.76,0.92 1.68,2.2 0.92,1.24 1.84,2.56 0.96,1.28 1.68,2.28 0.52,0.76 1.04,1.56 0.52,0.76 1.04,1.52 1.56,-0.84 2.08,-2.48 0.56,-1.64 0.76,-3.52 l 0.52,-4.12 h 6.04 l -0.48,4.48 q -0.28,2.92 -1.72,5.44 -1.44,2.52 -4.64,3.88 1.76,2.48 3.52,5.08 1.8,2.56 3.48,5.24 h -7.08 q -2.04,-3.52 -3.96,-6.48 -1.88,-3 -3.96,-5.8 -1.6,0.76 -2.16,2.48 -0.52,1.68 -0.8,3.72 l -0.92,6.08 z"
+         style="font-weight:900;-inkscape-font-specification:'Inter Heavy'"
+         id="path3616" /></g></g></svg>

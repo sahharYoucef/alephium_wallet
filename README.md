@@ -1,7 +1,7 @@
 # Sahhar Alephium Wallet
 
 <p align="center">
-<img src="assets/icons/alephium_icon.svg" alt="drawing" width="150"/>
+<img src="assets/icons/alephium_icon.svg" alt="drawing" width="250"/>
 <p/>
 
 Alephium wallet for mobile made by Community members
