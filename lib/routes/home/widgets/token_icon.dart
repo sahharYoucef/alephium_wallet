@@ -33,7 +33,6 @@ class TokenIcon extends StatelessWidget {
     );
     if (tokenStore.logo != null) {
       return CachedNetworkImage(
-        cacheManager: DefaultCahe,
         height: size,
         width: size,
         imageUrl: tokenStore.logo!,
