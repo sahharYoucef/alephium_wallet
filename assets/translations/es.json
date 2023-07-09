@@ -111,6 +111,8 @@
   "fr": "Francés",
   "es": "Español",
   "it": "Italiano",
+  "de": "alemán",
+  "id": "Indonesio",
   "system": "Sistema",
   "license": "Licencia",
   "errorMessageGenericError": "¡Algo salió mal!",
@@ -160,5 +162,9 @@
   "explorerUrl": "explorerUrl",
   "explorerApiUrl": "Explorer Apihost Url",
   "verifyTransaction": "Verificar transacción",
-  "invalidTransactionDetails": "¡Detalles de transacción no válidos!"
+  "invalidTransactionDetails": "¡Detalles de transacción no válidos!",
+  "name": "nombre",
+  "symbol": "símbolo",
+  "totalSupply": "suministro total",
+  "decimals": "decimales"
 }

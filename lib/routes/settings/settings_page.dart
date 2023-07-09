@@ -48,7 +48,7 @@ class SettingsPage extends StatelessWidget {
                   height: 4,
                 ),
                 Text(
-                  "v0.9.5",
+                  "v0.9.6",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(
@@ -57,6 +57,7 @@ class SettingsPage extends StatelessWidget {
                 Text(
                   "broughtBy".tr(args: ["Sahhar Youcef"]),
                   style: Theme.of(context).textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
                 ),
                 RichText(
                     text: TextSpan(children: [

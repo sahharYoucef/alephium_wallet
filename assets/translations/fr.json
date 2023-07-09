@@ -111,6 +111,8 @@
   "fr": "Français",
   "es": "Espagnol",
   "it": "Italien",
+  "de": "Allemand",
+  "id": "Indonésien",
   "system": "Système",
   "license": "Licence",
   "errorMessageGenericError": "Quelque chose s'est mal passé !",
@@ -160,5 +162,9 @@
   "explorerUrl": "explorerUrl",
   "explorerApiUrl": "URL de l'explorateur Apihost",
   "verifyTransaction": "Vérifier la transaction",
-  "invalidTransactionDetails": "détails de transaction invalides !"
+  "invalidTransactionDetails": "détails de transaction invalides !",
+  "name": "nom",
+  "symbol": "symbole",
+  "totalSupply": "offre totale",
+  "decimals": "décimales"
 }

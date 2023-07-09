@@ -4,18 +4,13 @@ import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
+import '../../../utils/languages.dart';
+
 class LanguageDropDown extends StatelessWidget {
   const LanguageDropDown({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final _languages = {
-      "system": "",
-      "en": "English",
-      "fr": "Français",
-      "es": "Español",
-      "it": "Italiano"
-    };
     return ButtonTheme(
       alignedDropdown: true,
       child: DropdownButtonFormField<String>(
@@ -42,7 +37,7 @@ class LanguageDropDown extends StatelessWidget {
         ),
         value: AppStorage.instance.language,
         items: [
-          ..._languages
+          ...languages
               .map(
                 (key, value) => MapEntry(
                     key,

@@ -111,6 +111,8 @@
   "fr": "Perancis",
   "es": "Spanyol",
   "it": "Italia",
+  "de": "Jerman",
+  "id": "Indonesia",
   "system": "Sistem",
   "license": "Lisensi",
   "errorMessageGenericError": "Ada yang salah!",
@@ -160,5 +162,9 @@
   "explorerUrl": "Penjelajah URL",
   "explorerApiUrl": "Penjelajah api host Url",
   "verifyTransaction": "Verifikasi transaksi",
-  "invalidTransactionDetails": "detail transaksi tidak valid!"
+  "invalidTransactionDetails": "detail transaksi tidak valid!",
+  "name": "nama",
+  "symbol": "simbol",
+  "totalSupply": "pasokan total",
+  "decimals": "desimal"
 }

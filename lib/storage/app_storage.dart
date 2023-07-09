@@ -1,6 +1,7 @@
 import 'package:alephium_wallet/api/models/tokens.dart';
 import 'package:alephium_wallet/api/utils/network.dart';
 import 'package:alephium_wallet/utils/format.dart';
+import 'package:alephium_wallet/utils/languages.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -75,7 +76,7 @@ class AppStorage {
   String get language {
     var settings = Hive.box("settings");
     var _language = settings.get("language");
-    if (_language == null) {
+    if (_language == null || !languages.keys.contains(_language)) {
       language = _language = "en";
     }
     return _language;

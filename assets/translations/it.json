@@ -111,6 +111,8 @@
   "fr": "Francese",
   "es": "Spagnolo",
   "it": "Italiano",
+  "de": "tedesco",
+  "id": "indonesiano",
   "system": "Sistema",
   "license": "Licenza",
   "errorMessageGenericError": "Qualcosa è andato storto!",
@@ -160,5 +162,9 @@
   "explorerUrl": "explorerUrl",
   "explorerApiUrl": "URL dell'apihost di Explorer",
   "verifyTransaction": "Verifica transazione",
-  "invalidTransactionDetails": "Dettagli della transazione non validi!"
+  "invalidTransactionDetails": "Dettagli della transazione non validi!",
+  "name": "nome",
+  "symbol": "simbolo",
+  "totalSupply": "offerta totale",
+  "decimals": "decimali"
 }

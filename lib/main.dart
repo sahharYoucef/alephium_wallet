@@ -12,6 +12,7 @@ import 'package:alephium_wallet/storage/app_storage.dart';
 import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:alephium_wallet/storage/sqflite_database/sqflite_database.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
+import 'package:alephium_wallet/utils/languages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -69,10 +70,11 @@ void main() async {
     ],
     child: EasyLocalization(
         supportedLocales: [
-          Locale('en'),
-          Locale('fr'),
-          Locale('it'),
-          Locale('es'),
+          ...languages.keys
+              .where(
+                (element) => element != "system",
+              )
+              .map((e) => Locale(e))
         ],
         useOnlyLangCode: true,
         fallbackLocale: Locale('en'),

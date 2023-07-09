@@ -111,6 +111,8 @@
   "fr": "French",
   "es": "Spanish",
   "it": "Italian",
+  "de": "German",
+  "id": "Indonesian",
   "system": "System",
   "license": "License",
   "errorMessageGenericError": "Something went wrong!",
@@ -160,5 +162,9 @@
   "explorerUrl": "Explorer Url",
   "explorerApiUrl": "Explorer Api host Url",
   "verifyTransaction": "Verify transaction",
-  "invalidTransactionDetails": "invalid transaction details!"
+  "invalidTransactionDetails": "invalid transaction details!",
+  "name": "name",
+  "symbol": "symbol",
+  "totalSupply": "total supply",
+  "decimals": "decimals"
 }
