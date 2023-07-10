@@ -8,4 +8,13 @@ final currencies = [
   "hkd",
   "chf",
   "cad",
+  "idr",
+  "vnd",
+  "thb",
+  "sgd",
+  "bnd",
+  "myr",
+  "sar",
+  "nok",
+  "cny",
 ];
