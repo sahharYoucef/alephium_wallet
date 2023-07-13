@@ -12,7 +12,6 @@ final currencies = [
   "vnd",
   "thb",
   "sgd",
-  "bnd",
   "myr",
   "sar",
   "nok",
