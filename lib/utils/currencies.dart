@@ -16,4 +16,8 @@ final currencies = [
   "sar",
   "nok",
   "cny",
+  "hkd",
+  "inr",
+  "php",
+  "krw",
 ];
