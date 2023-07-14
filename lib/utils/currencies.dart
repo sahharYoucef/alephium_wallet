@@ -1,4 +1,4 @@
-final currencies = [
+final currencies = {
   "usd",
   "eur",
   "gbp",
@@ -8,4 +8,12 @@ final currencies = [
   "hkd",
   "chf",
   "cad",
-];
+  "idr",
+  "vnd",
+  "thb",
+  "sgd",
+  "myr",
+  "sar",
+  "nok",
+  "cny",
+};

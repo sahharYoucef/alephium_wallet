@@ -1,5 +1,6 @@
 import 'package:alephium_wallet/api/models/tokens.dart';
 import 'package:alephium_wallet/api/utils/network.dart';
+import 'package:alephium_wallet/utils/currencies.dart';
 import 'package:alephium_wallet/utils/format.dart';
 import 'package:alephium_wallet/utils/languages.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class AppStorage {
   String get currency {
     var settings = Hive.box("settings");
     var _currency = settings.get("currency");
-    if (_currency == null) {
+    if (_currency == null || !currencies.contains(_currency)) {
       _currency = currency = "usd";
     }
     return _currency as String;

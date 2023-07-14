@@ -8,6 +8,7 @@ import 'package:alephium_wallet/api/models/token_metadata.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:collection/collection.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TokenStore extends Equatable {
   final String? id;
@@ -77,7 +78,7 @@ class TokenStore extends Equatable {
   String get label {
     return isNft
         ? nftMetaData?.name ?? ""
-        : (metaData?.name ?? symbol ?? "Unknown");
+        : (metaData?.name ?? symbol ?? "token".tr());
   }
 
   String? get description {

@@ -113,6 +113,7 @@
   "it": "Italia",
   "de": "Jerman",
   "id": "Indonesia",
+  "ar": "Arab",
   "system": "Sistem",
   "license": "Lisensi",
   "errorMessageGenericError": "Ada yang salah!",
@@ -166,5 +167,6 @@
   "name": "nama",
   "symbol": "simbol",
   "totalSupply": "pasokan total",
-  "decimals": "desimal"
+  "decimals": "desimal",
+  "pleaseCopyTransactionDetails": "Harap salin rincian transaksi"
 }

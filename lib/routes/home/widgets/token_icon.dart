@@ -17,7 +17,7 @@ class TokenIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     late Widget errorHolder;
-    if (!tokenStore.isNft) {
+    if (!tokenStore.isNft && tokenStore.symbol != null) {
       final symbol = tokenStore.symbol!.substring(0, 2);
       errorHolder = Container(
         height: size,

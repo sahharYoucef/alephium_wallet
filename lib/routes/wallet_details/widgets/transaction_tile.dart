@@ -191,8 +191,7 @@ class TransactionTile extends StatelessWidget {
                                               width: 5,
                                             ),
                                             Text(
-                                                "${token.name ?? token.symbol ?? 'Unknown Token'.tr()}"
-                                                    .tr(),
+                                                "${token.name ?? token.symbol ?? 'token'.tr()}",
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyMedium!

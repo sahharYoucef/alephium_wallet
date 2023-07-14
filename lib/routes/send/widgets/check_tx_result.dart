@@ -86,7 +86,7 @@ class CheckTransactionResult extends StatelessWidget {
                     .map((e) => [
                           Row(children: [
                             Text(
-                              "${e.name ?? 'Unknown Token'.tr()}",
+                              "${e.name ?? 'token'.tr()}",
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium

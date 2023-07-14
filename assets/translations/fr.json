@@ -113,6 +113,7 @@
   "it": "Italien",
   "de": "Allemand",
   "id": "Indonésien",
+  "ar": "Arabe",
   "system": "Système",
   "license": "Licence",
   "errorMessageGenericError": "Quelque chose s'est mal passé !",
@@ -166,5 +167,6 @@
   "name": "nom",
   "symbol": "symbole",
   "totalSupply": "offre totale",
-  "decimals": "décimales"
+  "decimals": "décimales",
+  "PleaseCopyTransactionDetails": "Veuillez copier les détails de la transaction"
 }

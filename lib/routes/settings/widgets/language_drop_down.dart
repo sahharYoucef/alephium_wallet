@@ -51,7 +51,7 @@ class LanguageDropDown extends StatelessWidget {
                           ),
                           Spacer(),
                           Text(
-                            "${(key == context.locale.languageCode || key == "system") ? '' : '($value)'}",
+                            "${(key == context.locale.languageCode || key == "system") ? '' : '(${value['name']})'}",
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!

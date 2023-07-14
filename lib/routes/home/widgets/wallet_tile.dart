@@ -4,6 +4,7 @@ import 'package:alephium_wallet/routes/widgets/gradient_icon.dart';
 import 'package:alephium_wallet/storage/models/wallet_store.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/theme.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -172,7 +173,7 @@ class WalletTile extends StatelessWidget {
                   },
                 ),
                 SizedBox(
-                  height: 4.h,
+                  height: 12.h,
                 ),
                 Row(
                   children: [
@@ -180,7 +181,10 @@ class WalletTile extends StatelessWidget {
                       Expanded(
                           child: OutlinedButton.icon(
                         icon: Icon(Icons.call_made),
-                        label: Text("send".tr()),
+                        label: AutoSizeText(
+                          "send".tr(),
+                          maxLines: 1,
+                        ),
                         onPressed: () {
                           Navigator.pushNamed(context, Routes.send, arguments: {
                             "wallet": wallet,
@@ -188,13 +192,16 @@ class WalletTile extends StatelessWidget {
                         },
                       )),
                       SizedBox(
-                        width: 16.w,
+                        width: 12.w,
                       ),
                     ],
                     Expanded(
                         child: OutlinedButton.icon(
                       icon: Icon(Icons.call_received),
-                      label: Text("receive".tr()),
+                      label: AutoSizeText(
+                        "receive".tr(),
+                        maxLines: 1,
+                      ),
                       onPressed: () {
                         showGeneralDialog(
                           barrierDismissible: true,

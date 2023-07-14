@@ -59,6 +59,7 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
         ExplorerClient(_dio, baseUrl: this.network.data.explorerApiHost);
     _coingeckoClient = CoingeckoClient(_dio);
     _multisigClient = MultisigClient(_dio, baseUrl: network.data.nodeHost);
+    _contractClient = ContractClient(_dio, baseUrl: network.data.nodeHost);
   }
 
   @override
@@ -93,13 +94,13 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
   Future<Either<ContractState>> getContractsAddressState(
       {required String address, num group = 0}) async {
     try {
-      if (caches["getContractsAddressState-$address"] != null)
-        return caches["getContractsAddressState-$address"];
+      if (caches["getContractsAddressState-$address-${network.name}"] != null)
+        return caches["getContractsAddressState-$address${network.name}"];
       final data = await _contractClient.getContractsAddressState(
         address,
         group: group,
       );
-      caches["getContractsAddressState-$address"] = data;
+      caches["getContractsAddressState-$address${network.name}"] = data;
       return Either<ContractState>(data: data);
     } on Exception catch (e, trace) {
       return Either<ContractState>(error: ApiError(exception: e, trace: trace));
