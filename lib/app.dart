@@ -52,6 +52,10 @@ class _AppState extends State<App> {
     timeAgo.setLocaleMessages("fr", timeAgo.FrMessages());
     timeAgo.setLocaleMessages("es", timeAgo.EsMessages());
     timeAgo.setLocaleMessages("it", timeAgo.ItMessages());
+    timeAgo.setLocaleMessages("de", timeAgo.DeMessages());
+    timeAgo.setLocaleMessages("id", timeAgo.IdMessages());
+    timeAgo.setLocaleMessages("ar", timeAgo.ArMessages());
+
     var window = WidgetsBinding.instance.window;
     window.onPlatformBrightnessChanged = () {
       WidgetsBinding.instance.handlePlatformBrightnessChanged();

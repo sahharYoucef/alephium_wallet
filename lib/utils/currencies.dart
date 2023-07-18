@@ -1,4 +1,4 @@
-final currencies = [
+final currencies = {
   "usd",
   "eur",
   "gbp",
@@ -20,4 +20,4 @@ final currencies = [
   "inr",
   "php",
   "krw",
-];
+  };

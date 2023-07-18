@@ -67,7 +67,7 @@ class TransactionSuccessDialog extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          "${token.name ?? 'Unknown Token'.tr()}".tr(),
+                          "${token.name ?? 'token'.tr()}".tr(),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         Spacer(),
@@ -134,7 +134,7 @@ class TransactionSuccessDialog extends StatelessWidget {
                             if (ref.tokens != null)
                               ...ref.tokens!.map(
                                 (token) => Text(
-                                  "${Format.humanReadableNumber(token.formattedAmount)} ${token.symbol ?? 'Unknown Token'.tr()}"
+                                  "${Format.humanReadableNumber(token.formattedAmount)} ${token.symbol ?? 'token'.tr()}"
                                       .tr(),
                                   style: Theme.of(context)
                                       .textTheme

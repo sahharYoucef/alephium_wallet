@@ -113,6 +113,7 @@
   "it": "Italian",
   "de": "German",
   "id": "Indonesian",
+  "ar": "Arabic",
   "system": "System",
   "license": "License",
   "errorMessageGenericError": "Something went wrong!",
@@ -166,5 +167,6 @@
   "name": "name",
   "symbol": "symbol",
   "totalSupply": "total supply",
-  "decimals": "decimals"
+  "decimals": "decimals",
+  "pleaseCopyTransactionDetails": "Please copy transaction details"
 }

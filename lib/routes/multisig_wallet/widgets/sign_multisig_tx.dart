@@ -44,7 +44,7 @@ class _SignMultisigTxViewState extends State<SignMultisigTxView> {
       getIt.get<BaseApiRepository>(),
     );
     _controller =
-        TextEditingController(text: "Please copy transaction details");
+        TextEditingController(text: "pleaseCopyTransactionDetails".tr());
     super.initState();
   }
 

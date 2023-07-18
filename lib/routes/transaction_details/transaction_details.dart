@@ -145,7 +145,7 @@ class TransactionDetails extends StatelessWidget {
                                             tokenStore: token);
                                       },
                                       child: Text(
-                                        "${token.name ?? token.symbol ?? 'unknownToken'.tr()}"
+                                        "${token.name ?? token.symbol ?? 'token'.tr()}"
                                             .tr(),
                                         style: Theme.of(context)
                                             .textTheme

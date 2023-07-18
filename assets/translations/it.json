@@ -111,8 +111,9 @@
   "fr": "Francese",
   "es": "Spagnolo",
   "it": "Italiano",
-  "de": "tedesco",
-  "id": "indonesiano",
+  "de": "Tedesco",
+  "id": "Indonesiano",
+  "ar": "Arabo",
   "system": "Sistema",
   "license": "Licenza",
   "errorMessageGenericError": "Qualcosa è andato storto!",
@@ -166,5 +167,6 @@
   "name": "nome",
   "symbol": "simbolo",
   "totalSupply": "offerta totale",
-  "decimals": "decimali"
+  "decimals": "decimali",
+  "pleaseCopyTransactionDetails": "Copia i dettagli della transazione"
 }

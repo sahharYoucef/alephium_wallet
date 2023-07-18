@@ -41,7 +41,7 @@ class _TokensDropDownState extends State<TokensDropDown> {
           ],
         ),
         decoration: InputDecoration(
-          label: Text("token"),
+          label: Text("token".tr()),
         ),
         borderRadius: BorderRadius.circular(16),
         isExpanded: true,

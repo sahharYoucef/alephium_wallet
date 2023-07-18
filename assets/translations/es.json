@@ -113,6 +113,7 @@
   "it": "Italiano",
   "de": "alemán",
   "id": "Indonesio",
+  "ar": "árabe",
   "system": "Sistema",
   "license": "Licencia",
   "errorMessageGenericError": "¡Algo salió mal!",
@@ -166,5 +167,6 @@
   "name": "nombre",
   "symbol": "símbolo",
   "totalSupply": "suministro total",
-  "decimals": "decimales"
+  "decimals": "decimales",
+  "pleaseCopyTransactionDetails": "Copie los detalles de la transacción"
 }
