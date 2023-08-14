@@ -64,6 +64,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  base58check:
+    dependency: transitive
+    description:
+      name: base58check
+      sha256: "6c300dfc33e598d2fe26319e13f6243fea81eaf8204cb4c6b69ef20a625319a5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   base_x:
     dependency: transitive
     description:
@@ -72,6 +80,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  bech32:
+    dependency: transitive
+    description:
+      name: bech32
+      sha256: "156cbace936f7720c79a79d16a03efad343b1ef17106716e04b8b8e39f99f7f7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.2"
   bip32:
     dependency: transitive
     description:
@@ -80,6 +96,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  bip32_bip44:
+    dependency: transitive
+    description:
+      name: bip32_bip44
+      sha256: "8e28e6bde00da1ed207f2c0a5361792375799196176742c0d36c71e89a5485d3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  bip340:
+    dependency: transitive
+    description:
+      name: bip340
+      sha256: "9a2f454d3f5e2d67a1b21494203132786d95bde8784e7ada74adac00df3ddc11"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   bip39:
     dependency: transitive
     description:
@@ -307,6 +339,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  dart_nostr:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: c514994b262e2b1c51f7fc7b84a1d828ac789994
+      url: "https://github.com/sahharYoucef/nostr.git"
+    source: git
+    version: "3.3.1"
   dart_style:
     dependency: transitive
     description:

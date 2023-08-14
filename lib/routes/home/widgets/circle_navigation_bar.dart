@@ -64,7 +64,7 @@ class CircleNavigationBar extends StatelessWidget {
                           },
                         ),
                         tabs: <Widget>[
-                          ...List.generate(3, (index) {
+                          ...List.generate(4, (index) {
                             return navBarIcons[index];
                           }),
                         ],

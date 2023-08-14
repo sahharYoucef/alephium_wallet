@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:alephium_wallet/api/repositories/alephium/alephium_api_repository.dart';
 import 'package:alephium_wallet/api/repositories/base_api_repository.dart';
 import 'package:alephium_wallet/app.dart';
 import 'package:alephium_wallet/bloc/contacts/contacts_bloc.dart';
 import 'package:alephium_wallet/bloc/settings/settings_bloc.dart';
+import 'package:alephium_wallet/bloc/store/store_bloc.dart';
 import 'package:alephium_wallet/bloc/wallet_home/wallet_home_bloc.dart';
 import 'package:alephium_wallet/encryption/alephium/alephium_wallet_service.dart';
 import 'package:alephium_wallet/encryption/base_wallet_service.dart';
@@ -13,6 +16,7 @@ import 'package:alephium_wallet/storage/base_db_helper.dart';
 import 'package:alephium_wallet/storage/sqflite_database/sqflite_database.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/utils/languages.dart';
+import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,6 +70,9 @@ void main() async {
         create: (context) => ContactsBloc(
           dbHelper: getIt.get<BaseDBHelper>(),
         )..add(LoadAllContactsEvent()),
+      ),
+      BlocProvider<StoreBloc>(
+        create: (context) => StoreBloc()..add(SubscribeToNostrRelays()),
       ),
     ],
     child: EasyLocalization(

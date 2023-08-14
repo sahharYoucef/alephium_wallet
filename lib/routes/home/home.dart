@@ -6,6 +6,7 @@ import 'package:alephium_wallet/routes/contacts/contacts_page.dart';
 import 'package:alephium_wallet/routes/contacts/widgets/add_contact_dialog.dart';
 import 'package:alephium_wallet/routes/home/widgets/home_view.dart';
 import 'package:alephium_wallet/routes/settings/settings_page.dart';
+import 'package:alephium_wallet/routes/store/store.dart';
 import 'package:alephium_wallet/routes/widgets/appbar_icon_button.dart';
 import 'package:alephium_wallet/utils/helpers.dart';
 import 'package:alephium_wallet/routes/home/widgets/circle_navigation_bar.dart';
@@ -37,7 +38,7 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     FlutterNativeSplash.remove();
-    _tabController = TabController(length: 3, vsync: this)
+    _tabController = TabController(length: 4, vsync: this)
       ..addListener(() {
         _listenable.value = _tabController.index;
       });
@@ -121,7 +122,8 @@ class _HomePageState extends State<HomePage>
                               bloc: _walletHomeBloc,
                             ),
                             ContactsPage(),
-                            SettingsPage()
+                            SettingsPage(),
+                            StorePage(),
                           ]),
                     ),
                   ],
@@ -199,6 +201,12 @@ class _HomePageState extends State<HomePage>
                           icon: Icon(Icons.settings),
                           onPressed: () {
                             _tabController.animateTo(2);
+                          }),
+                      IconButton(
+                          tooltip: "store".tr(),
+                          icon: Icon(Icons.store),
+                          onPressed: () {
+                            _tabController.animateTo(3);
                           }),
                     ],
                     borderRadius: BorderRadius.circular(16),
