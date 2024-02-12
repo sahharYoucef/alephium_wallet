@@ -21,7 +21,17 @@ mixin RepositoryMixin {
           address: address.address,
           network: network,
           tokens: data.tokenBalances
-              ?.map((e) => TokenStore(id: e.id, amount: e.amount))
+              ?.map(
+                (e) => TokenStore(
+                  id: e.id,
+                  balance: e.amount,
+                  lockedBalance: data.lockedTokenBalances
+                      ?.firstWhereOrNull(
+                        (element) => element.id == e.id,
+                      )
+                      ?.amount,
+                ),
+              )
               .toList()),
     );
   }
@@ -47,8 +57,8 @@ mixin RepositoryMixin {
                           hash: e.txHashRef,
                           unlockScript: e.unlockScript,
                           tokens: e.tokens
-                              ?.map(
-                                  (e) => TokenStore(id: e.id, amount: e.amount))
+                              ?.map((e) =>
+                                  TokenStore(id: e.id, balance: e.amount))
                               .toList()))
                       .toList() ??
                   [],
@@ -63,8 +73,8 @@ mixin RepositoryMixin {
                           lockTime: e.lockTime,
                           hint: e.hint,
                           tokens: e.tokens
-                              ?.map(
-                                  (e) => TokenStore(id: e.id, amount: e.amount))
+                              ?.map((e) =>
+                                  TokenStore(id: e.id, balance: e.amount))
                               .toList()))
                       .toList() ??
                   [],

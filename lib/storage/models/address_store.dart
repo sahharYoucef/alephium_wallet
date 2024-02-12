@@ -79,17 +79,17 @@ class AddressStore extends Equatable {
   }
 
   String get formattedBalance {
-    return Format.formatNumber(addressBalance);
+    return Format.formatNumber(addressBalance.toDouble());
   }
 
-  double get addressBalance {
-    double? addressBalance = balance?.balance?.toDouble();
-    return (addressBalance ?? 0) / 10e17;
+  BigInt get addressBalance {
+    return (balance?.balance ?? BigInt.zero) -
+        (balance?.lockedBalance ?? BigInt.zero);
   }
 
   String? get balanceConverted {
     var value = addressBalance;
-    return Format.convertToCurrency(value);
+    return Format.convertToCurrency(value.toDouble());
   }
 
   @override

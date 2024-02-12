@@ -94,7 +94,7 @@ class CheckTransactionResult extends StatelessWidget {
                             ),
                             Spacer(),
                             Text(
-                              "${Format.humanReadableNumber(e.formattedAmount)}",
+                              "${Format.humanReadableNumber(e.formattedBalance)}",
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ]),

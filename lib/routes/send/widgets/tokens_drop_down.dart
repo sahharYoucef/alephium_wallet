@@ -82,7 +82,7 @@ class _TokensDropDownState extends State<TokensDropDown> {
                         value.isNft
                             ? "(NFT)"
                             : Format.humanReadableNumber(
-                                value.formattedAmount.toString()),
+                                value.formattedAvailableBalance.toString()),
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],

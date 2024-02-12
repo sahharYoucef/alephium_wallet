@@ -57,7 +57,7 @@ class TransactionVerifyDialog extends StatelessWidget {
                               amount: e.attoAlphAmount,
                               tokens: e.tokens
                                   ?.map((e) =>
-                                      TokenStore(id: e.id, amount: e.amount))
+                                      TokenStore(id: e.id, balance: e.amount))
                                   .toList()))
                           .toList() ??
                       <TransactionRefStore>[],

@@ -164,7 +164,7 @@ class TransactionStore extends Equatable {
             if (tokens.contains(token)) {
               final index = tokens.indexWhere((element) => element == token);
               tokens[index] = tokens[index]
-                  .copyWith(amount: tokens[index].amount! + token.amount!);
+                  .copyWith(balance: tokens[index].balance! + token.balance!);
             } else {
               tokens.add(token);
             }
@@ -177,7 +177,7 @@ class TransactionStore extends Equatable {
             if (tokens.contains(token)) {
               final index = tokens.indexWhere((element) => element == token);
               tokens[index] = tokens[index]
-                  .copyWith(amount: tokens[index].amount! - token.amount!);
+                  .copyWith(balance: tokens[index].balance! - token.balance!);
             } else {
               tokens.add(token);
             }
@@ -193,7 +193,7 @@ class TransactionStore extends Equatable {
             if (tokens.contains(token)) {
               var index = tokens.indexWhere((element) => element == token);
               tokens[index] = tokens[index]
-                  .copyWith(amount: tokens[index].amount! + token.amount!);
+                  .copyWith(balance: tokens[index].balance! + token.balance!);
             } else {
               tokens.add(token);
             }

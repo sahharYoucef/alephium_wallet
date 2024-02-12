@@ -8,7 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 enum GenerationType { single, group }
 
-class GenerateWalletDialog extends StatelessWidget {
+class GenerateWalletDialog extends StatefulWidget {
   final WalletDetailsBloc bloc;
   final GenerationType type;
   GenerateWalletDialog({
@@ -17,12 +17,20 @@ class GenerateWalletDialog extends StatelessWidget {
     required this.type,
   }) : super(key: key);
 
+  @override
+  State<GenerateWalletDialog> createState() => _GenerateWalletDialogState();
+}
+
+class _GenerateWalletDialogState extends State<GenerateWalletDialog> {
   final GlobalKey<ShakeTextFormFieldState> _key =
       GlobalKey<ShakeTextFormFieldState>();
+
   final GlobalKey<MainAddressSwitchState> _switchKey =
       GlobalKey<MainAddressSwitchState>();
+
   final GlobalKey<GroupDropDownState> _groupKey =
       GlobalKey<GroupDropDownState>();
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -44,22 +52,23 @@ class GenerateWalletDialog extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          type == GenerationType.single
+                          widget.type == GenerationType.single
                               ? "mainAddress".tr()
                               : "generateOneAddress".tr(),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
-                      if (type == GenerationType.single)
+                      if (widget.type == GenerationType.single)
                         MainAddressSwitch(
                           key: _switchKey,
                         )
                     ],
                   ),
-                  if (type == GenerationType.single) ...[
+                  if (widget.type == GenerationType.single) ...[
                     Text(
-                      "generateAddressDescription"
-                          .tr(args: [bloc.wallet.mainAddress.substring(0, 10)]),
+                      "generateAddressDescription".tr(args: [
+                        widget.bloc.wallet.mainAddress.substring(0, 10)
+                      ]),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
@@ -80,7 +89,7 @@ class GenerateWalletDialog extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  if (type == GenerationType.single) ...[
+                  if (widget.type == GenerationType.single) ...[
                     GroupDropDown(
                       key: _groupKey,
                     ),
@@ -92,22 +101,22 @@ class GenerateWalletDialog extends StatelessWidget {
                     tag: "button",
                     child: OutlinedButton(
                       onPressed: () {
-                        if (type == GenerationType.single)
-                          bloc.add(GenerateNewAddress(
+                        if (widget.type == GenerationType.single)
+                          widget.bloc.add(GenerateNewAddress(
                             isMain: _switchKey.currentState!.value,
                             title: _key.currentState?.value,
                             color: "",
                             group: _groupKey.currentState!.value,
                           ));
                         else
-                          bloc.add(GenerateOneAddressPerGroup(
+                          widget.bloc.add(GenerateOneAddressPerGroup(
                             title: _key.currentState?.value,
                             color: "",
                           ));
                         Navigator.pop(context);
                       },
                       child: Text(
-                        type == GenerationType.single
+                        widget.type == GenerationType.single
                             ? "generateAddress".tr()
                             : "generate".tr(),
                       ),

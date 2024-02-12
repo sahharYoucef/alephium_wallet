@@ -154,7 +154,7 @@ class TransactionDetails extends StatelessWidget {
                                     ),
                                     Spacer(),
                                     Text(
-                                      "${Format.humanReadableNumber(token.formattedAmount)}",
+                                      "${Format.humanReadableNumber(token.formattedBalance)}",
                                       style: Theme.of(context)
                                           .textTheme
                                           .headlineSmall!

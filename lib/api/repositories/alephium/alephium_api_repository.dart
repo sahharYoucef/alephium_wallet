@@ -6,6 +6,7 @@ import 'package:alephium_wallet/storage/models/token_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_ref_store.dart';
 import 'package:alephium_wallet/storage/models/transaction_store.dart';
 import 'dart:async';
+import 'package:collection/collection.dart';
 
 import 'package:dio/dio.dart' hide Headers;
 
@@ -131,7 +132,7 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
             tokens: tokens
                 ?.map<Token>((token) => Token(
                       id: token.id,
-                      amount: token.amount,
+                      amount: token.balance,
                     ))
                 .toList(),
           ),
@@ -255,7 +256,7 @@ class AlephiumApiRepository extends BaseApiRepository with RepositoryMixin {
             tokens: tokens
                 ?.map<Token>((token) => Token(
                       id: token.id,
-                      amount: token.amount,
+                      amount: token.balance,
                     ))
                 .toList(),
           ),

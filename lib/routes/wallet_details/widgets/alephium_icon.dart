@@ -1,6 +1,11 @@
+import 'dart:math';
+
 import 'package:alephium_wallet/routes/wallet_details/widgets/alephium_paint.dart';
 import 'package:alephium_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../utils/constants.dart';
 
 class AlephiumIcon extends StatefulWidget {
   final bool spinning;
@@ -46,17 +51,18 @@ class _AlephiumIconState extends State<AlephiumIcon>
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = WalletTheme.themeMode == ThemeMode.dark;
     return AnimatedBuilder(
       builder: (context, child) {
-        return SizedBox(
-            height: 50,
-            width: 35,
-            child: CustomPaint(
-                painter: AlephiumCustomPainter(
-              _animation.value,
-              isDarkMode ? Colors.white : Colors.black,
-            )));
+        return Transform(
+          transform: Matrix4.rotationY(2 * pi * _animation.value),
+          origin: Offset(25, 32.5),
+          child: SizedBox(
+              height: 65,
+              width: 50,
+              child: SvgPicture.asset(
+                WalletIcons.alephiumIcon,
+              )),
+        );
       },
       animation: _animation,
     );

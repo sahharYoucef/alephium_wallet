@@ -59,6 +59,20 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     return "$value ℵ";
   }
 
+  BigInt get getBigIntAmount {
+    if (amount != null) {
+      if (gasPrice == null) {
+        if (amount!.parseToAlphValue - 0.003.parseToAlphValue >
+            fromAddress!.balance!.balance!) {
+          return amount!.parseToAlphValue - 0.003.parseToAlphValue;
+        } else {
+          return amount!.parseToAlphValue;
+        }
+      }
+    }
+    return BigInt.zero;
+  }
+
   final WalletStore wallet;
   final BaseApiRepository apiRepository;
   final BaseWalletService walletService;
@@ -104,7 +118,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             ? event.amount
             : multiply(event.amount, event.decimals);
         final token =
-            TokenStore(id: event.id, amount: BigInt.tryParse(tokenAmount));
+            TokenStore(id: event.id, balance: BigInt.tryParse(tokenAmount));
         if (index == -1)
           tokens.add(token);
         else
@@ -136,7 +150,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             var data = await apiRepository.createTransaction(
               amount: amount == null && tokens.isNotEmpty
                   ? 0.001.parseToAlphValue
-                  : amount?.parseToAlphValue ?? BigInt.zero,
+                  : getBigIntAmount,
               fromPublicKey: fromAddress!.publicKey!,
               toAddress: toAddress!,
               gasAmount: gasAmount,

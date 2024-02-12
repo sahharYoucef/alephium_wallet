@@ -90,7 +90,7 @@ class TransactionReferences extends StatelessWidget {
                                           ),
                                         ),
                                       Text(
-                                        "${token.formattedAmount}",
+                                        "${token.formattedBalance}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .headlineSmall!

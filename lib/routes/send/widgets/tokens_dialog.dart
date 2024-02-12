@@ -64,7 +64,10 @@ class _AddTokenDialogState extends State<AddTokenDialog> with InputValidators {
                   height: 6,
                 ),
                 TokensDropDown(
-                  tokens: widget.tokens,
+                  tokens: widget.tokens
+                      .where(
+                          (element) => element.availableBalance > BigInt.zero)
+                      .toList(),
                   onChanged: (value) {
                     setState(() {
                       _id = value;
@@ -104,7 +107,7 @@ class _AddTokenDialogState extends State<AddTokenDialog> with InputValidators {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                     child: Text(
-                      "${'availableBalance'.tr()} : ${token.formattedAmount}",
+                      "${'availableBalance'.tr()} : ${token.availableBalance}",
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),

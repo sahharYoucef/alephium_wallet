@@ -30,12 +30,18 @@ class PriceBanner extends StatelessWidget {
                 children: [
                   Text(
                     "${AppStorage.instance.formattedPrice ?? ''}",
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   AutoSizeText(
                     'alephiumWallet'.tr(),
                     maxLines: 1,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),

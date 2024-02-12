@@ -216,7 +216,7 @@ class TransactionTile extends StatelessWidget {
                                               WalletTheme.instance.background,
                                         ),
                                         child: Text(
-                                          '${Format.humanReadableNumber(token.formattedAmount)}',
+                                          '${Format.humanReadableNumber(token.formattedBalance)}',
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyMedium!

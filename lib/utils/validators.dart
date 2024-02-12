@@ -14,7 +14,7 @@ mixin InputValidators {
     if (amountNumber == null) {
       return "Please enter a valid amount!";
     }
-    var balance = token.formattedAmount;
+    var balance = token.formattedAvailableBalance;
     if (amountNumber == 0) {
       return "amountIsZero".tr(args: ["0"]);
     }

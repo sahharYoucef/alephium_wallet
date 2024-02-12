@@ -190,11 +190,11 @@ class WalletStore extends Equatable {
             tokens.add(token);
           } else {
             late BigInt amount;
-            amount = tokens.firstWhere((element) => element == token).amount ??
+            amount = tokens.firstWhere((element) => element == token).balance ??
                 BigInt.zero;
-            amount += token.amount ?? BigInt.zero;
+            amount += token.balance ?? BigInt.zero;
             final index = tokens.indexWhere((element) => element == token);
-            tokens[index] = TokenStore(id: token.id, amount: amount);
+            tokens[index] = TokenStore(id: token.id, balance: amount);
           }
         }
     }
@@ -210,11 +210,11 @@ class WalletStore extends Equatable {
             tokens.add(token);
           } else {
             late BigInt amount;
-            amount = tokens.firstWhere((element) => element == token).amount ??
+            amount = tokens.firstWhere((element) => element == token).balance ??
                 BigInt.zero;
-            amount += token.amount ?? BigInt.zero;
+            amount += token.balance ?? BigInt.zero;
             final index = tokens.indexWhere((element) => element == token);
-            tokens[index] = TokenStore(id: token.id, amount: amount);
+            tokens[index] = TokenStore(id: token.id, balance: amount);
           }
         }
     }

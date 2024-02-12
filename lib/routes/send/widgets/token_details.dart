@@ -150,12 +150,31 @@ class TokenDetails extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        "amount".tr(),
+                        "balance".tr(),
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       Spacer(),
                       Text(
-                        "${Format.humanReadableNumber(tokenStore.formattedAmount)}",
+                        "${Format.humanReadableNumber(tokenStore.formattedBalance)}",
+                        style:
+                            Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                ],
+                if (!tokenStore.isNft) ...[
+                  Row(
+                    children: [
+                      Text(
+                        "lockedBalance".tr(),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      Spacer(),
+                      Text(
+                        "${Format.humanReadableNumber(tokenStore.formattedBalance)}",
                         style:
                             Theme.of(context).textTheme.headlineSmall!.copyWith(
                                   fontWeight: FontWeight.w700,

@@ -35,7 +35,7 @@ class TransactionStatusState extends TransactionState {
         toAddress,
         amount,
         tokens,
-        if (tokens != null) ...tokens!.map((e) => e.amount),
+        if (tokens != null) ...tokens!.map((e) => e.balance),
       ];
 }
 

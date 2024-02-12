@@ -146,7 +146,7 @@ class WalletTile extends StatelessWidget {
                                                 WalletTheme.instance.background,
                                           ),
                                           child: Text(
-                                                  "${Format.humanReadableNumber(e.formattedAmount)}",
+                                                  "${Format.humanReadableNumber(e.formattedBalance)}",
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .headlineMedium)

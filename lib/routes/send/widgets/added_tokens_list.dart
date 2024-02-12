@@ -82,7 +82,7 @@ class AddedTokensList extends StatelessWidget {
                         else
                           Text(
                             Format.humanReadableNumber(
-                                token.formattedAmount.toString()),
+                                token.formattedBalance.toString()),
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineSmall!

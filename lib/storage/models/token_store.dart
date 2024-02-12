@@ -12,7 +12,8 @@ import 'package:easy_localization/easy_localization.dart';
 
 class TokenStore extends Equatable {
   final String? id;
-  final BigInt? amount;
+  final BigInt? balance;
+  final BigInt? lockedBalance;
 
   static List<TokenStore> getTokens(data) {
     if (data == null) return <TokenStore>[];
@@ -30,27 +31,30 @@ class TokenStore extends Equatable {
 
   TokenStore({
     this.id,
-    this.amount,
+    this.balance,
+    this.lockedBalance,
   });
 
   factory TokenStore.fromDb(Map<String, dynamic> data) {
     final _id = data["id"] as String?;
-    final _amount = BigInt.tryParse(data["amount"]);
+    final _balance = BigInt.tryParse(data["amount"]);
+    final _lockedBalance = BigInt.tryParse("${data["lockedBalance"]}");
+
     return TokenStore(
-      id: _id,
-      amount: _amount,
-    );
+        id: _id, balance: _balance, lockedBalance: _lockedBalance);
   }
 
   TokenStore copyWith({
     String? id,
-    BigInt? amount,
+    BigInt? balance,
+    BigInt? lockedBalance,
     String? name,
     TokenType? type,
   }) {
     return TokenStore(
       id: id ?? this.id,
-      amount: amount ?? this.amount,
+      balance: balance ?? this.balance,
+      lockedBalance: lockedBalance ?? this.lockedBalance,
     );
   }
 
@@ -67,7 +71,8 @@ class TokenStore extends Equatable {
   Map<String, dynamic> toDb() {
     return {
       "id": this.id,
-      "amount": this.amount?.toString(),
+      "amount": this.balance?.toString(),
+      "lockedBalance": this.lockedBalance?.toString(),
     };
   }
 
@@ -97,10 +102,24 @@ class TokenStore extends Equatable {
     return metaData?.decimals ?? 0;
   }
 
-  double get formattedAmount {
-    return amount != null
-        ? amount!.toDouble() / pow(10, metaData?.decimals ?? 0)
+  double get formattedBalance {
+    return balance != null
+        ? balance!.toDouble() / pow(10, metaData?.decimals ?? 0)
         : 0;
+  }
+
+  double get formattedLockedBalance {
+    return lockedBalance != null
+        ? lockedBalance!.toDouble() / pow(10, metaData?.decimals ?? 0)
+        : 0;
+  }
+
+  BigInt get availableBalance {
+    return (balance ?? BigInt.zero) - (lockedBalance ?? BigInt.zero);
+  }
+
+  double get formattedAvailableBalance {
+    return availableBalance.toDouble() / pow(10, metaData?.decimals ?? 0);
   }
 
   String? get logo {

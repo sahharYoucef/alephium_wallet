@@ -127,7 +127,60 @@ class BalanceTile extends StatelessWidget {
                                       "${token.name ?? token.symbol ?? 'Token ${index + 1}'.tr()}",
                                 ),
                                 Text(
-                                  "${Format.humanReadableNumber(token.formattedAmount)}",
+                                  "${Format.humanReadableNumber(token.formattedBalance)}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall!
+                                      .copyWith(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ))
+              ],
+              if (wallet.tokensBalances
+                  .map((e) => e.lockedBalance)
+                  .where((element) => element != null && element != BigInt.zero)
+                  .isNotEmpty) ...[
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  '${'tokens'.tr()} ${'lockedBalance'.tr()} :',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                const Divider(),
+                ...wallet.tokensBalances.mapIndexed((index, token) => Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0,
+                        vertical: 4,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          TokenIcon(tokenStore: token),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                AddressText(
+                                  onTap: () {
+                                    TokenDetails.show(context,
+                                        tokenStore: token);
+                                  },
+                                  address:
+                                      "${token.name ?? token.symbol ?? 'Token ${index + 1}'.tr()}",
+                                ),
+                                Text(
+                                  "${Format.humanReadableNumber(token.formattedLockedBalance)}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .headlineSmall!

@@ -72,7 +72,7 @@ class TransactionSuccessDialog extends StatelessWidget {
                         ),
                         Spacer(),
                         Text(
-                          "${Format.humanReadableNumber(token.formattedAmount)}",
+                          "${Format.humanReadableNumber(token.formattedBalance)}",
                           style: Theme.of(context)
                               .textTheme
                               .headlineSmall!
@@ -134,7 +134,7 @@ class TransactionSuccessDialog extends StatelessWidget {
                             if (ref.tokens != null)
                               ...ref.tokens!.map(
                                 (token) => Text(
-                                  "${Format.humanReadableNumber(token.formattedAmount)} ${token.symbol ?? 'token'.tr()}"
+                                  "${Format.humanReadableNumber(token.formattedBalance)} ${token.symbol ?? 'token'.tr()}"
                                       .tr(),
                                   style: Theme.of(context)
                                       .textTheme
